@@ -1,0 +1,17 @@
+.col-lg-8{
+  margin: auto;
+}
+.mid-horizontal{
+  text-align: center;
+}
+.container{
+  margin-top: 20px;
+}
+/*.col-lg-7 {
+margin: auto;
+display: flex;
+}*/
+.col-lg-7 {
+  margin: auto;
+  display: flex;
+}

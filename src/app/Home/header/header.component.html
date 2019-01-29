@@ -1,0 +1,62 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div *ngIf="!isAuthenticated">
+    <a class="navbar-brand" routerLink="/" >CA Calendly 1.0</a>
+  </div>
+  <div *ngIf="isAuthenticated">
+    <a class="navbar-brand" routerLink="dashboard/{{emailId}}" >CA Calendly 1.0</a>
+  </div>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <div *ngIf="!isAuthenticated">
+          <a class="nav-link active" routerLink="/" tabindex="-1" aria-disabled="true">Home</a>
+        </div>
+
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="dashboard/{{emailId}}" tabindex="1" aria-disabled="true" *ngIf="isAuthenticated">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-disabled="true" *ngIf="isAuthenticated" style="cursor: pointer" routerLink="/eventMainPage">Event Types</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-disabled="true" *ngIf="isAuthenticated" style="cursor: pointer">Quick Start</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-disabled="true" *ngIf="isAuthenticated" style="cursor: pointer">Help</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/features" *ngIf="!isAuthenticated" style="cursor: pointer">Features<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/team" *ngIf="!isAuthenticated" style="cursor: pointer">For Teams<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/signup" *ngIf="!isAuthenticated" style="cursor: pointer">Sign Up<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login" *ngIf="!isAuthenticated" style="cursor: pointer">Login<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="isAuthenticated" [matMenuTriggerFor]="menu" style="cursor: pointer">calendly.com/{{userId}}<span class="sr-only">(current)</span></a>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item style="color: white" (click)="openDialog()">Share Your Link</button>
+            <button mat-menu-item style="color: white">Calendar connection</button>
+            <button mat-menu-item style="color: white">Account Setting</button>
+            <button mat-menu-item style="color: white">Users</button>
+            <button mat-menu-item style="color: white" routerLink="integrations">Integration</button>
+            <button mat-menu-item style="color: white">Billing</button>
+            <button mat-menu-item style="color: white">Get help</button>
+            <button mat-menu-item style="color: white" (click)="onLogout()">Logout</button>
+          </mat-menu>
+        </li>
+      </ul>
+    </form>
+  </div>
+</nav>

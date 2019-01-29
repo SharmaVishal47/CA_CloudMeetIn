@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="card text-left">
+    <strong style="margin-top: 20px;font-size: 30px;text-align: center">Integration with GoToMeeting</strong>
+    <div class="card-body" style="margin-top: 20px">
+      <form [formGroup]="integrationForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label>Enter your Go2Meeting Registered Email.</label>
+          <input type="email" [ngClass]="{'has-error': !integrationForm.get('emailId').valid && integrationForm.get('emailId').touched}"
+                 formControlName="emailId" class="form-control" id="emailId" placeholder="Email">
+          <span class="help-block" *ngIf="!integrationForm.get('emailId').valid && integrationForm.get('emailId').touched">
+          <span class="text-danger" *ngIf="integrationForm.get('emailId').errors" required>Email Address required.</span></span>
+        </div>
+        <div class="form-group">
+          <label>Enter your Go2Meeting Password.</label>
+          <input type="password" [ngClass]="{'has-error': !integrationForm.get('password').valid && integrationForm.get('password').touched}"
+                 formControlName="password" class="form-control" id="password" placeholder="Password">
+          <span class="help-block" *ngIf="!integrationForm.get('password').valid && integrationForm.get('password').touched">
+          <span class="text-danger" *ngIf="integrationForm.get('password').errors" required>Password Required.</span></span>
+        </div>
+        <div class="form-group">
+          <label>Enter your Go2Meeting Client Id.</label>
+          <input type="text" [ngClass]="{'has-error': !integrationForm.get('clientId').valid && integrationForm.get('clientId').touched}"
+                 formControlName="clientId" class="form-control" id="clientId" placeholder="Client Id">
+          <span class="help-block" *ngIf="!integrationForm.get('clientId').valid && integrationForm.get('clientId').touched">
+          <span class="text-danger" *ngIf="integrationForm.get('clientId').errors" required>Client Id Required.</span></span>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!integrationForm.valid">Continue</button>
+      </form>
+    </div>
+  </div>
+</div>
+

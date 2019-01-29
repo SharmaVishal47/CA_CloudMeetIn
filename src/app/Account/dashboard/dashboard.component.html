@@ -1,0 +1,98 @@
+<div class="container">
+  <div class="row" style="margin-top: 5%">
+    <div class="col-md-4" id="marginSpace">
+      <h6>My Calendly</h6>
+    </div>
+    <div class="col-md-6"></div>
+    <div class="col-md-2" id="marginSpace1">
+      All Past
+    </div>
+  </div>
+  <hr/>
+</div>
+<mat-card class="example-card">
+
+  <mat-card-content>
+    <div style="margin-left: 8%">
+      <svg width="30" height="30">
+        <circle cx="15" cy="15" r="10" fill="red"></circle>
+      </svg>
+      <button mat-button [matMenuTriggerFor]="menu"> Meeting 15 min</button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>Edit</button>
+        <button mat-menu-item>Copy URL</button>
+        <button mat-menu-item>Email URL</button>
+      </mat-menu>
+
+      <svg width="30" height="30">
+        <circle cx="15" cy="15" r="10" fill="blue"></circle>
+      </svg>
+      <button mat-button [matMenuTriggerFor]="menu"> Meeting 30 min</button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>Edit</button>
+        <button mat-menu-item>Copy URL</button>
+        <button mat-menu-item>Email URL</button>
+      </mat-menu>
+
+      <svg width="30" height="30">
+        <circle cx="15" cy="15" r="10" fill="red"></circle>
+      </svg>
+      <button mat-button [matMenuTriggerFor]="menu">Meeting 60 min</button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>Edit</button>
+        <button mat-menu-item>Copy URL</button>
+        <button mat-menu-item>Email URL</button>
+      </mat-menu><span style="margin-left:45%">Show Filter
+<mat-icon> home</mat-icon></span>
+    </div>
+
+  </mat-card-content>
+
+</mat-card>
+<div class="container" *ngIf="scheduling">
+  <div class="row" style="margin-top: 5%">
+    <div class="col-md-4"></div>
+    <div class="col-md-4"><p>You have no Calendly events yet.
+      As events are scheduled with you, they’ll appear here</p>
+      <button type="button" class="btn btn-info">View our Quick Start Guide</button>
+      <p style="margin-top: 5%">Need tips? Check out our<a href="#" style="color: #00A2FF">Knowledge Base</a> </p>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+</div>
+
+<div class="container" style="margin-top: 3%;margin-bottom: 5%">
+  <p style="margin-bottom: 3%">Displaying 1 of 1 Events</p>
+  <mat-accordion [multi]="true" >
+    <mat-expansion-panel style="border: 1px solid grey;" *ngFor="let data of responseData">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <svg width="50" height="50">
+            <circle cx="15" cy="15" r="12" fill="red"></circle>
+          </svg><p>{{data.meetingTime}}</p>
+
+        </mat-panel-title>
+        <mat-panel-description>
+<span> <a style="color: #00A2FF"> <b>{{fullName}}</b> </a> &nbsp; with you <br> <b >{{  data.eventType}} {{event}}</b>
+</span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <section class="container1">
+        <div style="height: 150px; width: 150px; margin-top:5%" class="one">
+          <button mat-button style="border: 1px solid grey; width:100px; ">Reschedule</button><br/><br/>
+          <button mat-button style="border: 1px solid grey; width:100px; ">Cancel</button>
+        </div>
+        <div class="two">
+          <hr/>
+          <b>EMAIL</b> <mat-icon>pencil</mat-icon><br>
+          {{data.schedulerEmail}}<br><br>
+          <b> INVITEE TIME ZONE</b><br>
+          {{data.timeZone}}
+          <br><br><br>
+          <i>{{data.meetingDate | date}} </i>
+        </div>
+      </section>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

@@ -1,0 +1,10 @@
+.example-fill-remaining-space {
+  flex: 1 1 auto;
+}
+.backgroud-toolbar{
+  background: white;
+  border-bottom:  1px solid black;
+}
+.mat-menu-content {
+  background-color: #343A40 !important;
+}

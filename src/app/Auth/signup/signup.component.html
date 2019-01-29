@@ -1,0 +1,70 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="mid-horizontal">
+        <img src="https://www.pr-inside.com/images/uploads/pr/2018/97797/20181129_ca-logo_97797.png" alt="" width="80">
+        <br><br>
+        <p *ngIf="isSignInStatus === 0 || isSignInStatus === 2">Sign Up for CA Calendly and get a 14 day pro trial.</p>
+        <p *ngIf="isSignInStatus === 1">Hi {{email}}!</p>
+      </div>
+<!--if isSignInStatus === 0 -->
+      <div class="card text-left" *ngIf="isSignInStatus === 0">
+        <div class="card-body">
+          <form [formGroup]="signUp" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label>Enter your email to get started.</label>
+            <input type="email" [ngClass]="{'has-error': !signUp.get('email').valid && signUp.get('email').touched}"
+                   formControlName="email" class="form-control" id="textName" placeholder="email address">
+            <span class="help-block" *ngIf="!signUp.get('email').valid && signUp.get('email').touched">
+          <span class="text-danger" *ngIf="signUp.get('email').errors" required>email address required</span></span>
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="!signUp.valid">Get Started</button>
+          </form>
+        </div>
+        <div class="text-left">
+          <div class="card-body">
+            <h6>Already have an account? <a routerLink="/login">Login</a></h6>
+          </div>
+        </div>
+      </div>
+      <!--if isSignInStatus === 2 -->
+      <div class="card text-left" *ngIf="isSignInStatus ===2">
+        <div class="card-body">
+          <form [formGroup]="signUpForm" (ngSubmit)="onSubmitProfile()">
+            <div class="form-group">
+              <label>Enter your email to get started.</label>
+              <input type="email" [ngClass]="{'has-error': !signUpForm.get('emailID').valid && signUpForm.get('emailID').touched}"
+                     formControlName="emailID" class="form-control" id="emailID" placeholder="email address">
+              <span class="help-block" *ngIf="!signUpForm.get('emailID').valid && signUpForm.get('emailID').touched">
+          <span class="text-danger" *ngIf="signUpForm.get('emailID').errors" required>email address required</span></span>
+            </div>
+            <div class="form-group">
+              <label>Enter your full name.</label>
+              <input type="text" [ngClass]="{'has-error': !signUpForm.get('fullName').valid && signUpForm.get('fullName').touched}"
+                     formControlName="fullName" class="form-control" id="fullName" placeholder="full name">
+              <span class="help-block" *ngIf="!signUpForm.get('fullName').valid && signUpForm.get('fullName').touched">
+          <span class="text-danger" *ngIf="signUpForm.get('fullName').errors" required>fullname required</span></span>
+            </div>
+            <div class="form-group">
+              <label>Choose a password with at least 8 characters.</label>
+              <input type="password" [ngClass]="{'has-error': !signUpForm.get('password').valid && signUpForm.get('password').touched}"
+                     formControlName="password" class="form-control" id="password" placeholder="password">
+              <span class="help-block" *ngIf="!signUpForm.get('password').valid && signUpForm.get('password').touched">
+          <span class="text-danger" *ngIf="signUpForm.get('password').errors" required>password required</span></span>
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="!signUpForm.valid">Continue</button>
+          </form>
+        </div>
+      </div>
+      <!--if isSignInStatus === 1 -->
+      <div class="card text-sm-center"*ngIf="isSignInStatus === 1">
+        <div class="card-body">
+          <p style="font-size: 14px" class="text-left">The easiest way for you to sign up is with Google. This will automatically connect your calendar so you can start using Calendly right away!
+          </p>
+          <button class="btn btn-primary"  (click)="socialSignIn('google')">Sign up with Google</button>
+        </div>
+        <p>Prefer to create an account with a password? <a style="color: blue;cursor: pointer;"(click)="OnCreateAccount()">click here</a></p>
+      </div>
+    </div>
+  </div>
+</div>

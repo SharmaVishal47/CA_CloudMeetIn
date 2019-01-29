@@ -1,0 +1,5 @@
+#btnSearch,
+#btnClear{
+  display: inline-block;
+  vertical-align: top;
+}

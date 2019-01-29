@@ -1,0 +1,20 @@
+.col-lg-8{
+  margin: auto;
+}
+.mid-horizontal{
+  text-align: center;
+}
+.container{
+  margin-top: 20px;
+}
+.col-md-10 {
+  display: flex;
+  margin: auto;
+}
+.period {
+  position: relative;
+  padding: 0px 30px 20px 30px;
+  max-width: 860px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}

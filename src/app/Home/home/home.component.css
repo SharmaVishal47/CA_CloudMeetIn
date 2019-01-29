@@ -1,0 +1,6 @@
+.container{
+  margin-top: 10%;
+}
+.has-error{
+  border: 1px solid red;
+}

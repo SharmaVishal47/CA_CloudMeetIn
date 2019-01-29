@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Which calendars should we check for conflicts?</h2>
+<form [formGroup]="calendarForm">
+<mat-dialog-content >
+  <div *ngFor="let calendarSummary of data | keyvalue">
+    <input type="checkbox" (change)="onChange(calendarSummary.key, $event.target.checked)">{{calendarSummary.value}}<br>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions >
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6 col-md-6">
+        <button type="button" id="btnSearch" style="width: 100%;" class="btn btn-primary" (click)="checkSelectedData()" [disabled]="!calendarForm.valid">Update</button>
+      </div>
+      <div class="col-sm-6 col-md-6">
+        <button type="button" id="btnSearchgf" style="width: 100%;" class="mat-raised-button" mat-button mat-dialog-close>Cancel</button>
+      </div>
+    </div>
+  </div>
+</mat-dialog-actions>
+</form>

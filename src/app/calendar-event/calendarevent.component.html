@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Which calendars should we add new events to?</h2>
+<form [formGroup]="calendarForm">
+  <p *ngFor="let item of data">
+     <input type="radio" name="eventType" value="{{item}}" (click)="checkAnswer(item)"/>{{item}}<br />
+  </p>
+  <mat-dialog-actions >
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6 col-md-6">
+          <button type="button" id="btnSearch" style="width: 100%;" class="btn btn-primary" (click)="checkSelectedData()">Update</button>
+        </div>
+        <div class="col-sm-6 col-md-6">
+          <button type="button" id="btnSearchgf" style="width: 100%;" class="mat-raised-button" mat-button mat-dialog-close>Cancel</button>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-actions>
+</form>

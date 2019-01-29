@@ -1,0 +1,29 @@
+<div class="container">
+  <h3 style="color: #4d5055;text-align: center;margin-top: 20px;margin-bottom: 20px">Event Types</h3>
+  <mat-tab-group mat-align-tabs="center">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <strong>Personal</strong>
+      </ng-template>
+      <div class="columns">
+        <p>{{fullName}}</p>
+        <p><a href="http://localhost:4200/{{userId}}">http://localhost:4200/{{userId}}</a></p>
+      </div>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <strong>Team</strong>
+      </ng-template>
+      <h1>Team</h1>
+      <p>...</p>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <strong>All Users</strong>
+      </ng-template>
+      <h1>All Users</h1>
+      <p>...</p>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+

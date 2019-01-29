@@ -1,0 +1,31 @@
+<div id="idStyle" class="mat-dialog-container">
+  <form [formGroup]="myForm">
+    <h6 style="margin-left: 25%">Share Your Link</h6>
+    <div class="container">
+      <div class="form-group">
+        <label for="copyLink">Copy Your Link</label>
+        <input type="text"
+               id="copyLink"
+               class="form-control"
+               formControlName="copyLink" />
+      </div>
+      <div class="form-group">
+        <label for="emailLink">Email Your Link</label>
+        <input type="text" id="emailLink" class="form-control"
+               formControlName="emailLink">
+      </div>
+      <!--<div class="form-group">-->
+      <!--<label for="Embed">Embed on Your Website</label>-->
+      <!--<input type="text" id="Embed" class="form-control"-->
+      <!--disabled-->
+      <!--formControlName="Embed">-->
+      <!--</div>-->
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-primary" style="margin: auto" mat-button mat-dialog-close>
+        close
+      </button>
+    </div>
+  </form>
+</div>

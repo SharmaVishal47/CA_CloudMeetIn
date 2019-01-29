@@ -1,0 +1,12 @@
+.col-lg-6 {
+  margin: auto;
+}
+.container{
+  margin-top: 20px;
+}
+.mid-horizontal{
+  text-align: center;
+}
+.has-error{
+  border: 1px solid red;
+}
