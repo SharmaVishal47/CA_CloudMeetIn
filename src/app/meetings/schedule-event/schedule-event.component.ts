@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {MessagedialogComponent} from '../../messagedialog/messagedialog.component';
-import {HttpClient,HttpHeaders} from '@angular/common/http';
-import {formatDate} from '@angular/common';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {MeetingService} from '../meeting.service';
 
 @Component({
   selector: 'app-schedule-event',
@@ -12,61 +12,73 @@ import {formatDate} from '@angular/common';
   styleUrls: ['./schedule-event.component.css']
 })
 export class ScheduleEventComponent implements OnInit {
-  access_token:string;
-  expires_in:string;
-  organizer_key:string;
-  refresh_token:string;
+
   userName = '';
   meetingUserInfoForm: FormGroup;
   meetingTime = '';
   meetingDateTime = '';
+  selectedTime = '';
   goToMeetingStartDateTime;
-  goToMeetingEndDateTime;
   meetingTimeZone = '';
-   todayDate;
-   _dateFormatEND;
-   _dateFormatEnd;
-  constructor( private router: Router,private httpClient: HttpClient,private dialog: MatDialog) { }
+  _dateFormatEnd;
+  meetingOptionList = [];
+  meetingSelectedOption: string;
+  checkMeetingOption = false;
+  data;
+  meetIngData;
+
+  constructor(private meetingService: MeetingService, private router: Router, private httpClient: HttpClient, private dialog: MatDialog) {
+  }
 
   ngOnInit() {
-    let _selectedDate = localStorage.getItem('selectedDate');
-    let timePeriod = localStorage.getItem('eventType').split('m');
-    let expectedTime = localStorage.getItem('selectedTime').split('a' || 'b');
-    let date = new Date(_selectedDate);
-    /*let _dateFormat  = formatDate(date, 'dd-MM-yyyy hh:mm:ss a', 'en-US', '+0530');*/
-    let _dateFormat = formatDate(date, 'yyyy-MM-dd', 'en-US');
-    this.goToMeetingStartDateTime = _dateFormat + 'T' + expectedTime[0] + ':00Z';
-
-    console.log(this.goToMeetingStartDateTime);
-    let d = new Date(this.goToMeetingStartDateTime);
-    // @ts-ignore
-    d.setMinutes(timePeriod[0] - 300);
-    this.goToMeetingEndDateTime = d;
-     /*this._dateFormatEND = formatDate(this.goToMeetingEndDateTime, 'yyyy-MM-dd HH:mm:ss Z:', 'en-US');
-    console.log('Hello ',this.goToMeetingEndDateTime);*/
-     this._dateFormatEnd  = formatDate(this.goToMeetingEndDateTime, 'yyyy-MM-ddThh:mm:ss', 'en-US');
-    console.log(this._dateFormatEnd +'Z');
-    this.httpClient.get<any>('https://api.getgo.com/oauth/access_token?grant_type=password&user_id=kishor.kumar@cloudanalogy.com&password=sfdc9034&client_id=xPlKoK3aapfA2KdO8flPdewDOIlrY1V0').subscribe(
-      res => {
-        let jsonData = res;
-        this.access_token = jsonData.access_token;
-        console.log('this.access_token===',this.access_token);
-        this.expires_in = jsonData.expires_in;
-        this.organizer_key = jsonData.organizer_key;
-        this.refresh_token = jsonData.refresh_token;
-      });
+    this.meetingService.removeHeader(true);
+    this.meetingService.checkMeetingPlatform();
+    this.meetingService.meetingPlatform.subscribe(res => {
+      if (res.data.length > 0) {
+        if (res.data[0].go2meeting) {
+          this.checkMeetingOption = true;
+          this.meetingOptionList.push('GoToMeeting');
+          this.meetingSelectedOption = 'GoToMeeting';
+        }
+        if (res.data[0].salesforce) {
+          this.checkMeetingOption = true;
+          this.meetingOptionList.push('Salesforce');
+          this.meetingSelectedOption = 'Salesforce';
+        }
+        if (res.data[0].zoom) {
+          this.checkMeetingOption = true;
+          this.meetingOptionList.push('Zoom');
+          this.meetingSelectedOption = 'Zoom';
+        }
+      }
+    }, error => {
+      console.log('error====', error);
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.data = error;
+      this.dialog.open(MessagedialogComponent, dialogConfig);
+    });
+    this.goToMeetingStartDateTime = this.meetingService.meetingStartTime();
+    console.log('S -> ',this.goToMeetingStartDateTime);
+    this._dateFormatEnd = this.meetingService.meetingEndTime(this.goToMeetingStartDateTime);
+    console.log('E--> ',this._dateFormatEnd);
     this.meetingUserInfoForm = new FormGroup({
       fullName: new FormControl(null, [Validators.required]),
       email: new FormControl(null, [Validators.required])
     });
     this.userName = localStorage.getItem('fullName');
     this.meetingTime = localStorage.getItem('eventType') + ' Minute Meeting';
-    this.meetingDateTime = localStorage.getItem('selectedTime') + ' ' + localStorage.getItem('selectedDate');
+    this.meetingDateTime = localStorage.getItem('selectedDate');
+    this.selectedTime = localStorage.getItem('selectedTime');
     this.meetingTimeZone = localStorage.getItem('selectedTimeZone');
   }
 
+
+  selectedPlatform(selectOption: string) {
+    this.meetingSelectedOption = selectOption;
+  }
+
   onSubmit() {
-    let data = {
+    this.data = {
       userId: localStorage.getItem('userId'),
       timeZone: localStorage.getItem('selectedTimeZone'),
       eventType: localStorage.getItem('eventType'),
@@ -76,57 +88,20 @@ export class ScheduleEventComponent implements OnInit {
       schedulerEmail: this.meetingUserInfoForm.value.email
     };
 
-    let httpHeaders = new HttpHeaders({
-      'Content-Type' : 'application/json',
-      'Authorization': "Bearer "+this.access_token
-    });
-
-    let options = {
-      headers: httpHeaders
+    this.meetIngData = {
+      'subject': 'Meeting with ' + this.meetingUserInfoForm.value.fullName,
+      'starttime': this.goToMeetingStartDateTime,
+      'endtime': this._dateFormatEnd,
+      'passwordrequired': false,
+      'conferencecallinfo': 'hybrid',
+      'timezonekey': localStorage.getItem('selectedTimeZone'),
+      'meetingtype': 'scheduled'
     };
 
-    const meetIngData = {
-      "subject": "Meeting with "+this.meetingUserInfoForm.value.fullName,
-      "starttime": this.goToMeetingStartDateTime,
-      "endtime": this._dateFormatEnd +'Z',
-      "passwordrequired": false,
-      "conferencecallinfo": "hybrid",
-      "timezonekey": "Asia/Calcutta",
-      "meetingtype": "recurring"
-    };
-    
-    console.log(meetIngData);
-
-    this.httpClient.post<any>('https://api.getgo.com/G2M/rest/meetings',meetIngData,options).subscribe(
-      res =>{
-        console.log("MeetingResponse=========",res[0].joinURL);
-        console.log("MeetingResponse=========",res[0].meetingid);
-        data['g2mMeetingId'] = res[0].meetingid;
-        data['g2mMeetingUrl'] = res[0].joinURL;
-        this.httpClient.post<any>('http://localhost:3000/meeting/addMeeting',data).subscribe((responseData)=>{
-          console.log("addMeeting====",responseData);
-            this.httpClient.post<any>('http://localhost:3000/user/insertevent',meetIngData).subscribe((responseData)=>{
-              console.log('Google Calendar integration======',responseData);
-              this.router.navigate(['confirmedMeeting']);
-            },error => {
-              console.log("error CAL ====",error);
-              const dialogConfig = new MatDialogConfig();
-              dialogConfig.data = error;
-              this.dialog.open(MessagedialogComponent, dialogConfig);
-            });
-
-        },error => {
-          console.log("error====",error);
-          const dialogConfig = new MatDialogConfig();
-          dialogConfig.data = error;
-          this.dialog.open(MessagedialogComponent, dialogConfig);
-        });
-      },
-      err => {
-        console.log("MeetingError=========",err.message);
-      });
-    
-    
+    if (this.meetingSelectedOption === 'GoToMeeting') {
+      this.meetingService.getGoToMeeting(this.meetIngData, this.data);
+    } else {
+      this.meetingService.addMeetingToDatabase(this.meetIngData, this.data);
+    }
   }
-
 }

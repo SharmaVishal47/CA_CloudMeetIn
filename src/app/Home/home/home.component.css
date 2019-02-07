@@ -4,3 +4,63 @@
 .has-error{
   border: 1px solid red;
 }
+
+.pill-form {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  height: 57px;
+  margin-right: auto;
+  margin-left: auto; }
+.pill-form input {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 57px;
+  border: 1px solid #00a3fa;
+  font-size: 18px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none; }
+.mts, .mvs, .mas {
+  margin-top: 10px; }
+.mts, .mvs, .mas {
+  margin-bottom: 10px; }
+.pill-form input::-webkit-input-placeholder {
+  color: #a8a8a8; }
+.pill-form input:-ms-input-placeholder {
+  color: #a8a8a8; }
+.pill-form input::-ms-input-placeholder {
+  color: #a8a8a8; }
+.pill-form input::placeholder {
+  color: #a8a8a8; }
+.pill-form input[type="text"],
+.pill-form input[type="email"],
+.pill-form input[type="number"],
+.pill-form input[type="tel"] {
+  left: 0;
+  width: 70%;
+  padding: 16px 0 16px 15px;
+  border-radius: 5px 0 0 5px; }
+.pill-form input[type="submit"] {
+  right: 0;
+  width: 30%;
+  border-radius: 0 5px 5px 0;
+  background-color: #00a3fa;
+  color: #fff; }
+.description {
+  color: #656A72;
+  font-family: "Cabin", serif;
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 36px;
+  padding-top: 20px;
+  text-rendering: optimizeLegibility;
+}
+.image-set {
+  width: 80%;
+  height: 70%;
+  margin: auto;
+}

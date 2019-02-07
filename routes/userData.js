@@ -45,6 +45,7 @@ router.post('/updateProfile',upload.single('image'),(req,res,next)=>{
 });
 
 router.post('/userData',(req,res,next)=>{
+  console.log("UsrID ------------------->", req.body.userId);
   let integrationQuery = "SELECT userId,userName,welcomeMessage,language,dateFormat,timeFormat,country,timeZone,profilePic FROM `userData` WHERE userId = '" + req.body.userId + "'";
   db.query(integrationQuery, (err, result) => {
     if (err!==null) {

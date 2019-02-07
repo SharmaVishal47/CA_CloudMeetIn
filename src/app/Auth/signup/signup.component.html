@@ -14,9 +14,9 @@
           <div class="form-group">
             <label>Enter your email to get started.</label>
             <input type="email" [ngClass]="{'has-error': !signUp.get('email').valid && signUp.get('email').touched}"
-                   formControlName="email" class="form-control" id="textName" placeholder="email address">
+                   formControlName="email" class="form-control" id="textName" placeholder="Email address">
             <span class="help-block" *ngIf="!signUp.get('email').valid && signUp.get('email').touched">
-          <span class="text-danger" *ngIf="signUp.get('email').errors" required>email address required</span></span>
+          <span class="text-danger" *ngIf="signUp.get('email').errors" required>Email address required</span></span>
           </div>
           <button type="submit" class="btn btn-primary" [disabled]="!signUp.valid">Get Started</button>
           </form>
@@ -34,23 +34,23 @@
             <div class="form-group">
               <label>Enter your email to get started.</label>
               <input type="email" [ngClass]="{'has-error': !signUpForm.get('emailID').valid && signUpForm.get('emailID').touched}"
-                     formControlName="emailID" class="form-control" id="emailID" placeholder="email address">
+                     formControlName="emailID" class="form-control" id="emailID" placeholder="Email address">
               <span class="help-block" *ngIf="!signUpForm.get('emailID').valid && signUpForm.get('emailID').touched">
-          <span class="text-danger" *ngIf="signUpForm.get('emailID').errors" required>email address required</span></span>
+          <span class="text-danger" *ngIf="signUpForm.get('emailID').errors" required>Email address required</span></span>
             </div>
             <div class="form-group">
               <label>Enter your full name.</label>
               <input type="text" [ngClass]="{'has-error': !signUpForm.get('fullName').valid && signUpForm.get('fullName').touched}"
-                     formControlName="fullName" class="form-control" id="fullName" placeholder="full name">
+                     formControlName="fullName" class="form-control" id="fullName" placeholder="Full name">
               <span class="help-block" *ngIf="!signUpForm.get('fullName').valid && signUpForm.get('fullName').touched">
-          <span class="text-danger" *ngIf="signUpForm.get('fullName').errors" required>fullname required</span></span>
+          <span class="text-danger" *ngIf="signUpForm.get('fullName').errors" required>Fullname required</span></span>
             </div>
             <div class="form-group">
               <label>Choose a password with at least 8 characters.</label>
-              <input type="password" [ngClass]="{'has-error': !signUpForm.get('password').valid && signUpForm.get('password').touched}"
-                     formControlName="password" class="form-control" id="password" placeholder="password">
+              <input type="password" minlength="8" [ngClass]="{'has-error': !signUpForm.get('password').valid && signUpForm.get('password').touched}"
+                     formControlName="password" class="form-control" id="password" placeholder="Password">
               <span class="help-block" *ngIf="!signUpForm.get('password').valid && signUpForm.get('password').touched">
-          <span class="text-danger" *ngIf="signUpForm.get('password').errors" required>password required</span></span>
+          <span class="text-danger" *ngIf="signUpForm.get('password').errors" required>Password required</span></span>
             </div>
             <button type="submit" class="btn btn-primary" [disabled]="!signUpForm.valid">Continue</button>
           </form>
@@ -61,9 +61,10 @@
         <div class="card-body">
           <p style="font-size: 14px" class="text-left">The easiest way for you to sign up is with Google. This will automatically connect your calendar so you can start using Calendly right away!
           </p>
-          <button class="btn btn-primary"  (click)="socialSignIn('google')">Sign up with Google</button>
+          <button class="btn btn-primary" (click)="socialSignIn('google')">Sign up with Google</button>
+          <!--<a style="background: blue" href="http://localhost:3000/googleCalendar/signupcal" (click)="socialSignIn(email)">Sign up with Google</a>-->
         </div>
-        <p>Prefer to create an account with a password? <a style="color: blue;cursor: pointer;"(click)="OnCreateAccount()">click here</a></p>
+        <!--<p>Prefer to create an account with a password? <a style="color: blue;cursor: pointer;"(click)="OnCreateAccount()">click here</a></p>-->
       </div>
     </div>
   </div>

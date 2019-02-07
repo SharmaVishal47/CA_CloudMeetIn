@@ -10,15 +10,17 @@
       <div class="col-md-10">
         <div class="col-md-10">
           <svg width="40" height="40">
-            <circle cx="15" cy="15" r="13" fill="#dfc12d"></circle>
+            <circle cx="15" cy="15" r="10" fill="#DFC12D" *ngIf="meeting_time == '15 Minute Meeting'"></circle>
+            <circle cx="15" cy="15" r="10" fill="blue" *ngIf="meeting_time == '30 Minute Meeting'"></circle>
+            <circle cx="15" cy="15" r="10" fill="#EE5353" *ngIf="meeting_time == '60 Minute Meeting'"></circle>
           </svg>
           <p>
             {{meeting_time}}
           </p>
         </div>
         <div class="col-md-10">
-          Times are in <ng2-timezone-picker
-          [(timezone)]="timeZone" (click)="changeTimezone(timeZone)">
+          Times are in &nbsp;<ng2-timezone-picker
+          [timezone]="timeZone" (change)="changeTimezone($event)" style="min-width: 200px">
         </ng2-timezone-picker>
         </div>
       </div>
@@ -28,11 +30,11 @@
           <h6 style="font-weight:bold;">{{select_day}}</h6>
         </div>
         <mat-form-field class="example-full-width">
-          <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]='selectDate'>
+          <input matInput [min]="startDate" [matDatepickerFilter]="myFilter" [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]='selectDate'>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker touchUi #picker></mat-datepicker>
         </mat-form-field>
-        {{selectDate}}
+        {{selectDate|  date:'MM/dd/yyyy'}}
       </div>
       <button style="float: right" type="button" class="btn btn-primary" (click)="OnContinue()">Continue</button>
     </div>

@@ -1,13 +1,15 @@
-
 const express = require('express');
 const userRoutes = require('../routes/users');
+const googleCalRoutes = require('../routes/emailVerify');
 const meetingRoutes = require('../routes/meeting');
+const sendEmail = require('../routes/sendEmail');
 const integrationRoutes = require('../routes/integration');
+const calendlyTimeFilter = require('../routes/calendlyTimeFilter');
+const userDataRoutes = require('../routes/userData');
 const app = express();
 const bodyParser = require('body-parser');
+const path  = require('path');
 const mysql = require('mysql');
-
-
 
 const db = mysql.createConnection({
   host: 'localhost',
@@ -30,8 +32,16 @@ app.use('/', function (req, res, next) {
   next();
 });
 
+
+
 app.use(bodyParser.json());
+app.use('/userData',userDataRoutes);
+app.use('/images',express.static(path.join('backend/images')));
 app.use('/user', userRoutes);
 app.use('/meeting', meetingRoutes);
 app.use('/integration', integrationRoutes);
+app.use('/googleCalendar', googleCalRoutes);
+app.use('/sendEmail', sendEmail);
+app.use('/filter', calendlyTimeFilter);
+
 module.exports = app;

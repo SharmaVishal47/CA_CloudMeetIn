@@ -17,8 +17,24 @@ export class LoginComponent implements OnInit {
   isLoginInStatus = 0;
   email = '';
   loginForm1: FormGroup;
+  param1;
   constructor( private socialAuthService: AuthService,private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private dialog: MatDialog,private authService:AuthServiceLocal) {}
   ngOnInit() {
+    this.param1 = this.route.snapshot.queryParamMap.get('code');
+    if(this.param1) {
+      this.httpClient.post<{message: string,data: []}>('http://localhost:3000/googleCalendar/generateToken',{_token: this.param1 }).subscribe((responseData)=>{
+        console.log("responseData====",responseData.data);
+        this.router.navigate(["/login"]);
+      },error => {
+        console.log("error====",error);
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.data = error;
+        this.dialog.open(MessagedialogComponent, dialogConfig);
+      });
+      console.log(this.param1);
+    }
+
+
     this.loginForm = new FormGroup({
       email: new FormControl(null, [Validators.required])
     });

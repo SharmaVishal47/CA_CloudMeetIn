@@ -1,24 +1,28 @@
+<link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
 <div class="container">
-  <div class="row">
-    <div class="col-lg-12" >
-      <div class="col-lg-6 float-left">
-        <h2 style="color: #656a72">Calendly helps you schedule meetings without the back-and-forth emails</h2>
-        <div class="card-body">
-          <form [formGroup]="signUp" (ngSubmit)="onSubmit()">
-            <div class="form-group">
-              <input type="email" [ngClass]="{'has-error': !signUp.get('email').valid && signUp.get('email').touched}"
-                     formControlName="email" class="form-control" id="textName" placeholder="email address">
-              <span class="help-block" *ngIf="!signUp.get('email').valid && signUp.get('email').touched">
-          <span class="text-danger" *ngIf="signUp.get('email').errors" required>email address required</span></span>
-            </div>
-            <button type="submit" class="btn btn-primary" [disabled]="!signUp.valid">Sign up</button>
-            <br>
-          </form>
+    <div class="row">
+      <div class="col-lg-12" >
+        <div class="col-lg-6 float-left">
+          <h2 class="description">Calendly helps you schedule meetings without the back-and-forth emails</h2>
+          <div class="card-body">
+            <form [formGroup]="signUp" (ngSubmit)="onSubmit()">
+              <div class="form-group pill-form mvs">
+                <input type="email" [ngClass]="{'has-error': !signUp.get('email').valid && signUp.get('email').touched}"
+                       formControlName="email" class="form-control" id="textName" placeholder="Enter your email" required>
+                <span class="help-block" *ngIf="!signUp.get('email').valid && signUp.get('email').touched">
+            <span class="text-danger" *ngIf="signUp.get('email').errors" required>email address required</span></span>
+                <input type="submit" [disabled]="!signUp.valid" value='Sign Up'/>
+              </div>
+              <br>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-6 float-right">
+          <img class="image-set" src="https://assets.calendly.com/assets/landing/homepage/hero-829da70d61c3fc165d69de57bdda58ae45b46fd5436ff022e34ffede540b9404.jpg" alt="">
         </div>
       </div>
-      <div class="col-lg-6 float-right">
-        <img src="https://www.pr-inside.com/images/uploads/pr/2018/97797/20181129_ca-logo_97797.png" alt="">
+      <div class="col-lg-8 text-center" style="margin: auto">
+        <p style="color: #656A72; font-size: 13px; margin-top: 50px">“When you are able to shift your inner awareness to how you can serve others, and when you make this the central focus of your life, you will then be in a position to know true miracles in your progress toward prosperity.”</p>
       </div>
     </div>
   </div>
-</div>

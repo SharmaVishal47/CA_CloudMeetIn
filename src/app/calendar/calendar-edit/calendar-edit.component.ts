@@ -24,7 +24,7 @@ export class CalendarEditComponent implements OnInit {
   }
 
   openCalendarOption() {
-    this.httpClient.get<any>('http://localhost:3000/user/getcalendarlist').subscribe( (responseData)=>{
+    this.httpClient.post<any>('http://localhost:3000/user/getcalendarlist',{email:this.email}).subscribe( (responseData)=>{
       let arr = [];
       arr.push(1);
       let calMap = new Map();
@@ -73,7 +73,7 @@ export class CalendarEditComponent implements OnInit {
     }
     });*/
 // Show the event in dialog box
-    this.httpClient.get<any>('http://localhost:3000/user/getcalendarlist').subscribe( (responseData)=>{
+    this.httpClient.post<any>('http://localhost:3000/user/getcalendarlist',{email:this.email}).subscribe( (responseData)=>{
       const dialogConfig = new MatDialogConfig();
       let eventIdArray = [];
       eventIdArray.push(responseData.record[0].id);

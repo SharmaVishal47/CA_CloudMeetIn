@@ -1,64 +1,59 @@
 const express = require('express');
-const nodemailer = require("nodemailer");
+const readline = require('readline');
 const router = express.Router();
-/*
-    Here we are configuring our SMTP Server details.
-    STMP is mail server which is responsible for sending and recieving email.
-*/
-const smtpTransport = nodemailer.createTransport("SMTP",{
-  service: "Gmail",
-  auth: {
-    user: "sumit.kumar@cloudanalogy.com",
-    pass: ""
-  }
+const fs = require('fs');
+const {google} = require('googleapis');
+const googleAuth = require('google-auth-library');
+// scopes
+const SCOPES = ['https://www.googleapis.com/auth/calendar',
+  'https://www.googleapis.com/auth/userinfo.profile'];
+const googleSecrets = JSON.parse(fs.readFileSync('credentials.json')).installed;
+const oauth2Client = new googleAuth.OAuth2Client(
+  googleSecrets.client_id,
+  googleSecrets.client_secret,
+  googleSecrets.redirect_uris[0]
+);
+router.get('/signupcal',(req,res,next)=>{
+  const authUrl = oauth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: SCOPES
+  });
+  res.status(200).json(
+    {url :  authUrl});
 });
-let rand,mailOptions,host,link;
-/*------------------SMTP Over-----------------------------*/
 
-/*------------------Routing Started ------------------------*/
+router.post('/generateToken',(req,res,next)=>{
+  let currentDate =  Date.now();
+  const TOKEN_PATH = './Token/'+req.body.email +'-'+ currentDate +'.json';
+  oauth2Client.getToken(req.body._token, function(err, token) {
+    if (err) return console.error('Error retrieving access token', err);
+    oauth2Client.setCredentials(token);
+    // Store the token to disk for later program executions
+    fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+      if (err) console.error(err);
+     // console.log('Token stored to', TOKEN_PATH);
+      const token = fs.readFileSync(TOKEN_PATH);
+      let tokenObject = JSON.parse(token);
+      let refresh_token = tokenObject.refresh_token;
+      let access_token = tokenObject.access_token;
+      let scope = tokenObject.scope;
+      let token_type = tokenObject.token_type;
+      let expiry_date = tokenObject.expiry_date;
 
-router.get('/',function(req,res){
-  res.sendfile('index.html');
-});
-router.get('/send',function(req,res){
-  rand=Math.floor((Math.random() * 100) + 54);
-  host=req.get('host');
-  link="http://"+req.get('host')+"/verify?id="+rand;
-  mailOptions={
-    to : req.query.to,
-    subject : "Please confirm your Email account",
-    html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
-  };
-  console.log(mailOptions);
-  smtpTransport.sendMail(mailOptions, function(error, response){
-    if(error){
-      console.log(error);
-      res.end("error");
-    }else{
-      console.log("Message sent: " + response.message);
-      res.end("sent");
-    }
+      let query = "INSERT INTO `calendly` ( email, accessToken, refreshToken, tokenType, scope,expiryDate, token_path) VALUES ('"+req.body.email+"', '" + access_token + "', '" + refresh_token + "', '" + token_type + "', '" + scope + "', '" + expiry_date + "', '" + TOKEN_PATH + "' )";
+      db.query(query, (err, result) => {
+       // console.log("result=====",result);
+        // console.log("err=====",err);
+        if (err!==null) {
+          return res.status(500).send(err);
+        }else {
+          res.status(200).json({
+            message: 'Sign Up Successfully.'
+          });
+        }
+      });
+    });
   });
 });
 
-router.get('/verify',function(req,res){
-  console.log(req.protocol+":/"+req.get('host'));
-  if((req.protocol+"://"+req.get('host'))===("http://"+host))
-  {
-    console.log("Domain is matched. Information is from Authentic email");
-    if(req.query.id===rand)
-    {
-      console.log("email is verified");
-      res.end("<h1>Email "+mailOptions.to+" is been Successfully verified");
-    }
-    else
-    {
-      console.log("email is not verified");
-      res.end("<h1>Bad Request</h1>");
-    }
-  }
-  else
-  {
-    res.end("<h1>Request is from unknown source");
-  }
-});
+module.exports = router;

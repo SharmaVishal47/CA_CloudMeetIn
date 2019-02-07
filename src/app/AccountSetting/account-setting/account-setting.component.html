@@ -1,12 +1,12 @@
 <p style="font-size: 25px; font-family:sans-serif; margin-left: 20%; padding:2%">Account Settings</p>
 <hr/>
-<div class="container">
+<div class="container" *ngIf="settings">
   <div class="row" style="margin: 10px;">
     <div class="col-md-3">
-      <div class="dvMargin"><a routerLink="settings">Profile</a></div>
-      <div class="dvMargin"><a routerLink="picture">Picture</a></div>
-      <div class="dvMargin"><a routerLink="myLink">My link</a></div>
-      <div class="dvMargin"><a href="#">Login</a></div>
+      <div class="dvMargin"><a (click)="enableSetting()" class="aCurrent">Profile</a></div>
+      <div class="dvMargin"><a (click)="enableProfile()">Picture</a></div>
+      <div class="dvMargin"><a (click)="enableMylink()">My link</a></div>
+      <div class="dvMargin"><a >Login</a></div>
     </div>
     <div class="col-md-6">
       <form [formGroup]="settingForm" (ngSubmit)="submitForm()">
@@ -346,3 +346,59 @@
     </div>
   </div>
 </div>
+
+<div class="container" *ngIf="mylink">
+  <div class="row" style="margin: 10px;">
+    <div class="col-md-3">
+      <div class="dvMargin"><a (click)="enableSetting()">Profile</a></div>
+      <div class="dvMargin"><a (click)="enableProfile()">Picture</a></div>
+      <div class="dvMargin"><a (click)="enableMylink()" class="aCurrent">My link</a></div>
+      <div class="dvMargin"><a >Login</a></div>
+    </div>
+    <div class="col-md-6">
+      <span> Changing your Calendly URL will mean that all of your copied links will no longer work and will need to be updated.</span><br>
+      <form [formGroup]="myLinkForm" (ngSubmit)="submitMyLinkForm()">
+        <div class="form-group">
+          <div class="frm">
+            <div class="input-group">
+              <label for="userID" class="col-lg-4">calendly.com/</label>
+              <div class="col-lg-8">
+                <input type="text" class="form-control" formControlName="userID" id="userID" style="width: 100%">
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="border-radius: 0px; color: white; margin-left: 10%;">Save changes</button>
+      </form>
+    </div>
+    <div class="col-md-3">
+
+    </div>
+  </div>
+</div>
+<div class="container" *ngIf="profile">
+  <div class="row" style="margin: 10px;">
+    <div class="col-md-3">
+      <div class="dvMargin"><a (click)="enableSetting()">Profile</a></div>
+      <div class="dvMargin"><a (click)="enableProfile()" class="aCurrent">Picture</a></div>
+      <div class="dvMargin"><a (click)="enableMylink()">My link</a></div>
+      <div class="dvMargin"><a >Login</a></div>
+    </div>
+    <div class="col-md-6">
+      <span> Upload pictures will display at the top of your Calendly page. (maximum file size of 5MB)</span><br>
+      <form [formGroup]="profileForm" (ngSubmit)="submitMyProfileForm()">
+        <div  style="margin-top: 5%">
+          <img [src]="imageSource" [alt]="profileForm.value" class="rounded-circle" height="150" width="150">
+          <input  type="file" name="file" #filePicker formControlName="file"  (change)="onImagePicked($event)"  class="cdk-visually-hidden" >
+        </div>
+        <div style="margin-top: 5%" >
+          <button *ngIf="notChose" type="button" class="btn btn-primary" style="border-radius: 0px; color: white; margin-left: 10%;" (click)="filePicker.click()" >Choose files</button>
+          <button *ngIf="choosed" type="submit" class="btn btn-primary" style="border-radius: 0px; color: white; margin-left: 10%;">Upload Picture</button>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-3">
+    </div>
+  </div>
+</div>
+

@@ -14,21 +14,11 @@ export class DashboardComponent implements OnInit {
   scheduling: true;
   count = 0;
   event: string;
-   /* _id ;
-   _userId ;
-   _zoomMeetingUrl  ;
-   _zoomMeetingId ;
-   _salesForceRecordId  ;
-   _schedulerName ;
-   _schedulerEmail ;
-   _meetingDate ;
-   _meetingTime ;
-   _eventType ;
-   _timeZone ;
-   _g2mMeetingId  ;
-   _g2mMeetingUrl ;*/
-   responseData = [] ;
-   fullName ;
+  lengthOfEvent;
+  responseData = [] ;
+  fullName;
+  indexSelect = 1;
+
   constructor(private authService: AuthServiceLocal,private router:Router,  private  httpClient: HttpClient, private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -36,22 +26,7 @@ export class DashboardComponent implements OnInit {
     this.httpClient.post<any>('http://localhost:3000/meeting/getMeetingRecord',{userId: this.authService.getUserId()}).subscribe((responseData)=>{
       console.log("responseData====",responseData);
       this.responseData =  responseData.data;
-     /* for(let i = 0; i< responseData.data.length ; i ++ ) {
-         this._id  = responseData.data[i].id;
-        this._userId  = responseData.data[i].userId;
-        this._zoomMeetingUrl  = responseData.data[i].ZoomMeetingUrl;
-        this._zoomMeetingId  = responseData.data[i].zoomMeetingId;
-        this._salesForceRecordId  = responseData.data[i].salesforceRecordId;
-        this._schedulerName  = responseData.data[i].schedulerName;
-        this._schedulerEmail  = responseData.data[i].schedulerEmail;
-        this._meetingDate  = responseData.data[i].meetingDate;
-        this._meetingTime  = responseData.data[i].meetingTime;
-        this._eventType  = responseData.data[i].eventType;
-        this._timeZone  = responseData.data[i].timeZone;
-        this._g2mMeetingId  = responseData.data[i].g2mMeetingId;
-        this._g2mMeetingUrl  = responseData.data[i].g2mMeetingUrl;
-      }*/
-
+      this.lengthOfEvent = this.responseData.length;
     },error => {
       console.log("error====",error);
       const dialogConfig = new MatDialogConfig();
@@ -67,4 +42,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  onSelectIndex(selectIndex: number) {
+    this.indexSelect =  selectIndex + 1;
+  }
 }

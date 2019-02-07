@@ -9,6 +9,36 @@
       <hr>
       <div class="col-lg-4" style="margin: auto">
         <h6>Select a Time</h6>
+        <mat-accordion *ngFor="let time of listTimeArray; index as i">
+          <mat-expansion-panel style="margin-top: 25px;">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{time}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-action-row>
+              <button mat-button color="primary"(click)="setTime(i,time)">Confirm</button>
+            </mat-action-row>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <div style="text-align: center">
+        <h6>{{expectedDay}}</h6>
+        <p>{{expectedDate | date:'MMMM dd, yyy' }}</p>
+        <p>{{expectedTimeZone}}</p>
+      </div>
+      <hr>
+      <div class="col-lg-4" style="margin: auto">
+        <h6>Select a Time</h6>
         <mat-accordion *ngFor="let time of timeArray; index as i">
           <mat-expansion-panel style="margin-top: 25px;">
             <mat-expansion-panel-header>
@@ -25,3 +55,4 @@
     </div>
   </div>
 </div>
+-->

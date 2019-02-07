@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {FormBuilder} from '@angular/forms';
+import {MeetingService} from '../meeting.service';
+import {Subscription} from 'rxjs';
+
 
 @Component({
   selector: 'app-scheduling-page',
@@ -9,6 +12,7 @@ import {FormBuilder} from '@angular/forms';
   styleUrls: ['./scheduling-page.component.css']
 })
 export class SchedulingPageComponent implements OnInit {
+  header: boolean = false;
   email: string;
   Meeting_owner = 'Sumit Kumar';
   meeting_time15 = '15 Minute Meeting';
@@ -19,7 +23,9 @@ Please follow the instructions to add an event to my calendar`;
   findId =  false;
   userId : string;
   currentDate;
-  constructor(private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private fb: FormBuilder) { }
+  _meetingAuthUserDetails: MeetingAuthUser[];
+  authMeetingSubscription: Subscription;
+  constructor(private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private fb: FormBuilder, private meetingService: MeetingService) { }
 
   ngOnInit() {
     this.currentDate = new Date();
@@ -27,26 +33,36 @@ Please follow the instructions to add an event to my calendar`;
       this.userId = params['userId'];
       console.log("this.userId====",this.userId);
       let data = {userId: this.userId};
-      this.httpClient.post<{message: string,data: []}>('http://localhost:3000/user/checkuser',data).subscribe((responseData)=>{
+      /*this.httpClient.post<{message: string,data: []}>('http://localhost:3000/user/checkuser',data).subscribe((responseData)=>{
         console.log("responseData====",responseData.data);
         if(responseData.data.length>0){
           this.findId = true;
           this.Meeting_owner = responseData.data["0"].fullName;
-          this.email = responseData.data["0"].fullName;
+          this.email = responseData.data["0"].email;
         }else{
           this.findId = false;
           this.email = null;
         }
       },error => {
         console.log("error====",error);
-      });
+      });*/
+        this.meetingService.authUserRecord(data);
+        this.meetingService._meetingAuthUserRecord.subscribe((_meetingAuthUserDetails: MeetingAuthUser[]) => {
+          this._meetingAuthUserDetails = _meetingAuthUserDetails;
+          if(this._meetingAuthUserDetails.length > 0) {
+          this.findId = true;
+          this.Meeting_owner = this._meetingAuthUserDetails[0].fullName;
+          this.email = this._meetingAuthUserDetails[0].email;
+          this.meetingService.removeHeader(true);
+           } else {
+          this.findId = false;
+          this.email = null;
+           }
+        });
     });
   }
 
   setEvent(event: string) {
-    localStorage.setItem('eventType', event);
-    localStorage.setItem('userId', this.userId);
-    localStorage.setItem('fullName',this.Meeting_owner);
-    this.router.navigate([this.userId + '/' + event]);// + '/meetingDate'
+    this.meetingService.saveEvent(event, this.email, this.userId, this.Meeting_owner);
   }
 }

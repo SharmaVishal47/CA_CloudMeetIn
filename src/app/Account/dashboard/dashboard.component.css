@@ -31,3 +31,6 @@
   margin-left: 25%;
   height:200px;
 }
+.mat-expansion-panel:hover {
+  border: 1px solid blue;
+}

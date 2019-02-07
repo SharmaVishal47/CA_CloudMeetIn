@@ -3,16 +3,20 @@
 }
 a:link {
   color: black;
-  text-decoration: none;
+  text-decoration: none
 }
 a:visited {
   color: black;
 }
 a:hover {
   color: blue;
+  cursor: pointer;
 }
 a:active {
   color: black;
+}
+.aCurrent{
+  font-weight: bold;
 }
 .btn-primary-outline {
   background-color: transparent;
@@ -35,4 +39,16 @@ a:active {
   display: inline-block;
   vertical-align: top;
 
+}
+.dvMargin{
+  margin-top: 5px;
+}
+.currenta {
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+}
+a{
+  text-decoration: none;
+  color: black;
 }

@@ -23,15 +23,18 @@ export class GoTomeetingIntegrationComponent implements OnInit {
       clientId: new FormControl(null, [Validators.required]),
     });
     this.userId = this.authService.getUserId();
+    console.log("userId===",this.userId);
     this.httpClient.post<{message: string,data: []}>('http://localhost:3000/integration/getgotomeeting',{userId: this.userId}).subscribe(
       res =>{
-        console.log("res===========",res.data['0'].id);
-        this.editable = true;
-        this.integrationForm.patchValue({
-          emailId: res.data['0'].emailId,
-          password: res.data['0'].password,
-          clientId: res.data['0'].clientId
-        });
+        if(res.data.length > 0){
+          console.log("res===========",res.data['0']);
+          this.editable = true;
+          this.integrationForm.patchValue({
+            emailId: res.data['0'].emailId,
+            password: res.data['0'].password,
+            clientId: res.data['0'].clientId
+          });
+        }
       },err => {
         console.log("Error=========",err.message);
         const dialogConfig = new MatDialogConfig();

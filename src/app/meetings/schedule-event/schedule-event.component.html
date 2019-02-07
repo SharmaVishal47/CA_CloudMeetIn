@@ -7,8 +7,8 @@
         <div class="col-lg-6">
           <div class="card-body">
             <h5>{{meetingTime}}</h5>
-            <p>{{meetingDateTime}}</p>
-            <p>{{meetingTimeZone}}</p>
+            <p>{{selectedTime}}  -  {{meetingDateTime | date: "MM/dd/yyyy"}}</p>
+            <p>Times are in - {{meetingTimeZone}}</p>
           </div>
 
         </div>
@@ -33,7 +33,14 @@
 <span class="text-danger" *ngIf="meetingUserInfoForm.get('email').errors" required>email address required</span>
 </span>
                 </div>
-                <button type="submit" class="btn btn-primary" [disabled]="!meetingUserInfoForm.valid">Schedule Event</button>
+                <div class="form-group" *ngIf="checkMeetingOption">
+                <label>Meeting Platform</label>
+                <select style="width: auto;height: auto"  class="form-control" [value]='meetingSelectedOption' (change)="selectedPlatform($event.target.value)">
+                  <option *ngFor="let item of meetingOptionList" [ngValue]="item">{{item}}</option>
+                </select>
+                <br/>
+                </div>
+                <button type="submit" class="btn btn-primary" [disabled]="!meetingUserInfoForm.valid" >Schedule Event</button>
               </form>
             </div>
           </div>

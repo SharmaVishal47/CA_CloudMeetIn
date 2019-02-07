@@ -13,9 +13,9 @@
             <div class="form-group">
               <label>Enter your email to get started.</label>
               <input type="email" [ngClass]="{'has-error': !loginForm.get('email').valid && loginForm.get('email').touched}"
-                     formControlName="email" class="form-control" id="textName" placeholder="email address">
+                     formControlName="email" class="form-control" id="textName" placeholder="Email address">
               <span class="help-block" *ngIf="!loginForm.get('email').valid && loginForm.get('email').touched">
-          <span class="text-danger" *ngIf="loginForm.get('email').errors" required>email address required</span></span>
+          <span class="text-danger" *ngIf="loginForm.get('email').errors" required>Email address required</span></span>
             </div>
             <button type="submit" class="btn btn-primary" [disabled]="!loginForm.valid">Get Started</button>
           </form>
@@ -33,16 +33,16 @@
             <div class="form-group">
               <label>Enter your email to get started.</label>
               <input type="email" [ngClass]="{'has-error': !loginForm1.get('emailID').valid && loginForm1.get('emailID').touched}"
-                     formControlName="emailID" class="form-control" id="emailID" placeholder="email address">
+                     formControlName="emailID" class="form-control" id="emailID" placeholder="Email address">
               <span class="help-block" *ngIf="!loginForm1.get('emailID').valid && loginForm1.get('emailID').touched">
-          <span class="text-danger" *ngIf="loginForm1.get('emailID').errors" required>email address required</span></span>
+          <span class="text-danger" *ngIf="loginForm1.get('emailID').errors" required>Email address required</span></span>
             </div>
             <div class="form-group">
               <label>Choose a password with at least 8 characters.</label>
               <input type="password" [ngClass]="{'has-error': !loginForm1.get('password').valid && loginForm1.get('password').touched}"
-                     formControlName="password" class="form-control" id="password" placeholder="password">
+                     formControlName="password" class="form-control" id="password" placeholder="Password">
               <span class="help-block" *ngIf="!loginForm1.get('password').valid && loginForm1.get('password').touched">
-          <span class="text-danger" *ngIf="loginForm1.get('password').errors" required>password required</span></span>
+          <span class="text-danger" *ngIf="loginForm1.get('password').errors" required>Password required</span></span>
             </div>
             <button type="submit" class="btn btn-primary" [disabled]="!loginForm1.valid">Continue</button>
           </form>

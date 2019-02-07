@@ -34,7 +34,7 @@ import { DashboardComponent } from './Account/dashboard/dashboard.component';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
 import { CalendarOptionComponent } from './calendar-option/calendar-option.component';
 
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { CalendareventComponent } from './calendar-event/calendarevent.component';
 import { UserRoleComponentComponent } from './user-role-component/user-role-component.component';
 import { SchedulingPageComponent } from './meetings/scheduling-page/scheduling-page.component';
@@ -48,8 +48,8 @@ import {TimezonePickerModule} from 'ng2-timezone-selector';
 import { ShareYourLinkComponentComponent } from './share-your-link-component/share-your-link-component.component';
 import { EventsMainPageComponent } from './Events/events-main-page/events-main-page.component';
 import { AccountSettingComponent } from './AccountSetting/account-setting/account-setting.component';
-import { MyLinkComponent } from './AccountSetting/my-link/my-link.component';
-import { ProfilePictureComponentComponent } from './AccountSetting/profile-picture-component/profile-picture-component.component';
+import {DatePipe} from '@angular/common';
+import { AvailableDateTimeComponent } from './available-date-time/available-date-time.component';
 
 export function getAuthServiceConfigs() {
   let config = new AuthServiceConfig(
@@ -99,8 +99,7 @@ export function getAuthServiceConfigs() {
     ShareYourLinkComponentComponent,
     EventsMainPageComponent,
     AccountSettingComponent,
-    MyLinkComponent,
-    ProfilePictureComponentComponent
+    AvailableDateTimeComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -133,10 +132,16 @@ export function getAuthServiceConfigs() {
         provide: AuthServiceConfig,
         useFactory: getAuthServiceConfigs
       },
-    MatDatepickerModule
+    MatDatepickerModule,
+    DatePipe
   ],
   bootstrap: [AppComponent],
-  entryComponents: [CalendarOptionComponent,CalendareventComponent,MessagedialogComponent, ShareYourLinkComponentComponent]
+  entryComponents: [
+    CalendarOptionComponent,
+    CalendareventComponent,
+    MessagedialogComponent,
+    ShareYourLinkComponentComponent
+  ]
 })
 
 export class AppModule { }

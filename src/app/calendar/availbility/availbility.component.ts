@@ -14,6 +14,8 @@ export class AvailbilityComponent implements OnInit {
   form: FormGroup;
   dayFormArray: FormArray;
   email: string;
+  defaultStartTime = "00:00";
+  defaultEndTime = "05:00";
   constructor(private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private fb: FormBuilder,private dialog: MatDialog) {}
   ngOnInit() {
     this.form = new FormGroup({

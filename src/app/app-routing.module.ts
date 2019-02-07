@@ -21,16 +21,14 @@ import {GoTomeetingIntegrationComponent} from './Integrations/go-tomeeting-integ
 import {AuthGuard} from './Auth/auth.guard';
 import {EventsMainPageComponent} from './Events/events-main-page/events-main-page.component';
 import {AccountSettingComponent} from './AccountSetting/account-setting/account-setting.component';
-import {MyLinkComponent} from './AccountSetting/my-link/my-link.component';
-import {ProfilePictureComponentComponent} from './AccountSetting/profile-picture-component/profile-picture-component.component';
+import {AvailableDateTimeComponent} from './available-date-time/available-date-time.component';
 
 
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent},
+  {path: 'availableTime', component: AvailableDateTimeComponent},
   {path: 'settings', component: AccountSettingComponent},
-  {path: 'myLink', component: MyLinkComponent},
-  {path: 'picture', component: ProfilePictureComponentComponent},
   /*{path: 'eventMainPage', component: EventsMainPageComponent,canActivate: [AuthGuard]},*/
   {path: 'eventMainPage', component: EventsMainPageComponent},
   {path: 'login', component: LoginComponent},

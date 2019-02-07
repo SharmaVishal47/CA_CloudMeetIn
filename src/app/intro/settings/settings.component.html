@@ -33,16 +33,20 @@
           <br/>
         </div>
         <h6>Time Zone</h6>
-        <select style="width: auto;height: auto" formControlName="timeZone">
-          <option value="India , Sri Lanka Time (3:50pm)">India , Sri Lanka Time (3:50pm)</option>
-          <option value="saab">Saab</option>
-          <option value="mercedes">Mercedes</option>
-          <option value="audi">Audi</option>
-        </select>
+      <!--  <select style="width: auto;height: auto" formControlName="timeZone"  [value]='46'>
+          <option value="46">Select TimeZone</option>
+          <option value="India , Sri Lanka Time (3:50pm)">Asia/Kolkata</option>
+          <option value="saab">Pacific/Pago_Pago</option>
+          <option value="mercedes">America/Adak</option>
+          <option value="audi">America/Vancouver</option>
+        </select>-->
+          <ng2-timezone-picker
+          [timezone]="timeZone" (change)="changeTimezone($event)">
+        </ng2-timezone-picker>
         <br/>
         <mat-card-actions style="justify-content: flex-end;display: flex;">
           <button mat-button >Cancel</button>
-          <button mat-button class="btn btn-primary" [disabled]="!form.valid">Continue</button>
+          <button mat-button class="btn btn-primary" [disabled]="((!timeZoneStatus) && (!form.valid))">Continue</button>
         </mat-card-actions>
         </form>
       </mat-card>
