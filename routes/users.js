@@ -4,7 +4,6 @@ const fs = require('fs');
 const {google} = require('googleapis');
 const googleAuth = require('google-auth-library');
 
-
 router.get('/getcalendarlist',(req,res,next)=>{
   const TOKEN_PATH = './Token/calendar-nodejs-quickstart.json';
   const googleSecrets = JSON.parse(fs.readFileSync('credentials.json')).installed;
