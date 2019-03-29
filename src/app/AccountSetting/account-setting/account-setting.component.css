@@ -1,54 +1,8 @@
-.dvMargin{
-  margin-top: 5px;
-}
-a:link {
-  color: black;
-  text-decoration: none
-}
-a:visited {
-  color: black;
-}
-a:hover {
-  color: blue;
-  cursor: pointer;
-}
-a:active {
-  color: black;
-}
-.aCurrent{
-  font-weight: bold;
-}
-.btn-primary-outline {
-  background-color: transparent;
-  border-color:mediumseagreen;
-  float: right;
-}
-#dateFormat1 {display:inline-block;margin-right:5%; width:200px; }
-#timeFormat1 {display:inline-block; width:200px; margin-left: 10% }
-#dateFormat {display:inline-block;margin-right:10px; width:200px; }
-#timeFormat {display:inline-block; width:200px; }
-#btnSave{
-  float: left;
-  display: inline-block;
-  border-radius: 0px;
-  vertical-align: top;
-}
-#btnClear{
-  border-radius: 0px;
-  float: right;
-  display: inline-block;
-  vertical-align: top;
-
-}
-.dvMargin{
-  margin-top: 5px;
-}
-.currenta {
-  color: black;
-  font-weight: bold;
-  text-decoration: none;
-}
-a{
-  text-decoration: none;
-  color: black;
+.fnt {
+  font-family: 'Roboto-Medium', sans-serif;
+  font-size: calc(0.30em + 1vmin);
+  line-height: normal;
+  color: #707070;
+  margin: 0;
+  padding: 0;
 }

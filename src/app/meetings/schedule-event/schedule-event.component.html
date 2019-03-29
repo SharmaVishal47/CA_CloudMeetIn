@@ -1,3 +1,133 @@
+<nz-row nzJustify="center" nzAlign="middle">
+  <nz-col nzSpan="6" nzOffset="3" style="margin-top: 50px;" align="start">
+    <button nz-button nzType="primary"
+            style="color: #707070;background: none;border-color: #707070;width: 100px;align-content: center"
+            routerLink="/integrations">Back
+    </button>
+  </nz-col>
+  <nz-col nzSpan="6" style="margin-top: 50px;" align="end">
+  </nz-col>
+</nz-row>
+<nz-row nzJustify="center" nzAlign="middle" style="margin-top: 10px">
+  <nz-col nzSpan="6" nzOffset="3" align="start">
+    <span>{{userName}}</span><br>
+    <b>{{meetingTime}}</b>
+    <div style="color: red" *ngIf="rescheduleRecords">
+      FORMER TIME: <br>
+      <span
+        style="text-decoration: line-through;">{{rescheduleRecords.meetingTime}} {{rescheduleRecords.meetingDate | date:'fullDate' }}</span><br>
+      <span style="text-decoration: line-through;">{{rescheduleRecords.timeZone}}</span>
+    </div>
+  </nz-col>
+  <nz-col nzSpan="6" align="center">
+  </nz-col>
+  <nz-col nzSpan="6" align="end">
+    <span style="margin-right: 80px"> <i nz-icon type="clock-circle"
+                                         theme="outline"></i>&nbsp; {{meetingTimeZone}}</span><br>
+    <span> <i nz-icon type="calendar" theme="outline"></i>&nbsp;{{selectedTime}}
+      - {{meetingDateTime | date: "MM/dd/yyyy"}}</span>
+
+  </nz-col>
+</nz-row>
+
+<nz-row nzJustify="center" nzAlign="middle">
+  <nz-col nzSpan="18" nzOffset="3">
+    <hr/>
+    <h5 align="center">Enter Details </h5>
+  </nz-col>
+</nz-row>
+<form nz-form [formGroup]="meetingUserInfoForm" (ngSubmit)="onSubmit()">
+  <nz-row nzJustify="center" nzAlign="middle">
+    <nz-col nzSpan="9" nzOffset="3" style="margin-top: 10px;margin-bottom:10px">
+      <nz-form-item>
+        <nz-form-control [nzSm]="22" [nzXs]="24">
+          <nz-input-group [nzSuffix]="sufixTemplate" [nzPrefix]="nameTemplate">
+            <input type="text" id="fullName" formControlName="fullName" nz-input placeholder="Enter your fullName"
+                   [(ngModel)]="name"/>
+          </nz-input-group>
+          <nz-form-explain
+            *ngIf="meetingUserInfoForm.get('fullName').dirty && meetingUserInfoForm.get('fullName').errors">Please input
+            your
+            fullName!
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <ng-template #nameTemplate><i nz-icon type="user"></i></ng-template>
+      <ng-template #sufixTemplate
+      ><i nz-icon type="close-circle" (click)="name = ''" *ngIf="name"></i
+      ></ng-template>
+      <nz-form-item>
+        <nz-form-control [nzSm]="22" [nzXs]="24">
+          <nz-input-group [nzSuffix]="emailsuffixTemplate" [nzPrefix]="emailprefixTemplate">
+            <input type="email" id="email" formControlName="email" nz-input placeholder="Enter your email"
+                   [(ngModel)]="email"/>
+          </nz-input-group>
+          <nz-form-explain *ngIf="meetingUserInfoForm.get('email').dirty && meetingUserInfoForm.get('email').errors">
+            Please input your
+            email!
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <ng-template #emailprefixTemplate><i nz-icon type="mail" theme="outline"></i></ng-template>
+      <ng-template #emailsuffixTemplate
+      ><i nz-icon type="close-circle" (click)="email = ''" *ngIf="email"></i
+      ></ng-template>
+      <nz-form-item>
+        <nz-form-control [nzSm]="22" [nzXs]="24">
+          <nz-input-group [nzSuffix]="phonesuffixTemplate" [nzPrefix]="phoneprefixTemplate">
+            <input type="number" id="phone" formControlName="phone" nz-input placeholder="Enter your phone"
+                   [(ngModel)]="phone"/>
+          </nz-input-group>
+          <nz-form-explain *ngIf="meetingUserInfoForm.get('phone').dirty && meetingUserInfoForm.get('phone').errors">
+            Please input your
+            phone!
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <ng-template #phoneprefixTemplate><i nz-icon type="phone" theme="outline"></i></ng-template>
+      <ng-template #phonesuffixTemplate
+      ><i nz-icon type="close-circle" (click)="phone = ''" *ngIf="phone"></i
+      ></ng-template>
+    </nz-col>
+    <nz-col nzSpan="9" style="margin-top: 10px;">
+      <nz-form-item *ngIf="!rescheduleRecords">
+        <nz-form-control [nzSm]="22" [nzXs]="24" >
+          <nz-input-group [nzPrefix]="descriptionTemp">
+          <textarea rows="7" nz-input formControlName="description" placeholder="Description"></textarea>
+          </nz-input-group>
+          <nz-form-explain
+            *ngIf="meetingUserInfoForm.get('description').dirty && meetingUserInfoForm.get('description').errors">
+            Please input your description!
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <ng-template #descriptionTemp><i nz-icon type="profile" theme="outline"></i></ng-template>
+
+      <nz-form-item *ngIf="rescheduleRecords">
+        <nz-form-control [nzSm]="22" [nzXs]="24">
+          <textarea rows="7" nz-input formControlName="reasonOfRescheduling"
+                    placeholder="Reason Of Rescheduling"></textarea>
+          <nz-form-explain
+            *ngIf="meetingUserInfoForm.get('reasonOfRescheduling').dirty && meetingUserInfoForm.get('reasonOfRescheduling').errors">
+            Please input your Reason Of Rescheduling!
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row nzJustify="center" nzAlign="middle">
+    <nz-col nzSpan="18" nzOffset="3" align="center">
+      <button nz-button type="submit" class="login-form-button"
+              style="background-color:#FF4165; color: white; width: 150px" [disabled]="!meetingUserInfoForm.valid">
+        {{btnValue}}
+      </button>
+    </nz-col>
+  </nz-row>
+</form>
+
+
+
+<!--
 <div class="container">
   <div class="row">
     <div class="col-lg-12">
@@ -7,10 +137,14 @@
         <div class="col-lg-6">
           <div class="card-body">
             <h5>{{meetingTime}}</h5>
-            <p>{{selectedTime}}  -  {{meetingDateTime | date: "MM/dd/yyyy"}}</p>
+            <p>{{selectedTime}} - {{meetingDateTime | date: "MM/dd/yyyy"}}</p>
             <p>Times are in - {{meetingTimeZone}}</p>
+            <div style="color: red" *ngIf="rescheduleRecords">
+              FORMER TIME: <br>
+              <span style="text-decoration: line-through;">{{rescheduleRecords.meetingTime}} {{rescheduleRecords.meetingDate | date:'fullDate' }}</span><br>
+              <span style="text-decoration: line-through;">{{rescheduleRecords.timeZone}}</span>
+            </div>
           </div>
-
         </div>
         <div class="col-lg-6">
           <div class="text-left">
@@ -19,28 +153,42 @@
               <form [formGroup]="meetingUserInfoForm" (ngSubmit)="onSubmit()">
                 <div class="form-group">
                   <label>Full Name</label>
-                  <input type="email" [ngClass]="{'has-error': !meetingUserInfoForm.get('fullName').valid && meetingUserInfoForm.get('fullName').touched}"
-                         formControlName="fullName" class="form-control" id="fullName" placeholder="fullname">
+                  <input type="text" [ngClass]="{'has-error': !meetingUserInfoForm.get('fullName').valid && meetingUserInfoForm.get('fullName').touched}"
+                         formControlName="fullName" class="form-control" id="fullName" placeholder="Fullname">
                   <span class="help-block" *ngIf="!meetingUserInfoForm.get('fullName').valid && meetingUserInfoForm.get('fullName').touched">
-<span class="text-danger" *ngIf="meetingUserInfoForm.get('fullName').errors" required>full name required</span>
+<span class="text-danger" *ngIf="meetingUserInfoForm.get('fullName').errors" required>Full name required</span>
 </span>
                 </div>
                 <div class="form-group">
                   <label>Your e-mail address</label>
                   <input type="email" [ngClass]="{'has-error': !meetingUserInfoForm.get('email').valid && meetingUserInfoForm.get('email').touched}"
-                         formControlName="email" class="form-control" id="email" placeholder="email address">
+                         formControlName="email" class="form-control" id="email" placeholder="Email address">
                   <span class="help-block" *ngIf="!meetingUserInfoForm.get('email').valid && meetingUserInfoForm.get('email').touched">
-<span class="text-danger" *ngIf="meetingUserInfoForm.get('email').errors" required>email address required</span>
+<span class="text-danger" *ngIf="meetingUserInfoForm.get('email').errors" required>Email address required</span>
 </span>
                 </div>
-                <div class="form-group" *ngIf="checkMeetingOption">
+                <div class="form-group">
+                  <label>Phone number.</label>
+                  <input type="number" [ngClass]="{'has-error': !meetingUserInfoForm.get('phone').valid && meetingUserInfoForm.get('phone').touched}"
+                         formControlName="phone" class="form-control" id="phone" placeholder="Phone number">
+                </div>
+                <div class="form-group">
+                  <label>Description.</label>
+                  <textarea [ngClass]="{'has-error': !meetingUserInfoForm.get('description').valid && meetingUserInfoForm.get('description').touched}"
+                            formControlName="description" class="form-control" id="description" placeholder=" Meeting Description"></textarea>
+                </div>
+                <div class="form-group purple-border" *ngIf="rescheduleRecords">
+                  <label for="exampleFormControlTextarea4">Reason for rescheduling</label>
+                  <textarea class="form-control" formControlName="reasonOfRescheduling" id="exampleFormControlTextarea4" rows="3"></textarea>
+                </div>
+                &lt;!&ndash; <div class="form-group" *ngIf="checkMeetingOption">
                 <label>Meeting Platform</label>
-                <select style="width: auto;height: auto"  class="form-control" [value]='meetingSelectedOption' (change)="selectedPlatform($event.target.value)">
-                  <option *ngFor="let item of meetingOptionList" [ngValue]="item">{{item}}</option>
+                <select style="width: auto;height: auto" class="form-control" [value]='meetingSelectedOption' (change)="selectedPlatform($event.target.value)">
+                <option *ngFor="let item of meetingOptionList" [ngValue]="item">{{item}}</option>
                 </select>
                 <br/>
-                </div>
-                <button type="submit" class="btn btn-primary" [disabled]="!meetingUserInfoForm.valid" >Schedule Event</button>
+                </div>&ndash;&gt;
+                <button type="submit" class="btn btn-primary" [disabled]="!meetingUserInfoForm.valid">{{btnValue}}</button>
               </form>
             </div>
           </div>
@@ -49,3 +197,4 @@
     </div>
   </div>
 </div>
+-->

@@ -2,8 +2,49 @@ import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
-import {MatDialog, MatDialogConfig} from '@angular/material';
-import {MessagedialogComponent} from '../../messagedialog/messagedialog.component';
+import {SignUpService} from '../../Auth/sign-up.service';
+
+@Component({
+  selector: 'app-availbility',
+  templateUrl: './availbility.component.html',
+  styleUrls: ['./availbility.component.css']
+})
+export class AvailbilityComponent implements OnInit {
+  email: string;
+  defaultStartTime = "09:00";
+  defaultEndTime = "18:00";
+
+
+  availabilityForm: FormGroup;
+  listOfDays = ['1','2','3','4','5'];
+  constructor(private fb: FormBuilder,private signUpService: SignUpService,private router:Router,private httpClient: HttpClient,private route: ActivatedRoute) { }
+  ngOnInit(): void {
+    this.availabilityForm = this.fb.group({
+      inTime: [ null, [ Validators.required ] ],
+      outTime: [ null, [ Validators.required ] ],
+      selectedOption: [ null, [ Validators.required ] ],
+    });
+    this.email = this.signUpService.getAuthUserEmail();
+  }
+  submitForm(): void {
+    for (const i in this.availabilityForm.controls) {
+      this.availabilityForm.controls[ i ].markAsDirty();
+      this.availabilityForm.controls[ i ].updateValueAndValidity();
+    }
+    this.availabilityForm.value['email'] = this.email;
+    this.signUpService.updateAvailabilityConfiguration(this.availabilityForm.value);
+    console.log('Availability Form---> ',this.availabilityForm.value);
+  }
+}
+
+
+/*
+import {Component, OnInit} from '@angular/core';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {HttpClient} from '@angular/common/http';
+import {MatDialog} from '@angular/material';
+import {SignUpService} from '../../Auth/sign-up.service';
 
 @Component({
   selector: 'app-availbility',
@@ -14,9 +55,10 @@ export class AvailbilityComponent implements OnInit {
   form: FormGroup;
   dayFormArray: FormArray;
   email: string;
-  defaultStartTime = "00:00";
-  defaultEndTime = "05:00";
-  constructor(private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private fb: FormBuilder,private dialog: MatDialog) {}
+  defaultStartTime = "09:00";
+  defaultEndTime = "20:00";
+
+  constructor(private signUpService: SignUpService,private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private fb: FormBuilder,private dialog: MatDialog) {}
   ngOnInit() {
     this.form = new FormGroup({
       inTime: new FormControl(null,[Validators.required]),
@@ -24,23 +66,12 @@ export class AvailbilityComponent implements OnInit {
       selectedOption: this.fb.array([],[Validators.required])
     });
 
-    this.route.params.subscribe((params: Params) => {
-      this.email = params['email'];
-      console.log("this.email====",this.email);
-    });
+   this.email = this.signUpService.getAuthUserEmail();
   }
 
   updateConfiguration() {
     this.form.value['email'] = this.email;
-    console.log("Value=====",this.form.value);
-    this.httpClient.post<any>('http://localhost:3000/user/updateConfiguration',this.form.value).subscribe((responseData)=>{
-      console.log("responseData====",responseData);
-      this.router.navigate(["userRole/"+this.email]);
-    },error => {
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.data = error;
-      this.dialog.open(MessagedialogComponent, dialogConfig);
-    });
+    this.signUpService.updateAvailabilityConfiguration(this.form.value);
   }
 
   onChange(email: string, isChecked: boolean) {
@@ -53,13 +84,5 @@ export class AvailbilityComponent implements OnInit {
     }
     this.dayFormArray = emailFormArray;
   }
-
-  setUpLater() {
-    this.router.navigate(["userRole/"+this.email]);
-  }
 }
-
-/*
-routerLink="/dashboard"*/
-
-/*this.router.navigate(["availability/"+this.email]);*/
+*/

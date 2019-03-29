@@ -1,0 +1,58 @@
+<!--
+<h2 mat-dialog-title>Which calendars should we add new events to?</h2>
+<form [formGroup]="cancelForm">
+  <div class="form-group">
+    <label>Enter Reason.</label>
+    <input type="text" formControlName="message" class="form-control" id="message" placeholder="Reason">
+  </div>
+  <mat-dialog-actions >
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6 col-md-6">
+          <button type="button" id="btnSearch" style="width: 100%;" class="btn btn-primary" (click)="cancelMeeting()" [disabled]="!cancelForm.valid">Cancel Meeting</button>
+        </div>
+        <div class="col-sm-6 col-md-6">
+          <button type="button" id="btnSearchgf" style="width: 100%;" class="mat-raised-button"  (click)="buttonBack()" >Back</button>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-actions>
+</form>
+
+-->
+<div class="container">
+  <div class="row justify-content-center align-content-center">
+    <h6>Cancel Event</h6>
+  </div>
+  <div class="row">
+    <div class="col-lg-4" >
+      <p style="font-family: 'Roboto-Regular',sans-serif;color: #707070;float: left">{{data.eventType}} meeting</p>
+    </div>
+    <div class="col-lg-4 center" >
+      <p style="font-family: 'Roboto-Medium',sans-serif;color: #707070;text-align: center"><b>{{data.schedulerName}}</b></p>
+    </div>
+    <div class="col-lg-4">
+      <p style="font-family: 'Roboto-Regular',sans-serif;color: #707070;float: right">{{data.meetingTime}}</p>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <p>Please confirm that you would like to cancel this event. A cancellation email will also go out to the invitee.</p>
+  <form [formGroup]="cancelForm">
+    <div class="form-group">
+      <input type="text" formControlName="message" class="form-control" id="message" placeholder="Add an optional cancellation message.">
+    </div>
+    <mat-dialog-actions >
+      <div class="container-fluid">
+        <div nz-row style="margin-top: 1%;margin-bottom: 2%" nzAlign="middle" nzJustify="center">
+          <nz-col nzSpan="24" align="center">
+            <button nz-button nzSize="default" class="login-form-button" style="background-color:#FF4165; color: white; width: 150px" (click)="cancelMeeting()" [disabled]="!cancelForm.valid" >Confirm</button> &nbsp;&nbsp;&nbsp;&nbsp;
+            <button nz-button nzSize="default" class="login-form-button" style="border-color:#707070; color: #707070; width: 150px" (click)="buttonBack()">Back</button>
+          </nz-col>
+        </div>
+      </div>
+    </mat-dialog-actions>
+  </form>
+</div>
+
+

@@ -14,7 +14,7 @@ import {Subscription} from 'rxjs';
 export class SchedulingPageComponent implements OnInit {
   header: boolean = false;
   email: string;
-  Meeting_owner = 'Sumit Kumar';
+  Meeting_owner = 'Sumit Kumar [#]';
   meeting_time15 = '15 Minute Meeting';
   meeting_time30 = '30 Minute Meeting';
   meeting_time60 = '60 Minute Meeting';

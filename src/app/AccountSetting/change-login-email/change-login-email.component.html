@@ -1,0 +1,47 @@
+<div nz-row nzType="flex" nzJustify="center" style="margin-top: 40px">
+  <div nz-col>
+    <img src="../../../../assets/Logo_c_new.svg" alt="" width="80px">
+  </div>
+</div>
+<div  nz-row nzType="flex" nzJustify="center" style="margin-top:40px ">
+  <div nz-col align="center" nzSpan="12">
+    <h6 align="center">Abhishek,</h6>
+    <h6 align="center">Thank you for confirming your email address, {{email}} .</h6>
+    <h6 align="center">Let's log in and finish getting you started!</h6>
+    <p align="center"> <a style="color:#FF4165; text-decoration: underline">This is not me</a>.</p>
+    <nz-card nzHoverable style="width:600px" [nzCover]="coverTemplate">
+      <nz-card-meta>
+      </nz-card-meta>
+    </nz-card>
+    <ng-template #coverTemplate>
+      <nz-row  nzJustify="center">
+        <form nz-form [formGroup]="changPasswordForm" class="forget-form" (ngSubmit)="submitForm()" style="margin-top:3%">
+        <nz-col nzOffset="2" nzSpan="20">
+            <nz-form-item>
+              <nz-form-control>
+                <input type="password" minlength="8" nzSize="large" nz-input formControlName="password" placeholder="password" class="forget-form-button">
+                <nz-form-explain *ngIf="!changPasswordForm.get('password').valid && changPasswordForm.get('password').touched">
+                  <nz-form-explain *ngIf="changPasswordForm.get('password').errors">Please enter at least 8 characters password
+                  </nz-form-explain>
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+        </nz-col>
+          <nz-col nzOffset="2" nzSpan="20">
+            <nz-form-item>
+              <nz-form-control>
+                <button type="submit" nz-button nzType="primary" style="background-color:#FF4165; color: white" [disabled]="!changPasswordForm.valid" nzBlock>Log in</button>
+              </nz-form-control>
+            </nz-form-item>
+            <div align="start">
+              <p>I forgot my password. Please <a style="color:#FF4165; text-decoration: underline" routerLink="/forgetPassword">send me a recovery email</a>.</p>
+              <p>Don't have an account? <a style="color:#FF4165; text-decoration: underline" routerLink="/forgetPassword">Sign up</a>.</p>
+            </div>
+          </nz-col>
+        </form>
+      </nz-row>
+
+    </ng-template>
+  </div>
+</div>
+

@@ -1,8 +1,9 @@
 <h2 mat-dialog-title>Which calendars should we check for conflicts?</h2>
-<form [formGroup]="calendarForm">
+<form nz-form [formGroup]="calendarForm">
 <mat-dialog-content >
   <div *ngFor="let calendarSummary of data | keyvalue">
-    <input type="checkbox" (change)="onChange(calendarSummary.key, $event.target.checked)">{{calendarSummary.value}}<br>
+  <!--<label nz-checkbox [nzValue]="calendarSummary.key" (change)="onChange(calendarSummary.key, $event.target.checked)"> {{calendarSummary.value}} </label>-->
+    <input type="checkbox"  (change)="onChange(calendarSummary.key, $event.target.checked)">&nbsp;&nbsp;{{calendarSummary.value}}<br>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions >

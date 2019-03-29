@@ -6,6 +6,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {AuthService} from 'angular-6-social-login';
 import {CalendareventComponent} from '../../calendar-event/calendarevent.component';
 import {MessagedialogComponent} from '../../messagedialog/messagedialog.component';
+import {SignUpService} from '../../Auth/sign-up.service';
 @Component({
   selector: 'app-calendar-edit',
   templateUrl: './calendar-edit.component.html',
@@ -13,106 +14,75 @@ import {MessagedialogComponent} from '../../messagedialog/messagedialog.componen
 })
 export class CalendarEditComponent implements OnInit {
 
-  constructor(private dialog: MatDialog,private route: ActivatedRoute,private router:Router,private httpClient: HttpClient) { }
+  constructor(private dialog: MatDialog, private route: ActivatedRoute,private router:Router,private httpClient: HttpClient,public signUpService: SignUpService) { }
   email: string;
-  calendarOption : [];
+  isVisible = false;
+  calendarOption;
   event : string;
+  checkCalendar = false;
+  checkEvent:number = 0;
+  eventString: string;
+  public data: Map<string,string>;
+  onCheckBoxModelStatus;
+  modelTitle: string;
+
+
   ngOnInit() {
-    this.route.params.subscribe((params: Params) => {
-      this.email = params['email'];
-    });
-  }
+    this.email =  this.signUpService.getAuthUserEmail();
+    console.log("Email ===========> ", this.email);
 
-  openCalendarOption() {
-    this.httpClient.post<any>('http://localhost:3000/user/getcalendarlist',{email:this.email}).subscribe( (responseData)=>{
-      let arr = [];
-      arr.push(1);
+    this.signUpService.getCalendarOptionListener().subscribe((responseData)=>{
       let calMap = new Map();
-      const dialogConfig = new MatDialogConfig();
+      let calendarId = [];
       responseData.record.forEach(function(cal) {
-        calMap.set(cal.id, cal.summary)
+        calMap.set(cal.id, cal.summary);
+        calendarId.push(cal.id);
       });
-      dialogConfig.data = calMap;
-      let dialogRef = this.dialog.open(CalendarOptionComponent, dialogConfig);
-      dialogRef.afterClosed().subscribe(value => {
-        if(value !== ''){
-          this.calendarOption = value;
-        }
-      });
-    },error => {
-      console.log("error====",error);
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.data = error;
-      this.dialog.open(MessagedialogComponent, dialogConfig);
+      this.data = calMap;
+      this.checkEvent = calendarId.length > 0 ? calendarId.length : 0;
+      this.calendarOption = calendarId.join(',');
+    });
+    this.signUpService.getCalendarEventsListener().subscribe((responseData)=>{
+      this.onCheckBoxModelStatus = true;
+      this.eventString = responseData.record[0].id;
     });
   }
 
-  /*openCalendarOption() {
-    let arr = [];
-    arr.push(1);
-    const dialogConfig = new MatDialogConfig();
-    let dummyData = ['Contacts','Holiday in India'];
-    dummyData.push(this.email)
-    dialogConfig.data = dummyData;
-    let dialogRef = this.dialog.open(CalendarOptionComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(value => {
-      if(value !== ''){
-        this.calendarOption = value;
-      }
-    });
-  }*/
-  openCalendarEvent() {
-    /* const dialogConfig = new MatDialogConfig();
-    let dummyData = ['Contacts','Holiday in India'];
-    dummyData.push(this.email)
-    dialogConfig.data = dummyData;
-    let dialogRef = this.dialog.open(CalendareventComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(value => {
-    if(value){
-    this.event = value;
+
+  openCalendarEvent(status: boolean) {
+    if(status) {
+      this.isVisible = true;
+      this.onCheckBoxModelStatus = status;
+      this.modelTitle = 'Which calendar should we add new events to?';
+      this.signUpService.getCalendarEventsList(this.email);
     }
-    });*/
-// Show the event in dialog box
-    this.httpClient.post<any>('http://localhost:3000/user/getcalendarlist',{email:this.email}).subscribe( (responseData)=>{
-      const dialogConfig = new MatDialogConfig();
-      let eventIdArray = [];
-      eventIdArray.push(responseData.record[0].id);
-      dialogConfig.data = eventIdArray;
-      let dialogRef = this.dialog.open(CalendareventComponent, dialogConfig);
-      dialogRef.afterClosed().subscribe(value => {
-        if(value){
-          this.event = value;
-        }
-      });
-    },error => {
-      console.log("error====",error);
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.data = error;
-      this.dialog.open(MessagedialogComponent, dialogConfig);
-    });
-
   }
-
 
   updateEventCalendar() {
-      let data =  {
-        eventType: this.event,
-        calnedarOption : this.calendarOption,
-        email : this.email
-      };
-      this.httpClient.post<any>('http://localhost:3000/user/updateCalendarEvent',data).subscribe((responseData)=>{
-        console.log("responseData====",responseData);
-        this.router.navigate(["availability/"+this.email]);
-      },error => {
-        console.log("error====",error);
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.data = error;
-        this.dialog.open(MessagedialogComponent, dialogConfig);
-      });
+    this.signUpService.updateCalendarEventOptions(this.eventString,this.calendarOption,this.email);
   }
 
-  setUpLater() {
-    this.router.navigate(["availability/"+this.email]);
+  openCalendarOption(status: boolean): void {
+    if(!status) {
+      this.isVisible = true;
+      this.modelTitle = 'Which calendars should we check for conflicts?';
+      this.onCheckBoxModelStatus = status;
+      this.signUpService.getCalendarOptionList(this.email);
+    }
+  }
+  handleOk(): void {
+    console.log('Button ok clicked!');
+    this.isVisible = false;
+  }
+
+  handleCancel(): void {
+    console.log('Button cancel clicked!');
+    this.isVisible = false;
+  }
+  log(value: string[]): void {
+    this.checkEvent = value.length;
+    this.calendarOption = null;
+    this.calendarOption = value.join(',');
+    console.log(this.calendarOption);
   }
 }
-

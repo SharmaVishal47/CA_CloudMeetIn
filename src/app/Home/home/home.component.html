@@ -1,9 +1,41 @@
+<div nz-row nzType="flex" nzJustify="center" style="margin-top: 10%">
+  <div nz-col >
+    <img src="./../../assets/cloudemeetin.svg" alt="" width="350px" height="350px" >
+  </div>
+  <div nz-col align="center">
+    <h2 style="margin-bottom:7%">Simple online scheduling for your team</h2>
+    <div >
+      <p style="margin-bottom:10%"> CloudMeetIn helps you schedule meetings <br>&nbsp;&nbsp;&nbsp;&nbsp; without the back and forth emails.<br> Customer bookings straight into your calendar.</p>
+      <form nz-form [formGroup]="signUp" class="login-form" (ngSubmit)="onSubmit()">
+        <nz-form-item>
+          <nz-form-control>
+            <nz-input-group [nzPrefix]="prefixEmail">
+              <input type="text" nz-input formControlName="email" placeholder="Enter your email" required email>
+            </nz-input-group>
+            <nz-form-explain *ngIf="signUp.get('email').dirty && signUp.get('email').errors">Please enter valid email address</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <button nz-button class="login-form-button" style="background-color:#FF4165; color: white;" [disabled]="!signUp.valid">Sign up</button>
+        <p>&nbsp;&nbsp;&nbsp; Get started for free. No credit card required.</p>
+
+      </form>
+      <ng-template #prefixEmail><i nz-icon nzType="mail" nzTheme="outline"></i></ng-template>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+<!--
 <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
 <div class="container">
     <div class="row">
       <div class="col-lg-12" >
         <div class="col-lg-6 float-left">
-          <h2 class="description">Calendly helps you schedule meetings without the back-and-forth emails</h2>
+          <h2 class="description">CloudMeetIn helps you schedule meetings without the back-and-forth emails</h2>
           <div class="card-body">
             <form [formGroup]="signUp" (ngSubmit)="onSubmit()">
               <div class="form-group pill-form mvs">
@@ -26,3 +58,6 @@
       </div>
     </div>
   </div>
+
+
+-->

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
+import {NzNotificationService} from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-confirmed',
@@ -10,13 +11,14 @@ export class ConfirmedComponent implements OnInit {
   meetingTime = '15 Minute Meeting';
   meetingDateTime = '09:00am - Wednesday, January 30,2019';
   meetingTimeZone = 'India, Sri Lanka Time';
-  constructor( private router: Router) { }
+  constructor( private router: Router, private notification: NzNotificationService) { }
   userId = 'Kishor Kumar';
   ngOnInit() {
     this.userId = localStorage.getItem('fullName');
     this.meetingTime = localStorage.getItem('eventType')+" Minute Meeting";
     this.meetingDateTime = localStorage.getItem('selectedTime')+" "+localStorage.getItem('selectedDate');
     this.meetingTimeZone = localStorage.getItem('selectedTimeZone');
+    this.notification.blank('Meeting Confirmation', 'I would like to confirm our meeting at '+this.meetingDateTime+'', { nzDuration: 0 });
     localStorage.removeItem('fullName');
     localStorage.removeItem('eventType');
     localStorage.removeItem('selectedTime');

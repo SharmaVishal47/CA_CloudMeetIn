@@ -1,4 +1,61 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import { AuthService} from 'angular-6-social-login';
+import {ActivatedRoute, Router} from '@angular/router';
+import {HttpClient} from '@angular/common/http';
+import {MatDialog, MatDialogConfig} from '@angular/material';
+import {MessagedialogComponent} from '../../messagedialog/messagedialog.component';
+import {AuthServiceLocal} from '../auth.service';
+import {HeaderserviceService} from '../../Home/headerservice.service';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent implements OnInit {
+  email = '';
+  param1;
+  loginForm: FormGroup;
+  constructor(private fb: FormBuilder, private headerserviceService: HeaderserviceService, private socialAuthService: AuthService,private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private dialog: MatDialog,private authService:AuthServiceLocal) {}
+  ngOnInit() {
+    this.headerserviceService.getTokenExpiry();
+    this.param1 = this.route.snapshot.queryParamMap.get('code');
+    if(this.param1) {
+      this.httpClient.post<{message: string,data: []}>('http://localhost:3000/googleCalendar/generateToken',{_token: this.param1 }).subscribe((responseData)=>{
+        console.log("responseData====",responseData.data);
+        this.router.navigate(["/login"]);
+      },error => {
+        console.log("error====",error);
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.data = error;
+        this.dialog.open(MessagedialogComponent, dialogConfig);
+      });
+      console.log(this.param1);
+    }
+
+    this.loginForm = this.fb.group({
+      emailID: [ null, [ Validators.required ] ],
+      password: [ null, [ Validators.required ] ]
+    });
+
+  }
+  submitForm(): void {
+    for (const i in this.loginForm.controls) {
+      this.loginForm.controls[ i ].markAsDirty();
+      this.loginForm.controls[ i ].updateValueAndValidity();
+    }
+    console.log('Datas--------->', this.loginForm.value);
+    this.authService.loginUser(this.loginForm.value);
+  }
+}
+
+
+/*
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { AuthService,GoogleLoginProvider} from 'angular-6-social-login';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -6,6 +63,7 @@ import {HttpClient} from '@angular/common/http';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {MessagedialogComponent} from '../../messagedialog/messagedialog.component';
 import {AuthServiceLocal} from '../auth.service';
+import {HeaderserviceService} from '../../Home/headerservice.service';
 
 @Component({
   selector: 'app-login',
@@ -14,12 +72,13 @@ import {AuthServiceLocal} from '../auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  isLoginInStatus = 0;
+  isLoginInStatus = 2;
   email = '';
   loginForm1: FormGroup;
   param1;
-  constructor( private socialAuthService: AuthService,private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private dialog: MatDialog,private authService:AuthServiceLocal) {}
+  constructor(private headerserviceService: HeaderserviceService, private socialAuthService: AuthService,private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private dialog: MatDialog,private authService:AuthServiceLocal) {}
   ngOnInit() {
+    this.headerserviceService.getTokenExpiry();
     this.param1 = this.route.snapshot.queryParamMap.get('code');
     if(this.param1) {
       this.httpClient.post<{message: string,data: []}>('http://localhost:3000/googleCalendar/generateToken',{_token: this.param1 }).subscribe((responseData)=>{
@@ -44,7 +103,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-//*****************Login By Google Authentication***********************/////
+//!*****************Login By Google Authentication***********************!/////
   public socialSignIn(socialPlatform: string) {
     let socialPlatformProvider;
     if (socialPlatform === 'google') {
@@ -56,7 +115,8 @@ export class LoginComponent implements OnInit {
         if(userData.email === this.email){
           this.httpClient.post<{message: string,data: []}>('http://localhost:3000/user/signinwithgoogle',userData).subscribe((responseData)=>{
             console.log("responseData====",responseData.data);
-            this.router.navigate(["dashboard/"+this.email]);
+            /!*this.router.navigate(["dashboard/"+this.email]);*!/
+            this.router.navigate(["dashboard"]);
           },error => {
             console.log("error====",error);
             const dialogConfig = new MatDialogConfig();
@@ -91,12 +151,12 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  //*************************Login by username and password************
+  //!*************************Login by username and password************
   onSubmitWithPassword() {
     console.log(this.loginForm1.value);
     this.authService.loginUser(this.loginForm1.value);
 
-    /*this.httpClient.post<{message: string,data: []}>('http://localhost:3000/user/checkemailpassword',this.loginForm1.value).subscribe((responseData)=>{
+    /!*this.httpClient.post<{message: string,data: []}>('http://localhost:3000/user/checkemailpassword',this.loginForm1.value).subscribe((responseData)=>{
       console.log("responseData====",responseData.data);
       if(responseData.data.length>0){
         this.router.navigate(["dashboard/"+this.loginForm1.value.emailID]);
@@ -109,7 +169,7 @@ export class LoginComponent implements OnInit {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.data = error;
       this.dialog.open(MessagedialogComponent, dialogConfig);
-    });*/
+    });*!/
   }
 
   onLogin() {
@@ -119,3 +179,4 @@ export class LoginComponent implements OnInit {
     });
   }
 }
+*/

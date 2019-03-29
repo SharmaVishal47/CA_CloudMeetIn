@@ -56,4 +56,22 @@ router.post('/generateToken',(req,res,next)=>{
   });
 });
 
+router.post('/calendarId',(req,res,next)=>{
+
+  let calendarQuery = "SELECT calanderId FROM `calendly` WHERE userId = '"+req.body.userId+"'";
+  console.log("calendarQuery===========",calendarQuery);
+  db.query(calendarQuery, (err, result) => {
+    if (err!==null) {
+      return res.status(500).send(err);
+    }
+    else {
+      res.status(200).json({
+        "message" : "Records successfully get",
+        "data" :  result
+      });
+    }
+  });
+});
+
+
 module.exports = router;

@@ -1,0 +1,8 @@
+.fnt {
+  font-family: 'Roboto-Medium', sans-serif;
+  font-size: calc(0.50em + 1vmin);
+  line-height: normal;
+  color: #707070;
+  margin: 0;
+  padding: 0;
+}

@@ -1,0 +1,1083 @@
+<!--<nz-alert nzMessage="Your selected date: {{ selectedValue | date:'yyyy-MM-dd' }}"></nz-alert>
+<hr>-->
+<div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
+  <div nz-col nzSpan="14" class="custom-card" >
+    <nz-collapse [nzBordered]="false" >
+      <nz-collapse-panel [nzHeader]="template" [nzActive]="checkActiveCard">
+        <div nz-row>
+          <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+            <div nz-row style="width: 100%; height: 90%">
+              <div nz-col nzSpan="12" style="width: 40%">
+                <nz-form-item>
+                  <label for="EventName">Event name *</label>
+                  <nz-form-control>
+                    <input id="EventName" type="text" nz-input formControlName="eventName" placeholder="Your Event Name">
+                    <nz-form-explain *ngIf="validateForm.get('eventName').dirty && validateForm.get('eventName').errors">Please input your eventName!</nz-form-explain>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <label for="description" style="margin-top: 4%">Description/Instructions</label>
+                  <nz-form-control>
+<textarea id="description" type="text" nz-input formControlName="description" placeholder="Your Event Description">
+</textarea>
+                    <nz-form-explain *ngIf="validateForm.get('description').dirty && validateForm.get('description').errors">Please input your description!</nz-form-explain>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <label for="eventLink">Event link *</label>
+                  <nz-form-control>
+                    <div nz-row>
+                      <div nz-col nzSpan="14">
+                        <a style="margin: 0; padding: 0" href="">Cloudmeetin.com/{{userId}}/ </a>
+                      </div>
+                      <div nz-col nzSpan="10">
+                        <input id="eventLink" type="text" nz-input formControlName="eventLink" placeholder="Your Event Link">
+                        <nz-form-explain *ngIf="validateForm.get('eventLink').dirty && validateForm.get('eventLink').errors">Please input your eventLink!</nz-form-explain>
+                      </div>
+                    </div>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="12" style="width: 40%; float: right">
+                <nz-form-item style="line-height: normal">
+                  <label for="location">Locations</label>
+                  <nz-form-control >
+                    <nz-input-group [nzSuffix]="suffixTemplate">
+                      <input id="location" [(ngModel)]="location" type="text" nz-input formControlName="location" placeholder="Add a location" disabled>
+                      <ng-template #suffixTemplate><i nz-icon type="close-circle" (click)="location=null" *ngIf="location"></i></ng-template>
+                    </nz-input-group>
+                    <nz-form-explain *ngIf="validateForm.get('location').dirty && validateForm.get('location').errors">Please input your location!</nz-form-explain>
+                    <small class="muted" *ngIf="!meetingIntegrationStatus && !location">
+                      e.g.
+                      <span class="" >Joe's Coffee</span><span>, </span> <span class="">I'll call you</span><span>, </span> <span class="pointer js-location-switch-to-gotomeeting" (click)="checkMeetingPlatformAvailability(1)">GoToMeeting</span><span>, </span> <span class="pointer js-location-switch-to-zoom" (click)="checkMeetingPlatformAvailability(2)">Zoom</span><span>, </span> <span class="pointer js-location-request-location">let invitee decide</span><span>...</span>
+                    </small>
+                    <small class="muted" *ngIf="meetingIntegrationStatus && !location">
+                      e.g.
+                      <span class="" >Joe's Coffee</span><span>, </span> <span class="">I'll call you</span><span>, </span> <span class="pointer js-location-switch-to-gotomeeting" (click)="checkMeetingPlatformAvailability(1)">GoToMeeting</span><span>, </span> <span class="pointer js-location-switch-to-zoom" (click)="checkMeetingPlatformAvailability(2)">Zoom</span><span>, </span> <span class="pointer js-location-request-location">let invitee decide</span><span>...</span>
+                    </small>
+                    <small *ngIf="meetingIntegrationStatus && location">
+                      {{meetingIntegrationPlatFormName}} is not connected. Visit the<a routerLink="/integrations/{{meetingIntegrationPlatFormLink}}">{{meetingIntegrationPlatFormName}} integration page</a> to connect your account.
+                    </small>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-control>
+                    <nz-radio-group [(ngModel)]="radioValue" formControlName="location_display">
+                      <label class="custom-label" nz-radio [ngStyle]="style" nzValue="A">Display location while booking</label>
+                      <label class="custom-label" nz-radio [ngStyle]="style" nzValue="B">Display location only after confirmation</label>
+                    </nz-radio-group>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <label >Event color *</label>
+                  <nz-form-control>
+                    <div class="custom-radios" >
+                      <div (click)="getEventTypeColor(0)">
+                        <input type="radio" id="color-1" name="color" value="color-1" checked >
+                        <label for="color-1">
+                      <span>
+                      <img src="../../../assets/event_color.svg" alt="Checked Icon" />
+                      </span>
+                        </label>
+                      </div>
+                      <div (click)="getEventTypeColor(1)">
+                        <input type="radio" id="color-2" name="color" value="color-2" >
+                        <label for="color-2">
+                            <span>
+                            <img src="../../../assets/event_color.svg" alt="Checked Icon" />
+                            </span>
+                        </label>
+                      </div>
+
+                      <div (click)="getEventTypeColor(2)">
+                        <input type="radio" id="color-3" name="color" value="color-3">
+                        <label for="color-3">
+                        <span>
+                        <img src="../../../assets/event_color.svg" alt="Checked Icon" />
+                        </span>
+                        </label>
+                      </div>
+
+                      <div (click)="getEventTypeColor(3)">
+                        <input type="radio" id="color-4" name="color" value="color-4">
+                        <label for="color-4">
+                        <span>
+                        <img src="../../../assets/event_color.svg" alt="Checked Icon" />
+                        </span>
+                        </label>
+                      </div>
+                      <div (click)="getEventTypeColor(4)">
+                        <input type="radio" id="color-5" name="color" value="color-5">
+                        <label for="color-5">
+                          <span>
+                          <img src="../../../assets/event_color.svg" alt="Checked Icon" />
+                          </span>
+                        </label>
+                      </div>
+                      <div (click)="getEventTypeColor(5)">
+                        <input type="radio" id="color-6" name="color" value="color-6">
+                        <label for="color-6">
+                        <span>
+                        <img src="../../../assets/event_color.svg" alt="Checked Icon" />
+                        </span>
+                        </label>
+                      </div>
+                    </div>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+            <hr>
+            <div nz-row>
+              <div nz-col nzSpan="12" style="width: 40%;">
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button class="login-form-button" style="float: right; background: #FF4165; color: white"
+                            [disabled]="!validateForm.valid"> {{editMode ? 'Save & Close' :'Next'}}</button>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="12" style="width: 40%; float: right;">
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button class="login-form-button" style="border: 1px solid #707070; color: #707070" (click)="OnCancelEventAdvancedFrom()">Cancel</button>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </form>
+        </div>
+        <ng-template #template>
+          <div nz-row nzType="flex" nzJustify="center">
+            <svg width="30" height="30">
+              <circle cx="15" cy="15" r="10" fill="#23038F"></circle>
+            </svg>
+            <h4>What event is this?</h4>
+          </div>
+        </ng-template>
+      </nz-collapse-panel>
+    </nz-collapse>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
+  <div nz-col nzSpan="14" class="custom-card">
+    <nz-collapse [nzBordered]="false" >
+      <nz-collapse-panel [nzHeader]="template1" [nzActive]="secondCard">
+        <div nz-row>
+          <div nz-row style="margin-bottom: 20px">
+            <div nz-col nzSpan="12">
+              <label for="event_duration">Event Duration * ({{defaultEventType}}, 60 rolling days) Default</label>
+              <div>
+                <nz-avatar id="event_duration" style="cursor: pointer;" nzSize="large" nzText={{even_type.event_type}}
+                           *ngFor="let even_type of eventTimeSlot" (click)="onEventTime(even_type.event_type)"></nz-avatar>
+                <nz-avatar  nzSize="large" nzText="+" (click)="OnAddEventTime()" *ngIf="!custom_eventTime"></nz-avatar>
+                <input  type="number" style="width: 60px;" nz-input [(ngModel)]="custom_event_Time" *ngIf="custom_eventTime">
+              </div>
+            </div>
+            <div nz-col nzSpan="12">
+              <label for="date_range">Date Range</label>
+              <p id="date_range">Events can be scheduled over 60 rolling days <span (click)="onDateRange()">Edit</span></p>
+              <nz-modal [(nzVisible)]="date_range" [nzWidth]="600" [nzClosable]="false" [nzTitle]="availability" (nzOnCancel)="handleCancel()"
+                        (nzOnOk)="handleOk()" style="text-align: center;" [nzFooter]="footer">
+                <form nz-form  style="max-width: 500px; margin: auto; text-align: center"[formGroup]="dateRangeForm" (ngSubmit)="submitDateRangeForm()">
+                  <label for="date_availability">When can events be scheduled?</label>
+                  <nz-form-item>
+                    <nz-form-control>
+                      <nz-select id="date_availability" formControlName="availability" nzPlaceHolder="Select a option and change input text above" [(ngModel)]='defaultDateRange'
+                                 (ngModelChange)="availabilityChange($event)">
+                        <nz-option nzValue="day" nzLabel="Over a period of rolling days"></nz-option>
+                        <nz-option nzValue="date_range" nzLabel="Over a date range"></nz-option>
+                        <nz-option nzValue="indefinitely" nzLabel="Indefinitely"></nz-option>
+                      </nz-select>
+                      <nz-form-explain *ngIf="validateForm.get('availability')?.dirty && validateForm.get('availability')?.errors">Please select your availability!</nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <div nz-row *ngIf="date_range_status === 1">
+                    <nz-form-item style="text-align: left">
+                      <label for="rolling_days" style="font-family: 'Roboto-Regular', sans-serif;">Your invitees will be offered availability for a number of days into the future.</label>
+                      <nz-form-control style="margin-top: 5%">
+                        <input id="rolling_days" style="width: 20%;" type="number" nz-input formControlName="rolling_days" >
+                        <label style="font-family: 'Roboto-Regular', sans-serif; margin-left: 5%">
+                          rolling days</label>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                  <div nz-row *ngIf="date_range_status === 2">
+                    <nz-form-item style="text-align: left">
+                      <label for="range_dates" style="font-family: 'Roboto-Regular', sans-serif;">Your invitees will be offered availability within a defined range of dates.</label>
+                      <nz-form-control style="margin-top: 5%">
+                        <nz-range-picker id="range_dates" style="width: 100%" [(ngModel)]="dateRange" formControlName="range_dates"  nzShowTime></nz-range-picker>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                  <div nz-row *ngIf="date_range_status === 3">
+                    <nz-form-item style="text-align: left">
+                      <label  style="font-family: 'Roboto-Regular', sans-serif;">Your invitees will be offered availability indefinitely into the future.</label>
+                    </nz-form-item>
+                  </div>
+                  <div nz-row>
+                    <div nz-col nzSpan="12" style="width: 40%;">
+                      <nz-form-item>
+                        <nz-form-control>
+                          <button nz-button  class="login-button" style="float: right; background: #FF4165; color: white" [disabled]="!dateRangeForm.valid" >Apply</button>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                    <div nz-col nzSpan="12" style="width: 40%; float: right;">
+                      <nz-form-item>
+                        <nz-form-control>
+                          <button nz-button class="login-button" style="border: 1px solid #707070; color: #707070">Cancel</button>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                  </div>
+
+                </form>
+
+              </nz-modal>
+              <ng-template #availability>
+                <label>Availability</label>
+              </ng-template>
+            </div>
+          </div>
+          <div nz-row>
+            <div>
+              <label for="event_timZone">Event Time Zone</label>
+              <p id="event_timZone">You're in India, Sri Lanka Time. Your invitees will see your availability in their local time zone.
+                <span (click)="onEventTimeZone()">Edit</span></p>
+
+              <nz-modal [(nzVisible)]="event_timeZone" [nzWidth]="600" [nzClosable]="false" [nzTitle]="timeZone11" (nzOnCancel)="handleCancel()"
+                        (nzOnOk)="handleOk()" style="text-align: center;"
+                        [nzFooter]="footer">
+                <ng-template #footer >
+                </ng-template>
+                <form nz-form  style="max-width: 500px; margin: auto; text-align: center"[formGroup]="eventTimeZoneForm"
+                      (ngSubmit)="submitEventTimeZoneForm()">
+                  <nz-radio-group [(ngModel)]="selectTimeZoneValue" nzName="radiogroup" formControlName="timeZone">
+                    <div nz-row >
+                      <div nz-col nzSpan="12">
+                        <label  nz-radio nzValue="Local" style="float: left; font-family: 'Roboto-Regular', sans-serif;">Local</label>
+                      </div>
+                      <div nz-col nzSpan="12">
+                        <label   nz-radio nzValue="Locked" style="float: left; font-family: 'Roboto-Regular', sans-serif;">Locked</label>
+                      </div>
+                    </div>
+                  </nz-radio-group>
+                  <div nz-row *ngIf="selectTimeZoneValue == 'Local'" style="margin-top: 5%">
+                    <div nz-row>
+                      <nz-form-item style="text-align: left">
+                        <label style="font-family: 'Roboto-Regular', sans-serif;">
+                          Invitees will see your availability in their time zone. Recommended for virtual meetings.
+                        </label>
+                      </nz-form-item>
+                    </div>
+                    <div nz-row>
+                      <nz-form-item style="text-align: left">
+                        <label style="font-family: 'Roboto-Regular', sans-serif;">
+                          (Your account settings are configured for India, Sri Lanka Time)
+                        </label>
+                      </nz-form-item>
+                    </div>
+                  </div>
+                  <div nz-row *ngIf="selectTimeZoneValue == 'Locked'" style="margin-top: 5%">
+                    <div nz-row>
+                      <nz-form-item style="text-align: left">
+                        <label style="font-family: 'Roboto-Regular', sans-serif;">
+                          Invitees will see your availability in a locked time zone. Recommended for in-person meetings.
+                        </label>
+                      </nz-form-item>
+                    </div>
+                    <div nz-row>
+                      <nz-form-item style="text-align: left">
+                        <ng2-timezone-picker [timezone]="_timeZone" (change)="changeTimezone($event)" style="width: 15px"></ng2-timezone-picker>
+                      </nz-form-item>
+                    </div>
+                  </div>
+
+                  <div nz-row>
+                    <div nz-col nzSpan="12" style="width: 40%;">
+                      <nz-form-item>
+                        <nz-form-control>
+                          <button nz-button  class="login-button" style="float: right; background: #FF4165; color: white">Apply</button>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                    <div nz-col nzSpan="12" style="width: 40%; float: right;">
+                      <nz-form-item>
+                        <nz-form-control>
+                          <button nz-button class="login-button" style="border: 1px solid #707070; color: #707070">Cancel</button>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                  </div>
+
+                </form>
+
+              </nz-modal>
+              <ng-template #timeZone11>
+                <label>Time Zone Style</label>
+              </ng-template>
+            </div>
+            <div>
+              <label for="Availability">Availability</label>
+              <p id="Availability">Set your available hours when people can schedule meetings with you.</p>
+            </div>
+
+            <nz-card style="width: 100%;" [nzExtra]="extraTemplate">
+              <nz-card-tab>
+                <nz-tabset nzSize="large" [(nzSelectedIndex)]="index1">
+                  <nz-tab nzTitle="Hours"></nz-tab>
+                  <nz-tab nzTitle="Advanced"></nz-tab>
+                </nz-tabset>
+              </nz-card-tab>
+              <nz-calendar *ngIf="index1 === 0"
+                           [(ngModel)]="selectedValue"
+                           (nzSelectChange)="selectChange($event, selectedValue,'as')">
+                <ul *nzDateCell="let date" class="events">
+                  <ng-container [ngSwitch]="date.getDate()" >
+                    <li *ngFor="let item of listDataMap">
+                      <small class="cal-event-small">{{item.startTime}}-{{item.endTime}}</small>
+                    </li>
+                  </ng-container>
+                </ul>
+                <ng-container *nzMonthCell="let month">
+                  <div *ngIf="getMonthData(month) as monthData" class="notes-month">
+                    <section>{{ monthData }}</section>
+                    <span>Backlog number</span>
+                  </div>
+                </ng-container>
+                <nz-modal
+                  [nzWidth]="600"
+                  [(nzVisible)]="isVisible"
+                  [nzTitle]="editAvailability"
+                  (nzOnOk)="handleOk()"
+                  (nzOnCancel)="handleCancel()"
+                  [nzClosable]="false"
+                  nzOkText="Ok"
+                  nzCancelText="Cancel"
+                  style="text-align: center;">
+                  <div nz-row>
+                    <p>{{selectedValue}}</p>
+                    <form nz-form [formGroup]="addAvailabilityForm" (ngSubmit)="submitFormAvailability()">
+                      <div nz-row formArrayName="datePicker">
+                        <div nz-row *ngFor="let control of datePicker.controls;let i = index;" [formGroupName]="i">
+                          <div nz-col nzSpan="12">
+                            <nz-form-item >
+                              <nz-form-label [nzXs]="20" [nzSm]="4" >From</nz-form-label>
+                              <nz-form-control [nzXs]="20" [nzSm]="18" [nzOffset]="i==0?0:4">
+                                <nz-time-picker  nzFormat="hh:mm a"  formControlName="fromTime"></nz-time-picker>
+                              </nz-form-control>
+                            </nz-form-item>
+                          </div>
+                          <div nz-col nzSpan="12">
+                            <nz-form-label [nzXs]="20" [nzSm]="4">To</nz-form-label>
+                            <nz-form-control [nzXs]="20" [nzSm]="18" [nzOffset]="i==0?0:4">
+                              <nz-time-picker  nzFormat="hh:mm a"  formControlName="toTime"></nz-time-picker>
+                              <i nz-icon type="delete"  class="dynamic-delete-button" theme="outline" (click)="onDeleteTimePicker(i)"></i>
+                            </nz-form-control>
+                          </div>
+                        </div>
+                        <div nz-row>
+                          <nz-form-item>
+                            <nz-form-control [nzXs]="{span:24,offset:0}">
+                              <a (click)="addField()"> + New Interval</a>
+                            </nz-form-control>
+                          </nz-form-item>
+                          <nz-form-item>
+                            <nz-form-control [nzXs]="{span:24,offset:0}">
+                              <button class="custom-button" nz-button nzType="primary">Apply to {{selectedValue | date}}</button>
+                            </nz-form-control>
+                          </nz-form-item>
+                          <nz-form-item>
+                            <nz-form-control [nzXs]="{span:24,offset:0}">
+                              <button class="custom-button" nz-button nzType="primary">Apply to All {{selectedValue | date: 'EEEE'}}</button>
+                            </nz-form-control>
+                          </nz-form-item>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <ng-template #editAvailability>
+                    <label>Edit Availability</label>
+                  </ng-template>
+                </nz-modal>
+              </nz-calendar>
+
+              <div nz-row *ngIf="index1 === 1">
+                <form nz-form [formGroup]="availabilityAdvanceForm" class="login-form" (ngSubmit)="submitAdvancedForm(cardStatus)">
+                  <div nz-row>
+                    <label for="availability_increments">Availability Increments</label>
+                    <div nz-row>
+                      <div nz-col nzSpan="12" style="width: 40%">
+                        <p id="availability_increments">Set the frequency of available time slots for your invitees.</p>
+                      </div>
+                      <div nz-col nzSpan="12" style="width: 40%; float: right">
+                        <p>Show availability in increments of</p>
+                        <nz-form-item>
+                          <nz-form-control>
+                            <nz-select formControlName="show_availability" nzPlaceHolder="Please select availability" style="width: 100%" >
+                              <nz-option *ngFor="let timeSchedule of eventTimeSlot "nzValue="{{timeSchedule.event_type}}" nzLabel="{{timeSchedule.event_type}}"></nz-option>
+                            </nz-select>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </div>
+                  <div nz-row>
+                    <label for="event_max_per_day">Events Max Per Day</label>
+                    <div nz-row>
+                      <div nz-col nzSpan="12" style="width: 40%">
+                        <p id="event_max_per_day">Use this optional setting to limit the number of events that can be scheduled in a day.</p>
+                      </div>
+                      <div nz-col nzSpan="12" style="width: 40%; float: right">
+                        <p>Max number of events per day</p>
+                        <nz-form-item>
+                          <nz-form-control>
+                            <input style="width: 30%;" type="number" nz-input formControlName="event_max_per_day">
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </div>
+                  <div nz-row>
+                    <label for="minimum_scheduling_notice">Minimum Scheduling Notice</label>
+                    <div nz-row>
+                      <div nz-col nzSpan="12" style="width: 40%">
+                        <p id="minimum_scheduling_notice">Use this setting to prevent last minute events.</p>
+                      </div>
+                      <div nz-col nzSpan="12" style="width: 40%; float: right">
+                        <p>Prevent events less than</p>
+                        <nz-form-item>
+                          <nz-form-control>
+                            <input type="number" style="width: 30%;"nz-input formControlName="minimum_scheduling_notice">
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </div>
+                  <div nz-row>
+                    <label for="event_buffers">Event Buffers</label>
+                    <div nz-row>
+                      <div nz-col nzSpan="12" style="width: 40%">
+                        <p id="event_buffers">Use this to set aside preparation, rest or travel time before or after events. For example, if you define a 5 minute buffer before your events Cloudmeetin will make sure you have 5 minutes of free time before your scheduled events.</p>
+                      </div>
+                      <div nz-col nzSpan="12" style="width: 40%; float: right">
+                        <p>Buffer before event</p>
+                        <nz-form-item>
+                          <nz-form-control>
+                            <nz-select formControlName="show_availability_buffer_before_event" nzPlaceHolder="Please select availability" style="width: 100%">
+                              <nz-option *ngFor="let timeSchedule of eventBuffersSlot "nzValue="{{timeSchedule.event_type}}" nzLabel="{{timeSchedule.event_type}}" ></nz-option>
+                            </nz-select>
+                          </nz-form-control>
+                        </nz-form-item>
+                        <p>Buffer after event</p>
+                        <nz-form-item>
+                          <nz-form-control>
+                            <nz-select formControlName="show_availability_buffer_after_event" nzPlaceHolder="Please select availability" style="width: 100%">
+                              <nz-option *ngFor="let timeSchedule of eventBuffersSlot "nzValue="{{timeSchedule.event_type}}" nzLabel="{{timeSchedule.event_type}}" ></nz-option>
+                            </nz-select>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </nz-card>
+            <ng-template #extraTemplate>
+              <a>More</a>
+            </ng-template>
+            <br>
+            <div nz-row>
+              <div nz-col nzSpan="12">
+                <label for="secret_event">Secret Event</label>
+                <p id="secret_event">Hide this event from your main CloudMeetIn page?</p>
+              </div>
+              <div nz-col nzSpan="12">
+                <nz-switch style="float: right" nzSize="small" [ngModel]="default_secret_event"></nz-switch>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div nz-row>
+          <div nz-col nzSpan="12" style="width: 40%;">
+            <nz-form-item>
+              <nz-form-control>
+                <button nz-button class="login-form-button" [disabled]="!availabilityAdvanceForm.valid" style="float: right; background: #FF4165; color: white" (click)="submitAdvancedForm(cardStatus)">{{editMode ? 'Save & Close' :'Next'}}</button>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="12" style="width: 40%; float: right;">
+            <nz-form-item>
+              <nz-form-control>
+                <button nz-button class="login-form-button" [nzType]="'danger'" (click)="OnCancelEventAdvancedFrom()">Cancel</button>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <ng-template #template1>
+          <div nz-row nzType="flex" nzJustify="center">
+            <svg width="30" height="30">
+              <circle cx="15" cy="15" r="10" fill="#23038F"></circle>
+            </svg>
+            <h4>When can people book this event?</h4>
+          </div>
+        </ng-template>
+      </nz-collapse-panel>
+    </nz-collapse>
+  </div>
+</div>
+
+
+<!--
+<nz-alert nzMessage="Your selected date: {{ selectedValue | date:'yyyy-MM-dd' }}"></nz-alert>
+<hr>
+<div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
+  <div nz-col nzSpan="14" style="border: 1px solid #707070; border-radius: 2px;">
+    <nz-collapse [nzBordered]="false" >
+      <nz-collapse-panel [nzHeader]="template" [nzActive]="checkActiveCard">
+        <div nz-row>
+          <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+            <div nz-row style="width: 100%; height: 90%">
+              <div nz-col nzSpan="12" style="width: 40%">
+                <nz-form-item>
+                  <label for="EventName">Event name *</label>
+                  <nz-form-control>
+                    <input id="EventName" type="text" nz-input formControlName="eventName" placeholder="Your Event Name">
+                    <nz-form-explain *ngIf="validateForm.get('eventName').dirty && validateForm.get('eventName').errors">Please input your eventName!</nz-form-explain>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <label for="description" style="margin-top: 4%">Description/Instructions</label>
+                  <nz-form-control>
+<textarea id="description" type="text" nz-input formControlName="description" placeholder="Your Event Description">
+</textarea>
+                    <nz-form-explain *ngIf="validateForm.get('description').dirty && validateForm.get('description').errors">Please input your description!</nz-form-explain>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <label for="eventLink">Event link *</label>
+                  <nz-form-control>
+                    <div nz-row>
+                      <div nz-col nzSpan="14">
+                        <a style="margin: 0; padding: 0" href="">Cloudmeetin.com/{{userId}}/ </a>
+                      </div>
+                      <div nz-col nzSpan="10">
+                        <input id="eventLink" type="text" nz-input formControlName="eventLink" placeholder="Your Event Link">
+                        <nz-form-explain *ngIf="validateForm.get('eventLink').dirty && validateForm.get('eventLink').errors">Please input your eventLink!</nz-form-explain>
+                      </div>
+                    </div>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="12" style="width: 40%; float: right">
+                <nz-form-item style="line-height: normal">
+                  <label for="location">Locations</label>
+                  <nz-form-control >
+                    <nz-input-group [nzSuffix]="suffixTemplate">
+                      <input id="location" [(ngModel)]="location" type="text" nz-input formControlName="location" placeholder="Add a location" disabled>
+                      <ng-template #suffixTemplate><i nz-icon type="close-circle" (click)="location=null" *ngIf="location"></i></ng-template>
+                    </nz-input-group>
+                    <nz-form-explain *ngIf="validateForm.get('location').dirty && validateForm.get('location').errors">Please input your location!</nz-form-explain>
+                    <small class="muted" *ngIf="!meetingIntegrationStatus && !location">
+                      e.g.
+                      <span class="" >Joe's Coffee</span><span>, </span> <span class="">I'll call you</span><span>, </span> <span class="pointer js-location-switch-to-gotomeeting" (click)="checkMeetingPlatformAvailability(1)">GoToMeeting</span><span>, </span> <span class="pointer js-location-switch-to-zoom" (click)="checkMeetingPlatformAvailability(2)">Zoom</span><span>, </span> <span class="pointer js-location-request-location">let invitee decide</span><span>...</span>
+                    </small>
+                    <small class="muted" *ngIf="meetingIntegrationStatus && !location">
+                      e.g.
+                      <span class="" >Joe's Coffee</span><span>, </span> <span class="">I'll call you</span><span>, </span> <span class="pointer js-location-switch-to-gotomeeting" (click)="checkMeetingPlatformAvailability(1)">GoToMeeting</span><span>, </span> <span class="pointer js-location-switch-to-zoom" (click)="checkMeetingPlatformAvailability(2)">Zoom</span><span>, </span> <span class="pointer js-location-request-location">let invitee decide</span><span>...</span>
+                    </small>
+                    <small *ngIf="meetingIntegrationStatus && location">
+                      {{meetingIntegrationPlatFormName}} is not connected. Visit the<a routerLink="/integrations/{{meetingIntegrationPlatFormLink}}">Zoom integration page</a> to connect your account.
+                    </small>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-control>
+                    <nz-radio-group [(ngModel)]="radioValue" formControlName="location_display">
+                      <label class="custom-label" nz-radio [ngStyle]="style" nzValue="A">Display location while booking</label>
+                      <label class="custom-label" nz-radio [ngStyle]="style" nzValue="B">Display location only after confirmation</label>
+                    </nz-radio-group>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <label >Event color *</label>
+                  <nz-form-control>
+                    <div class="custom-radios" >
+                      <div (click)="getEventTypeColor(0)">
+                        <input type="radio" id="color-1" name="color" value="color-1" checked >
+                        <label for="color-1">
+                      <span>
+                      <img src="../../../assets/event_color.svg" alt="Checked Icon" />
+                      </span>
+                        </label>
+                      </div>
+                      <div (click)="getEventTypeColor(1)">
+                        <input type="radio" id="color-2" name="color" value="color-2" >
+                        <label for="color-2">
+                            <span>
+                            <img src="../../../assets/event_color.svg" alt="Checked Icon" />
+                            </span>
+                        </label>
+                      </div>
+
+                      <div (click)="getEventTypeColor(2)">
+                        <input type="radio" id="color-3" name="color" value="color-3">
+                        <label for="color-3">
+                        <span>
+                        <img src="../../../assets/event_color.svg" alt="Checked Icon" />
+                        </span>
+                        </label>
+                      </div>
+
+                      <div (click)="getEventTypeColor(3)">
+                        <input type="radio" id="color-4" name="color" value="color-4">
+                        <label for="color-4">
+                        <span>
+                        <img src="../../../assets/event_color.svg" alt="Checked Icon" />
+                        </span>
+                        </label>
+                      </div>
+                      <div (click)="getEventTypeColor(4)">
+                        <input type="radio" id="color-5" name="color" value="color-5">
+                        <label for="color-5">
+                          <span>
+                          <img src="../../../assets/event_color.svg" alt="Checked Icon" />
+                          </span>
+                        </label>
+                      </div>
+                      <div (click)="getEventTypeColor(5)">
+                        <input type="radio" id="color-6" name="color" value="color-6">
+                        <label for="color-6">
+                        <span>
+                        <img src="../../../assets/event_color.svg" alt="Checked Icon" />
+                        </span>
+                                                </label>
+                      </div>
+                    </div>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+            <hr>
+            <div nz-row>
+              <div nz-col nzSpan="12" style="width: 40%;">
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button class="login-form-button" style="float: right; background: #FF4165; color: white"
+                            [disabled]="!validateForm.valid"> {{editMode ? 'Save & Close' :'Next'}}</button>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="12" style="width: 40%; float: right;">
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button class="login-form-button" style="border: 1px solid #707070; color: #707070" (click)="OnCancelEventAdvancedFrom()">Cancel</button>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </form>
+        </div>
+        <ng-template #template>
+          <div nz-row nzType="flex" nzJustify="center">
+            <svg width="30" height="30">
+              <circle cx="15" cy="15" r="10" fill="#23038F"></circle>
+            </svg>
+            <h4>What event is this?</h4>
+          </div>
+        </ng-template>
+      </nz-collapse-panel>
+    </nz-collapse>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
+  <div nz-col nzSpan="14">
+    <nz-collapse>
+      <nz-collapse-panel [nzHeader]="template1" [nzActive]="secondCard">
+        <div nz-row>
+          <div nz-row style="margin-bottom: 20px">
+            <div nz-col nzSpan="12">
+              <label for="event_duration">Event Duration * ({{defaultEventType}}, 60 rolling days) Default</label>
+              <div>
+                <nz-avatar id="event_duration" style="cursor: pointer;" nzSize="large" nzText={{even_type.event_type}}
+                           *ngFor="let even_type of eventTimeSlot" (click)="onEventTime(even_type.event_type)"></nz-avatar>
+                <nz-avatar  nzSize="large" nzText="+" (click)="OnAddEventTime()" *ngIf="!custom_eventTime"></nz-avatar>
+                <input  type="number" style="width: 60px;" nz-input [(ngModel)]="custom_event_Time" *ngIf="custom_eventTime">
+              </div>
+            </div>
+            <div nz-col nzSpan="12">
+              <label for="date_range">Date Range</label>
+              <p id="date_range">Events can be scheduled over 60 rolling days <span (click)="onDateRange()">Edit</span></p>
+              <nz-modal [(nzVisible)]="date_range" [nzWidth]="600" [nzClosable]="false" [nzTitle]="availability" (nzOnCancel)="handleCancel()"
+                        (nzOnOk)="handleOk()" style="text-align: center;" [nzFooter]="footer">
+                <form nz-form  style="max-width: 500px; margin: auto; text-align: center"[formGroup]="dateRangeForm" (ngSubmit)="submitDateRangeForm()">
+                    <label for="date_availability">When can events be scheduled?</label>
+                    <nz-form-item>
+                      <nz-form-control>
+                        <nz-select id="date_availability" formControlName="availability" nzPlaceHolder="Select a option and change input text above" [(ngModel)]='defaultDateRange'
+                                   (ngModelChange)="availabilityChange($event)">
+                          <nz-option nzValue="day" nzLabel="Over a period of rolling days"></nz-option>
+                          <nz-option nzValue="date_range" nzLabel="Over a date range"></nz-option>
+                          <nz-option nzValue="indefinitely" nzLabel="Indefinitely"></nz-option>
+                        </nz-select>
+                        <nz-form-explain *ngIf="validateForm.get('availability')?.dirty && validateForm.get('availability')?.errors">Please select your availability!</nz-form-explain>
+                      </nz-form-control>
+                    </nz-form-item>
+                  <div nz-row *ngIf="date_range_status === 1">
+                    <nz-form-item style="text-align: left">
+                      <label for="rolling_days" style="font-family: 'Roboto-Regular', sans-serif;">Your invitees will be offered availability for a number of days into the future.</label>
+                      <nz-form-control style="margin-top: 5%">
+                        <input id="rolling_days" style="width: 20%;" type="number" nz-input formControlName="rolling_days" >
+                        <label style="font-family: 'Roboto-Regular', sans-serif; margin-left: 5%">
+                          rolling days</label>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                  <div nz-row *ngIf="date_range_status === 2">
+                  <nz-form-item style="text-align: left">
+                    <label for="range_dates" style="font-family: 'Roboto-Regular', sans-serif;">Your invitees will be offered availability within a defined range of dates.</label>
+                    <nz-form-control style="margin-top: 5%">
+                      <nz-range-picker id="range_dates" style="width: 100%" [(ngModel)]="dateRange" formControlName="range_dates"  nzShowTime></nz-range-picker>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                  <div nz-row *ngIf="date_range_status === 3">
+                    <nz-form-item style="text-align: left">
+                      <label  style="font-family: 'Roboto-Regular', sans-serif;">Your invitees will be offered availability indefinitely into the future.</label>
+                    </nz-form-item>
+                  </div>
+                  <div nz-row>
+                    <div nz-col nzSpan="12" style="width: 40%;">
+                      <nz-form-item>
+                        <nz-form-control>
+                          <button nz-button  class="login-button" style="float: right; background: #FF4165; color: white" [disabled]="!dateRangeForm.valid" >Apply</button>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                    <div nz-col nzSpan="12" style="width: 40%; float: right;">
+                      <nz-form-item>
+                        <nz-form-control>
+                          <button nz-button class="login-button" style="border: 1px solid #707070; color: #707070">Cancel</button>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                  </div>
+
+                </form>
+
+              </nz-modal>
+              <ng-template #availability>
+                <label>Availability</label>
+              </ng-template>
+            </div>
+          </div>
+          <div nz-row>
+            <div>
+              <label for="event_timZone">Event Time Zone</label>
+              <p id="event_timZone">You're in India, Sri Lanka Time. Your invitees will see your availability in their local time zone.
+                <span (click)="onEventTimeZone()">Edit</span></p>
+
+              <nz-modal [(nzVisible)]="event_timeZone" [nzWidth]="600" [nzClosable]="false" [nzTitle]="timeZone11" (nzOnCancel)="handleCancel()"
+                        (nzOnOk)="handleOk()" style="text-align: center;"
+              [nzFooter]="footer">
+                <ng-template #footer >
+                </ng-template>
+                <form nz-form  style="max-width: 500px; margin: auto; text-align: center"[formGroup]="eventTimeZoneForm"
+                      (ngSubmit)="submitEventTimeZoneForm()">
+                  <nz-radio-group [(ngModel)]="selectTimeZoneValue" nzName="radiogroup" formControlName="timeZone">
+                  <div nz-row >
+                    <div nz-col nzSpan="12">
+                      <label  nz-radio nzValue="Local" style="float: left; font-family: 'Roboto-Regular', sans-serif;">Local</label>
+                    </div>
+                    <div nz-col nzSpan="12">
+                      <label   nz-radio nzValue="Locked" style="float: left; font-family: 'Roboto-Regular', sans-serif;">Locked</label>
+                    </div>
+                  </div>
+                  </nz-radio-group>
+                  <div nz-row *ngIf="selectTimeZoneValue == 'Local'" style="margin-top: 5%">
+                    <div nz-row>
+                      <nz-form-item style="text-align: left">
+                        <label style="font-family: 'Roboto-Regular', sans-serif;">
+                          Invitees will see your availability in their time zone. Recommended for virtual meetings.
+                        </label>
+                      </nz-form-item>
+                    </div>
+                    <div nz-row>
+                      <nz-form-item style="text-align: left">
+                        <label style="font-family: 'Roboto-Regular', sans-serif;">
+                          (Your account settings are configured for India, Sri Lanka Time)
+                        </label>
+                      </nz-form-item>
+                    </div>
+                  </div>
+                  <div nz-row *ngIf="selectTimeZoneValue == 'Locked'" style="margin-top: 5%">
+                    <div nz-row>
+                      <nz-form-item style="text-align: left">
+                        <label style="font-family: 'Roboto-Regular', sans-serif;">
+                          Invitees will see your availability in a locked time zone. Recommended for in-person meetings.
+                        </label>
+                      </nz-form-item>
+                    </div>
+                    <div nz-row>
+                      <nz-form-item style="text-align: left">
+                        <ng2-timezone-picker [timezone]="_timeZone" (change)="changeTimezone($event)" style="width: 15px"></ng2-timezone-picker>
+                      </nz-form-item>
+                    </div>
+                  </div>
+
+                  <div nz-row>
+                    <div nz-col nzSpan="12" style="width: 40%;">
+                      <nz-form-item>
+                        <nz-form-control>
+                          <button nz-button  class="login-button" style="float: right; background: #FF4165; color: white">Apply</button>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                    <div nz-col nzSpan="12" style="width: 40%; float: right;">
+                      <nz-form-item>
+                        <nz-form-control>
+                          <button nz-button class="login-button" style="border: 1px solid #707070; color: #707070">Cancel</button>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                  </div>
+
+                </form>
+
+              </nz-modal>
+              <ng-template #timeZone11>
+                <label>Time Zone Style</label>
+              </ng-template>
+            </div>
+            <div>
+              <label for="Availability">Availability</label>
+              <p id="Availability">Set your available hours when people can schedule meetings with you.</p>
+            </div>
+
+            <nz-card style="width: 100%;" [nzExtra]="extraTemplate">
+              <nz-card-tab>
+                <nz-tabset nzSize="large" [(nzSelectedIndex)]="index1">
+                  <nz-tab nzTitle="Hours"></nz-tab>
+                  <nz-tab nzTitle="Advanced"></nz-tab>
+                </nz-tabset>
+              </nz-card-tab>
+              <nz-calendar *ngIf="index1 === 0"
+                           [(ngModel)]="selectedValue"
+                           (nzSelectChange)="selectChange($event, selectedValue,'as')">
+                <ul *nzDateCell="let date" class="events">
+                  <ng-container [ngSwitch]="date.getDate()" >
+                    <li *ngFor="let item of listDataMap">
+                      <small class="cal-event-small">{{item.startTime}}-{{item.endTime}}</small>
+                    </li>
+                  </ng-container>
+                </ul>
+                <ng-container *nzMonthCell="let month">
+                  <div *ngIf="getMonthData(month) as monthData" class="notes-month">
+                    <section>{{ monthData }}</section>
+                    <span>Backlog number</span>
+                  </div>
+                </ng-container>
+                <nz-modal
+                  [(nzVisible)]="isVisible"
+                  nzTitle="Modal"
+                  nzOkText="Ok"
+                  nzCancelText="Cancel"
+                  (nzOnOk)="handleOk()"
+                  (nzOnCancel)="handleCancel()"
+                >
+                  <div nz-row>
+                    <p>{{selectedValue}}</p>
+                    <form nz-form [formGroup]="addAvailabilityForm" (ngSubmit)="submitFormAvailability()">
+              &lt;!&ndash;        <div nz-row *ngFor="let event of listDataMap">&ndash;&gt;
+                      <div nz-row *ngFor="let control of controlArray;let i = index;">
+                        <div nz-col nzSpan="12">
+                          <nz-form-item >
+                            <nz-form-label [nzXs]="24" [nzSm]="4" *ngIf="i==0" [nzFor]="control.controlInstance">From</nz-form-label>
+                            <nz-form-control [nzXs]="24" [nzSm]="20" [nzOffset]="i==0?0:4">
+                              <nz-time-picker  [(ngModel)]="eventStartTime" nzFormat="hh:mm a" [attr.id]="control.id" [formControlName]="control.controlInstance"></nz-time-picker>
+
+                            </nz-form-control>
+                          </nz-form-item>
+                        </div>
+                        <div nz-col nzSpan="12">
+                          <nz-form-label [nzXs]="24" [nzSm]="4" *ngIf="i==0" [nzFor]="control.controlInstance">To</nz-form-label>
+                          <nz-form-control [nzXs]="24" [nzSm]="20" [nzOffset]="i==0?0:4">
+                            <nz-time-picker [(ngModel)]="endTime" nzFormat="hh:mm a" [attr.id]="control.id" [formControlName]="control.controlInstance2"></nz-time-picker>
+                            <i nz-icon class="dynamic-delete-button" (click)="removeField(control,$event)"> x </i>
+                          </nz-form-control>
+                        </div>
+                      </div>
+                      <div nz-row>
+                        <nz-form-item>
+                          <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:4}">
+                            <a (click)="addField($event)"> + New Interval</a>
+                          </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                          <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:4}">
+                            <button class="custom-button" nz-button nzType="primary">Apply to {{selectedValue | date}}</button>
+                          </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                          <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:4}">
+                            <button class="custom-button" nz-button nzType="primary">Apply to All {{selectedValue | date: 'EEEE'}}</button>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                      &lt;!&ndash;</div>&ndash;&gt;
+                    </form>
+                  </div>
+                </nz-modal>
+              </nz-calendar>
+
+              <div nz-row *ngIf="index1 === 1">
+                <form nz-form [formGroup]="availabilityAdvanceForm" class="login-form" (ngSubmit)="submitAdvancedForm(cardStatus)">
+                  <div nz-row>
+                    <label for="availability_increments">Availability Increments</label>
+                    <div nz-row>
+                      <div nz-col nzSpan="12" style="width: 40%">
+                        <p id="availability_increments">Set the frequency of available time slots for your invitees.</p>
+                      </div>
+                      <div nz-col nzSpan="12" style="width: 40%; float: right">
+                        <p>Show availability in increments of</p>
+                        <nz-form-item>
+                          <nz-form-control>
+                            <nz-select formControlName="show_availability" nzPlaceHolder="Please select availability" style="width: 100%" >
+                              <nz-option *ngFor="let timeSchedule of eventTimeSlot "nzValue="{{timeSchedule.event_type}}" nzLabel="{{timeSchedule.event_type}}"></nz-option>
+                            </nz-select>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </div>
+                  <div nz-row>
+                    <label for="event_max_per_day">Events Max Per Day</label>
+                    <div nz-row>
+                      <div nz-col nzSpan="12" style="width: 40%">
+                        <p id="event_max_per_day">Use this optional setting to limit the number of events that can be scheduled in a day.</p>
+                      </div>
+                      <div nz-col nzSpan="12" style="width: 40%; float: right">
+                        <p>Max number of events per day</p>
+                        <nz-form-item>
+                          <nz-form-control>
+                            <input style="width: 30%;" type="number" nz-input formControlName="event_max_per_day">
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </div>
+                  <div nz-row>
+                    <label for="minimum_scheduling_notice">Minimum Scheduling Notice</label>
+                    <div nz-row>
+                      <div nz-col nzSpan="12" style="width: 40%">
+                        <p id="minimum_scheduling_notice">Use this setting to prevent last minute events.</p>
+                      </div>
+                      <div nz-col nzSpan="12" style="width: 40%; float: right">
+                        <p>Prevent events less than</p>
+                        <nz-form-item>
+                          <nz-form-control>
+                            <input type="number" style="width: 30%;"nz-input formControlName="minimum_scheduling_notice">
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </div>
+                  <div nz-row>
+                    <label for="event_buffers">Event Buffers</label>
+                    <div nz-row>
+                      <div nz-col nzSpan="12" style="width: 40%">
+                        <p id="event_buffers">Use this to set aside preparation, rest or travel time before or after events. For example, if you define a 5 minute buffer before your events Cloudmeetin will make sure you have 5 minutes of free time before your scheduled events.</p>
+                      </div>
+                      <div nz-col nzSpan="12" style="width: 40%; float: right">
+                        <p>Buffer before event</p>
+                        <nz-form-item>
+                          <nz-form-control>
+                            <nz-select formControlName="show_availability_buffer_before_event" nzPlaceHolder="Please select availability" style="width: 100%">
+                              <nz-option *ngFor="let timeSchedule of eventBuffersSlot "nzValue="{{timeSchedule.event_type}}" nzLabel="{{timeSchedule.event_type}}" ></nz-option>
+                            </nz-select>
+                          </nz-form-control>
+                        </nz-form-item>
+                        <p>Buffer after event</p>
+                        <nz-form-item>
+                          <nz-form-control>
+                            <nz-select formControlName="show_availability_buffer_after_event" nzPlaceHolder="Please select availability" style="width: 100%">
+                              <nz-option *ngFor="let timeSchedule of eventBuffersSlot "nzValue="{{timeSchedule.event_type}}" nzLabel="{{timeSchedule.event_type}}" ></nz-option>
+                            </nz-select>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </nz-card>
+            <ng-template #extraTemplate>
+              <a>More</a>
+            </ng-template>
+            <br>
+            <div nz-row>
+              <div nz-col nzSpan="12">
+                <label for="secret_event">Secret Event</label>
+                <p id="secret_event">Hide this event from your main CloudMeetIn page?</p>
+              </div>
+              <div nz-col nzSpan="12">
+                <nz-switch style="float: right" nzSize="small" [ngModel]="default_secret_event"></nz-switch>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div nz-row>
+          <div nz-col nzSpan="12" style="width: 40%;">
+            <nz-form-item>
+              <nz-form-control>
+                <button nz-button class="login-form-button" [disabled]="!availabilityAdvanceForm.valid" style="float: right; background: #FF4165; color: white" (click)="submitAdvancedForm(cardStatus)">{{editMode ? 'Save & Close' :'Next'}}</button>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="12" style="width: 40%; float: right;">
+            <nz-form-item>
+              <nz-form-control>
+                <button nz-button class="login-form-button" [nzType]="'danger'" (click)="OnCancelEventAdvancedFrom()">Cancel</button>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <ng-template #template1>
+          <div nz-row nzType="flex" nzJustify="center">
+            <svg width="30" height="30">
+              <circle cx="15" cy="15" r="10" fill="#23038F"></circle>
+            </svg>
+            <h4>When can people book this event?</h4>
+          </div>
+        </ng-template>
+      </nz-collapse-panel>
+    </nz-collapse>
+  </div>
+</div>
+
+-->

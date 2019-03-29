@@ -1,71 +1,87 @@
-<div class="container">
-  <div class="row">
-    <div class="col-lg-6">
-      <div class="mid-horizontal">
-        <img src="https://www.pr-inside.com/images/uploads/pr/2018/97797/20181129_ca-logo_97797.png" alt="" width="80">
-        <br><br>
-        <p *ngIf="isSignInStatus === 0 || isSignInStatus === 2">Sign Up for CA Calendly and get a 14 day pro trial.</p>
-        <p *ngIf="isSignInStatus === 1">Hi {{email}}!</p>
-      </div>
-<!--if isSignInStatus === 0 -->
-      <div class="card text-left" *ngIf="isSignInStatus === 0">
-        <div class="card-body">
-          <form [formGroup]="signUp" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <label>Enter your email to get started.</label>
-            <input type="email" [ngClass]="{'has-error': !signUp.get('email').valid && signUp.get('email').touched}"
-                   formControlName="email" class="form-control" id="textName" placeholder="Email address">
-            <span class="help-block" *ngIf="!signUp.get('email').valid && signUp.get('email').touched">
-          <span class="text-danger" *ngIf="signUp.get('email').errors" required>Email address required</span></span>
-          </div>
-          <button type="submit" class="btn btn-primary" [disabled]="!signUp.valid">Get Started</button>
-          </form>
-        </div>
-        <div class="text-left">
-          <div class="card-body">
+<!--sumit.kumar@cloudanalogy.com-->
+<div nz-row style="margin-top: 2%">
+  <div class="mid-horizontal">
+    <img src="../../../assets/Logo_c_new.svg" alt="" width="80">
+    <br><br>
+    <div class="heading">
+      <h5>Sign Up for CloudMeetIn and get a 30 day pro trial</h5>
+      <h5>includes all features and 50 bookings.</h5>
+      <h5>No credit card needed.</h5>
+    </div>
+    <!-- Second Page -->
+   <!-- <div class="heading" *ngIf="isSignInStatus === 1">
+      <h5>Hi {{email}}!</h5>
+      <p>
+        The easiest way for you to sign up is with Google. This will automatically
+        connect your calendar so you can start using CloudMeetIn right away!
+      </p>
+      <button type="submit" style="max-width: 400px;" nz-button nzBlock (click)="socialSignIn('google')">
+        <i nz-icon type="google" theme="outline"></i>Sign up with Google</button>
+    </div>-->
+  </div>
+  <div nz-col nzSpan="12" nzOffset="6">
+    <!--One Page -->
+    <div *ngIf="isSignInStatus === 0" style="margin-top: 30px">
+      <form nz-form [formGroup]="signUp" class="login-form" style="margin: auto" (ngSubmit)="onSubmit()">
+        <nz-form-item>
+          <nz-form-control>
+            <label>Get started just with your email address.</label>
+            <input  type="email" nz-input placeholder="Email address" nzSize="large" formControlName="email">
+            <nz-form-explain *ngIf="!signUp.get('email').valid && signUp.get('email').touched">
+              <nz-form-explain *ngIf="signUp.get('email').errors">Please enter valid email address
+              </nz-form-explain>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control>
+            <button type="submit" nz-button nzBlock [disabled]="!signUp.valid">Create your account</button>
             <h6>Already have an account? <a routerLink="/login">Login</a></h6>
-          </div>
-        </div>
-      </div>
-      <!--if isSignInStatus === 2 -->
-      <div class="card text-left" *ngIf="isSignInStatus ===2">
-        <div class="card-body">
-          <form [formGroup]="signUpForm" (ngSubmit)="onSubmitProfile()">
-            <div class="form-group">
-              <label>Enter your email to get started.</label>
-              <input type="email" [ngClass]="{'has-error': !signUpForm.get('emailID').valid && signUpForm.get('emailID').touched}"
-                     formControlName="emailID" class="form-control" id="emailID" placeholder="Email address">
-              <span class="help-block" *ngIf="!signUpForm.get('emailID').valid && signUpForm.get('emailID').touched">
-          <span class="text-danger" *ngIf="signUpForm.get('emailID').errors" required>Email address required</span></span>
-            </div>
-            <div class="form-group">
-              <label>Enter your full name.</label>
-              <input type="text" [ngClass]="{'has-error': !signUpForm.get('fullName').valid && signUpForm.get('fullName').touched}"
-                     formControlName="fullName" class="form-control" id="fullName" placeholder="Full name">
-              <span class="help-block" *ngIf="!signUpForm.get('fullName').valid && signUpForm.get('fullName').touched">
-          <span class="text-danger" *ngIf="signUpForm.get('fullName').errors" required>Fullname required</span></span>
-            </div>
-            <div class="form-group">
-              <label>Choose a password with at least 8 characters.</label>
-              <input type="password" minlength="8" [ngClass]="{'has-error': !signUpForm.get('password').valid && signUpForm.get('password').touched}"
-                     formControlName="password" class="form-control" id="password" placeholder="Password">
-              <span class="help-block" *ngIf="!signUpForm.get('password').valid && signUpForm.get('password').touched">
-          <span class="text-danger" *ngIf="signUpForm.get('password').errors" required>Password required</span></span>
-            </div>
-            <button type="submit" class="btn btn-primary" [disabled]="!signUpForm.valid">Continue</button>
-          </form>
-        </div>
-      </div>
-      <!--if isSignInStatus === 1 -->
-      <div class="card text-sm-center"*ngIf="isSignInStatus === 1">
-        <div class="card-body">
-          <p style="font-size: 14px" class="text-left">The easiest way for you to sign up is with Google. This will automatically connect your calendar so you can start using Calendly right away!
-          </p>
-          <button class="btn btn-primary" (click)="socialSignIn('google')">Sign up with Google</button>
-          <!--<a style="background: blue" href="http://localhost:3000/googleCalendar/signupcal" (click)="socialSignIn(email)">Sign up with Google</a>-->
-        </div>
-        <!--<p>Prefer to create an account with a password? <a style="color: blue;cursor: pointer;"(click)="OnCreateAccount()">click here</a></p>-->
-      </div>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+
+    <!--Third page -->
+    <div *ngIf="isSignInStatus ===1" style="margin-top: 30px">
+      <form nz-form [formGroup]="signUpForm" class="login-form" style="margin: auto" (ngSubmit)="onSubmitProfile()">
+        <nz-form-item>
+          <nz-form-control>
+            <label>Get started just with your email address.</label>
+            <input  type="email" nz-input placeholder="Email address" nzSize="large" formControlName="emailID" [readonly]="true">
+            <nz-form-explain *ngIf="!signUpForm.get('emailID').valid && signUpForm.get('emailID').touched">
+              <nz-form-explain *ngIf="signUpForm.get('emailID').errors">Please enter valid email address
+              </nz-form-explain>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control>
+            <label>Enter your full name.</label>
+            <input  type="email" nz-input placeholder="Full name" nzSize="large" formControlName="fullName">
+            <nz-form-explain *ngIf="!signUpForm.get('fullName').valid && signUpForm.get('fullName').touched">
+              <nz-form-explain *ngIf="signUpForm.get('fullName').errors">Please enter full name
+              </nz-form-explain>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control>
+            <label>Choose a password with at least 8 characters.</label>
+            <input  type="password" minlength="8" nz-input placeholder="Password" nzSize="large" formControlName="password">
+            <nz-form-explain *ngIf="!signUpForm.get('password').valid && signUpForm.get('password').touched">
+              <nz-form-explain *ngIf="signUpForm.get('password').errors">Please enter at least 8 characters password
+              </nz-form-explain>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control>
+            <button type="submit" nz-button nzBlock [disabled]="!signUpForm.valid">Continue</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
     </div>
   </div>
 </div>
+

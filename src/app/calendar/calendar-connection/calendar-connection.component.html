@@ -1,0 +1,76 @@
+<div nz-row nzType="flex" nzJustify="start" style="margin-top: 40px">
+  <div nz-col nzOffset="4">
+    <h6 align="start">Calendar connection</h6>
+  </div>
+</div>
+<hr/>
+<div nz-row nzType="flex" nzJustify="center" style="margin-top:10px ">
+  <div nz-col nzSpan="20" align="center">
+    <nz-card style="width:80%">
+      <div nz-row nzJustify="center">
+        <div nz-col align="start" nzSpan="2">
+          <nz-avatar [nzSize]="50" nzIcon="user" nzSrc="https://i.stack.imgur.com/22WR2.png"></nz-avatar>
+        </div>
+        <div nz-col align="start" nzSpan="8">
+<span style="margin-right: 20%">
+Currently connected account<br>
+<b style="color:#FF4165 ">{{calendar}}</b>
+</span>
+        </div>
+        <div nz-col align="end" nzSpan="8" nzOffset="6">
+          <button nz-button nzType="default" routerLink="/changeCalendar" style="color:#FF4165; width:130px; text-align: center; border-color: #FF4165;margin-right: 1%">
+            Change Calendar
+          </button> &nbsp;&nbsp;&nbsp;
+          <button nz-button nzType="default" style="width: 130px; text-align: center;">Disconnect</button>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>
+
+<div nz-row style="margin-top:50px " nzType="flex" nzJustify="center">
+  <div nz-col nzSpan="15" nzOffset="4">
+    <b>Check Calendar for conflicts</b>
+  </div>
+  <div nz-col nzSpan="4">
+    <nz-switch [(ngModel)]="switchValue"></nz-switch>
+  </div>
+</div>
+<div nz-row style="margin-top:10px " nzType="flex" nzJustify="center">
+  <div nz-col nzSpan="15">
+    <label nz-checkbox [(ngModel)]="checked">{{calendar}}</label>
+  </div>
+</div>
+
+<div nz-row style="margin-top:50px " nzType="flex" nzJustify="center">
+  <div nz-col nzSpan="15" nzOffset="4">
+    <b>Add new events to calendar</b>
+  </div>
+  <div nz-col nzSpan="4">
+    <nz-switch [(ngModel)]="switchValue"></nz-switch>
+  </div>
+</div>
+
+<div nz-row style="margin-top:10px " nzType="flex" nzJustify="center">
+  <div nz-col nzSpan="15">
+    <nz-select style="width: 40%;">
+      <nz-option nzValue="{{calendar}}" nzLabel="{{calendar}}"></nz-option>
+    </nz-select>
+  </div>
+</div>
+<div nz-row style="margin-top:50px " nzType="flex" nzJustify="center">
+  <div nz-col nzSpan="15">
+    <b>Sync cancellation</b>
+  </div>
+</div>
+<div nz-row style="margin-top:10px " nzType="flex" nzJustify="center">
+  <div nz-col nzSpan="15">
+    <label nz-checkbox [(ngModel)]="checked">Deleting or declining an event in your calendar will also cancel it in Cloudmeetin.</label>
+  </div>
+</div>
+<div nz-row style="margin-top:50px " nzType="flex" nzJustify="center">
+  <div nz-col nzSpan="21" align="center" >
+    <button nz-button class="login-form-button" style="background-color:#FF4165; color: white; width: 150px" >Save Changes</button> &nbsp;&nbsp;&nbsp;&nbsp;
+    <button nz-button class="login-form-button" style="border-color:#707070; color: #707070; width: 150px" > Cancel </button>
+  </div>
+</div>

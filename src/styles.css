@@ -1,9 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; font-style: normal;}
 
 
+.custom-card {
+  border-radius: 2px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 0px 5px rgba(0,0,0,.09)
+}
+.custom-card:hover {
+  border-radius: 2px;
+  border: 1px solid rgb(215, 215, 215);
+  box-shadow: 0 0px 30px rgba(0,0,0,.09)
+}
 
 
 /*# sourceMappingURL=landing-fc0e373a.chunk.css.map*/

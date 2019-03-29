@@ -1,32 +1,67 @@
-<div class="container">
-  <div class="card text-left">
-    <strong style="margin-top: 20px;font-size: 30px;text-align: center">Integration with GoToMeeting</strong>
-    <div class="card-body" style="margin-top: 20px">
-      <form [formGroup]="integrationForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label>Enter your Go2Meeting Registered Email.</label>
-          <input type="email" [ngClass]="{'has-error': !integrationForm.get('emailId').valid && integrationForm.get('emailId').touched}"
-                 formControlName="emailId" class="form-control" id="emailId" placeholder="Email">
-          <span class="help-block" *ngIf="!integrationForm.get('emailId').valid && integrationForm.get('emailId').touched">
-          <span class="text-danger" *ngIf="integrationForm.get('emailId').errors" required>Email Address required.</span></span>
+<div nz-row style="margin-top: 20px" *ngIf="!alreadyIntegrated">
+  <div nz-col nzSpan="4">
+  </div>
+  <div nz-col nzSpan="16">
+    <div nz-row>
+      <div nz-col nzSpan="6">
+        <button nz-button nzType="primary" style="color: blue;background: none;border-color: blue;width: 80%;align-content: center" routerLink="/integrations">Back</button>
+      </div>
+      <div nz-col nzSpan="12">
+        <h6>GoToMeeting Information</h6>
+      </div>
+    </div>
+    <div style="margin-top: 50px">
+      <nz-card>
+        <div nz-row nzSpan="24">
+          <div nz-col nzSpan="12" >
+            <h5><b>Features that save you time:</b></h5>
+            <div style="margin-left: 4%">
+              <h4>&#9679; Automatically create GoToMeeting at the time an event is scheduled.</h4>
+              <h4>&#9679; Instantly share unique conferencing details upon confirmation.</h4>
+            </div>
+            <h5>Supports any GoToMeeting account:</h5>
+            <div style="margin-left: 4%">
+              <h4>&#9679; Web conferencing url on all GoToMeeting accounts.</h4>
+              <h4>&#9679; Call-In Instructions on Paid GoToMeeting accounts.</h4>
+            </div>
+            <div nz-col nzSpan="12" style="margin-top: 20px">
+              <button nz-button nzType="primary" (click)="gtmIntegrationStart()">Connect GoToMeeting</button>
+            </div>
+          </div>
+          <div nz-col nzSpan="12" style="height: 100%">
+            <img src="./../../../assets/gtm.jpg" style="alignment: center">
+          </div>
         </div>
-        <div class="form-group">
-          <label>Enter your Go2Meeting Password.</label>
-          <input type="password" [ngClass]="{'has-error': !integrationForm.get('password').valid && integrationForm.get('password').touched}"
-                 formControlName="password" class="form-control" id="password" placeholder="Password">
-          <span class="help-block" *ngIf="!integrationForm.get('password').valid && integrationForm.get('password').touched">
-          <span class="text-danger" *ngIf="integrationForm.get('password').errors" required>Password Required.</span></span>
+      </nz-card>
+    </div>
+  </div>
+  <div nz-col nzSpan="4">
+  </div>
+</div>
+<div *ngIf="alreadyIntegrated">
+  <div nz-row style="margin-top: 20px">
+    <div nz-col nzSpan="3" nzOffset="3">
+      <button nz-button nzType="primary" style="color: blue;background: none;border-color: blue;width: 80%;align-content: center" routerLink="/integrations">Back</button>
+    </div>
+    <div nz-col nzSpan="15">
+      <h6>GoToMeeting Information</h6>
+    </div>
+  </div>
+  <div nz-row style="margin-top: 20px">
+    <div nz-col nzSpan="4" nzOffset="2">
+      <!-- <button nz-button nzType="primary" style="color: blue;background: none;border-color: blue;width: 80%;align-content: center" routerLink="/integrations">Back</button>-->
+    </div>
+    <div nz-col nzSpan="16">
+      <nz-card>
+        <div nz-row nzType="flex" nzJustify="center">
+          <b>You have done integration with:</b>&nbsp; {{gtmIntegratedEmail}}
         </div>
-        <div class="form-group">
-          <label>Enter your Go2Meeting Client Id.</label>
-          <input type="text" [ngClass]="{'has-error': !integrationForm.get('clientId').valid && integrationForm.get('clientId').touched}"
-                 formControlName="clientId" class="form-control" id="clientId" placeholder="Client Id">
-          <span class="help-block" *ngIf="!integrationForm.get('clientId').valid && integrationForm.get('clientId').touched">
-          <span class="text-danger" *ngIf="integrationForm.get('clientId').errors" required>Client Id Required.</span></span>
+        <div nz-row nzType="flex" nzJustify="center" style="margin-top: 20px">
+          <button nz-button nzType="info" (click)="disconnectGTM()" style="background: #FF4165; color: white">Disconnect GTM Integration</button>
         </div>
-        <button type="submit" class="btn btn-primary" [disabled]="!integrationForm.valid">Continue</button>
-      </form>
+      </nz-card>
+    </div>
+    <div nz-col nzSpan="4">
     </div>
   </div>
 </div>
-
