@@ -21,7 +21,11 @@ export class ConfirmedComponent implements OnInit {
     this.meetingTime = localStorage.getItem('eventType')+" Minute Meeting";
     this.meetingDateTime = localStorage.getItem('selectedTime')+" "+localStorage.getItem('selectedDate');
     this.meetingTimeZone = localStorage.getItem('selectedTimeZone');
+<<<<<<< HEAD
     this.notification.blank('Meeting Confirmation', 'I would like to confirm our meeting at '+this.meetingDateTime+'', { nzDuration: 0 })
+=======
+    this.notification.blank('Meeting Confirmation', 'I would like to confirm our meeting at '+this.meetingDateTime+'', { nzDuration: 0 });
+>>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
     localStorage.removeItem('fullName');
     localStorage.removeItem('eventType');
     localStorage.removeItem('selectedTime');

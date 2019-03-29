@@ -39,6 +39,10 @@ export class SignUpService {
 
   updateRoleOfUser(formData){
     this.httpClient.post<any>('http://localhost:3000/user/updateRole',formData).subscribe((responseData)=>{
+<<<<<<< HEAD
+=======
+
+>>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
       let email = localStorage.getItem("emailSignUp");
       let password = localStorage.getItem("password");
       localStorage.removeItem("emailSignUp");

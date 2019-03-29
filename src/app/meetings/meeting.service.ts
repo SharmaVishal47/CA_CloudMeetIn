@@ -1000,7 +1000,11 @@ export class MeetingService {
   /*This function used for show the confirmation page and remove the meeting's local storage data*/
   meetingsConfirmation() {
     this.router.navigate(['confirmedMeeting']);
+<<<<<<< HEAD
     /*localStorage.removeItem('rescheduleRecord');*/
+=======
+    localStorage.removeItem('rescheduleRecord');
+>>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
     localStorage.removeItem('UpdateQuery');
     localStorage.removeItem('meetingTimeList');
   }

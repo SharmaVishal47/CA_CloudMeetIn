@@ -174,6 +174,7 @@ router.post('/insertslots', (req, res, next) => {
   });
 });
 
+<<<<<<< HEAD
 router.post('/createeventaftersignup', (req, res, next) => {
   let email =  req.body.email;
   let usernameQuery = "SELECT * FROM `calendly` WHERE email = '" + email + "'";
@@ -288,4 +289,7 @@ router.post('/createeventaftersignup', (req, res, next) => {
     }
   });
 });
+=======
+
+>>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
 module.exports = router;

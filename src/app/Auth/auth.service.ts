@@ -85,12 +85,19 @@ export class AuthServiceLocal implements OnInit{
           this.fullName = responseData.data[0].fullName.toString();
           this.profilePic = responseData.data[0].profilePic
           this.isAuthenticated = true;
+<<<<<<< HEAD
           this.authStatusListener.next(true);
+=======
+          this.router.navigate(['dashboard']);
+          this.authStatusListener.next(true);
+
+>>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
           const expiresIn = responseData.expiresIn;
           this.setAuthTimer(expiresIn);
           const now = new Date();
           const expirationDate = new Date(now.getTime() + expiresIn*1000);
           this.saveAuthData(this.token,expirationDate,responseData.data[0].userId,this.emailId);
+<<<<<<< HEAD
           /*this.eventService.createEventAfterSignUp(this.emailId);*/
           console.log("Call event create==========");
           this.httpClient.post<any>('http://localhost:3000/events/createeventaftersignup', {email: this.emailId}).subscribe(
@@ -100,6 +107,9 @@ export class AuthServiceLocal implements OnInit{
             err => {
 
             });
+=======
+
+>>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
         }else{
           console.log("Log97");
           this.router.navigate(['login']);

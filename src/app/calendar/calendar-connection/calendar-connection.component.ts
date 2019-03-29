@@ -45,7 +45,11 @@ export class CalendarConnectionComponent implements OnInit {
     this.httpClient.post<{message: string,data: []}>('http://localhost:3000/googleCalendar/calendarId',{'userId': this.userId}).subscribe(
       res =>{
         console.log('Response---> ',res);
+<<<<<<< HEAD
         this.calendar = res.data['0'].calendarEvent
+=======
+        this.calendar = res.data['0'].calanderId
+>>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
       },err => {
         console.log("Error=========",err.message);
         const dialogConfig = new MatDialogConfig();
