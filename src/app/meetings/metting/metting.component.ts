@@ -4,6 +4,8 @@ import {HttpClient} from '@angular/common/http';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {MessagedialogComponent} from '../../messagedialog/messagedialog.component';
 import {MeetingService} from '../meeting.service';
+import 'rxjs-compat/add/operator/filter';
+import {AuthServiceLocal} from '../../Auth/auth.service';
 
 @Component({
   selector: 'app-metting',
@@ -11,16 +13,18 @@ import {MeetingService} from '../meeting.service';
   styleUrls: ['./metting.component.css']
 })
 export class MettingComponent implements OnInit {
+  eventId: string;
   Meeting_owner;
   meeting_time;
-  select_day = 'Select Day';
+  select_day = 'Select Day ';
   selectDate: any;
   timeZone: string;
   myFilter;
   userId: string;
   startDate = new Date();
+  checkReschedule = false;
 
-  constructor(private meetingService: MeetingService, private router: Router, private route: ActivatedRoute, private httpClient: HttpClient, private dialog: MatDialog) {
+  constructor(private meetingService: MeetingService, private router: Router, private route: ActivatedRoute, private httpClient: HttpClient, private dialog: MatDialog,private authService: AuthServiceLocal) {
   }
 
   ngOnInit() {
@@ -40,15 +44,26 @@ export class MettingComponent implements OnInit {
           this.router.navigate(['/']);
       }
     });
+    // Get the query params from the url
+    this.route.queryParams
+      .filter(params => params.eid)
+      .subscribe(params => {
+        console.log(params);
+        this.eventId = params.eid;
+        if(this.eventId) {
+          this.checkReschedule = true;
+          this.select_day = 'Select a Day to Reschedule';
+        }
+        console.log('Get event id from url -->', this.eventId);
+      });
     /* this.meetingService.userLocalStorageData.subscribe((data: any) =>{
        console.log("Return data from service", typeof data.fullName);
        this.Meeting_owner =
          typeof (data.fullName) === 'string' && data.fullName.split('').length > 0 ? data.fullName : this.router.navigate(['/']);
    });*/
-    this.Meeting_owner =
-      typeof (localStorage.getItem('fullName')) === 'string' &&
-      localStorage.getItem('fullName').split('').length > 0
-        ? localStorage.getItem('fullName') : this.router.navigate(['/']);
+    this.Meeting_owner = typeof (localStorage.getItem('fullName')) === 'string' && localStorage.getItem('fullName').split('').length > 0
+        ? localStorage.getItem('fullName') :  this.router.navigate(['/']);
+
     this.meetingService.getMeetingAvailableDay(this.userId);
     this.meetingService.meetingAvailableDay.subscribe((res: any) => {
       console.log(res.data);
@@ -90,7 +105,7 @@ export class MettingComponent implements OnInit {
     localStorage.setItem('selectedDate', this.selectDate);
     localStorage.setItem('timeZone', this.timeZone);
     let expectedDay = this.selectDate.getDay();
-    this.router.navigate([expectedDay], {relativeTo: this.route});
+    this.router.navigate([expectedDay], {relativeTo: this.route, queryParamsHandling: 'merge'});
   }
 
   changeTimezone(timezone) {
@@ -98,6 +113,10 @@ export class MettingComponent implements OnInit {
     console.log(this.timeZone);
     this.startDate = new Date(new Date().toLocaleString('en-US', {timeZone: this.timeZone}));
     this.selectDate = '';
+  }
+
+  goToDashboard() {
+    this.authService.autoAuthenticateUser();
   }
 }
 

@@ -1,29 +1,223 @@
-<div class="container">
-  <h3 style="color: #4d5055;text-align: center;margin-top: 20px;margin-bottom: 20px">Event Types</h3>
-  <mat-tab-group mat-align-tabs="center">
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <strong>Personal</strong>
-      </ng-template>
-      <div class="columns">
-        <p>{{fullName}}</p>
-        <p><a href="http://localhost:4200/{{userId}}">http://localhost:4200/{{userId}}</a></p>
+<div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
+  <div nz-col nzSpan="14">
+    <div nz-row>
+      <div nz-col nzSpan="6">
+        <h4>Event Types</h4>
       </div>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <strong>Team</strong>
-      </ng-template>
-      <h1>Team</h1>
-      <p>...</p>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <strong>All Users</strong>
-      </ng-template>
-      <h1>All Users</h1>
-      <p>...</p>
-    </mat-tab>
-  </mat-tab-group>
+      <div nz-col nzSpan="9">
+      </div>
+      <div nz-col nzSpan="9">
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input type="text" nz-input placeholder="Search for Event Types">
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzType="primary" nzSearch style="background: #FF4165;border-color: #FF4165"><i nz-icon type="search"></i></button>
+        </ng-template>
+      </div>
+    </div>
+  </div>
 </div>
+<hr/>
+<div nz-row nzType="flex" nzJustify="center" style="margin-top:1%;margin-bottom: 1%" *ngIf="(userCheck || teamCheck)">
+  <div nz-col nzSpan="14">
+    <nz-tabset [nzSize]="size" >
+      <nz-tab [nzTitle]="titleTemplate">
+        <ng-template #titleTemplate>
+          Event Types
+        </ng-template>
+        <div class="col-lg-14" style="margin-top: 2%; margin-bottom: 5%">
+          <div class="wrap">
+            <div style="display: flex">
+              <div nz-row>
+                <div class="avatar-element">
+                  {{firstChar[0]}}
+                </div>
+              </div>
+              <div style="margin-left: 10px; font-size: 14px">
+                {{fullName}}<br>
+                <a href="http://localhost:4200/{{userId}}" style="font-size: 10px; color: #FF4165" target="_blank">http://localhost:4200/{{userId}}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+              </div>
+            </div>
+            <div>
+              <button nz-button routerLink="/newEvent" style="background: #FF4165; color: white;margin: 0 auto;vertical-align: middle;border-radius: 5px"><strong style="font-size: 16px">+</strong > New Event Type</button>
+            </div>
+          </div>
+        </div>
+        <hr/>
+        <div *ngFor="let event_details of EventTypeSlot">
+          <nz-card [nzBordered] = "true" style="margin-top: 2%; cursor: pointer; width: 90%; float: left">
+            <div class="gutter-example">
+              <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 8, xl: 8, xxl: 8 }">
+                <div nz-col class="gutter-row" nzSpan="1">
+                  <div class="gutter-box">
+                    <svg width="30" height="30">
+                      <circle cx="15" cy="15" r="10" fill="#DFC12D"></circle>
+                    </svg>
+                  </div>
+                </div>
+                <div nz-col class="gutter-row" nzSpan="10">
+                  <div class="gutter-box" style="float: left">
+                    <p>{{event_details.event_type}}</p>
+                    <p style="font-size: 10px">One-on-One, {{event_details.eventDuration}}</p>
+                  </div>
+                </div>
+                <div nz-col class="gutter-row" nzSpan="6" style="color: #FF4165">
+                  <div class="gutter-box">
+                    {{hostName}}{{event_details.link}}
+                  </div>
+                </div>
+                <div nz-col class="gutter-row" nzSpan="6">
+                  <div class="gutter-box" style="float: right">
+                    <nz-switch nzSize="small" [ngModel]="event_details.active == 'true' ? true : false"></nz-switch>
+                    <img src="../../../assets/gear.svg" alt="" width="16" height="16" style="margin-left: 5px">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nz-card>
+          <div style="float: right; margin-top: 5%">
+            <nz-checkbox-wrapper style="width: 100%;" (nzOnChange)="log($event)">
+              <div nz-col nzSpan="8"><label nz-checkbox nzValue={{event_details.name}}></label></div>
+            </nz-checkbox-wrapper>
+          </div>
+        </div>
+      </nz-tab>
+      <nz-tab [nzTitle]="titleTemplate1" *ngIf="teamCheck">
+        <ng-template #titleTemplate1 >
+          Teams
+        </ng-template>
+      </nz-tab>
+      <nz-tab [nzTitle]="titleTemplate2" *ngIf="userCheck">
+        <ng-template #titleTemplate2>
+          Users
+        </ng-template>
+        Testing
+      </nz-tab>
+    </nz-tabset>
+  </div>
+</div>
+<div nz-row nzType="flex" nzJustify="center" style="margin-top:1%;margin-bottom: 1%" *ngIf="!(userCheck || teamCheck)">
+  <div nz-col nzSpan="14">
+    <div class="col-lg-14" style="margin-top: 2%; margin-bottom: 5%">
+      <div class="wrap">
+        <div style="display: flex">
+          <div nz-row>
+            <div class="avatar-element">
+              {{firstChar[0]}}
+            </div>
+          </div>
+          <div style="margin-left: 10px; font-size: 14px">
+            {{fullName}}<br>
+              <a href="http://localhost:4200/{{userId}}" style="font-size: 10px; color: #FF4165" target="_blank">http://localhost:4200/{{userId}}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+          </div>
+        </div>
+        <div>
+          <button nz-button routerLink="/newEvent" style="background: #FF4165; color: white;margin: 0 auto;vertical-align: middle;border-radius: 5px"><strong style="font-size: 16px">+</strong > New Event Type</button>
+        </div>
+      </div>
+    </div>
+    <hr/>
+    <div *ngFor="let event_details of EventTypeSlot; let i = index">
+      <nz-card [nzBordered] = "false" style="margin-top: 2%;width: 90%; float: left;" class="custom-card"  >
+        <div class="gutter-example">
+          <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 8, xl: 8, xxl: 8 }">
+            <div nz-col class="gutter-row" nzSpan="1">
+              <div class="gutter-box">
+                <div class="custom-circle" [ngStyle]="{'background-color': event_details.color}"></div>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="10">
+              <div class="gutter-box" style="float: left">
+                <p>{{event_details.name}}</p>
+                <p style="font-size: 10px">One-on-One, {{event_details.eventDuration}}</p>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="6" style="color: #FF4165">
+              <div class="gutter-box">
+                {{hostName}}{{event_details.link}}
+              </div>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="6">
+              <div class="gutter-box" style="float: right">
+                <nz-switch nzSize="small" [ngModel]="event_details.active == 'true' ? true : false"></nz-switch>
 
+                <nz-dropdown [nzTrigger]="'click'" >
+                  <a nz-dropdown >
+                    <img src="../../../assets/gear.svg" alt="" width="16" height="16" style="margin-left: 5px" nz-tooltip nzTitle="Setting">
+                  </a>
+                  <ul nz-menu style="min-width: 160px">
+                    <li nz-menu-item (click)="onEditEvent(event_details.event_id, i)">
+                      <div nz-row>
+                        <div nz-col nzSpan="22">
+                          Edit
+                        </div>
+                        <div nz-col nzSpan="2">
+                          <img src="../../../assets/edit.png" style="width: 15px;height: 12px" >
+                        </div>
+                      </div>
+                    </li>
+                    <li nz-menu-item>
+                      <div nz-row>
+                        <div nz-col nzSpan="22">
+                          Copy Link
+                        </div>
+                        <div nz-col nzSpan="2">
+                          <img src="../../../assets/copy-document.png" style="width: 15px;height: 12px" >
+                        </div>
+                      </div>
+                    </li>
+                    <li nz-menu-item>
+                      <div nz-row>
+                        <div nz-col nzSpan="22">
+                          Clone
+                        </div>
+                        <div nz-col nzSpan="2">
+                          <img src="../../../assets/edit.png" style="width: 15px;height: 12px" >
+                        </div>
+                      </div>
+                    </li>
+                    <li nz-menu-item>
+                      <div nz-row>
+                        <div nz-col nzSpan="22">
+                          Save to Template
+                        </div>
+                        <div nz-col nzSpan="2">
+                          <img src="../../../assets/edit.png" style="width: 15px;height: 12px" >
+                        </div>
+                      </div>
+                    </li>
+                    <li nz-menu-item>
+                      <div nz-row>
+                        <div nz-col nzSpan="22">
+                          Embed
+                        </div>
+                        <div nz-col nzSpan="2">
+                          <img src="../../../assets/edit.png" style="width: 15px;height: 12px" >
+                        </div>
+                      </div>
+                    </li>
+                    <li nz-menu-item (click)="onDeleteEvent(event_details.event_id)">
+                      <div nz-row>
+                        <div nz-col nzSpan="22">
+                          Delete
+                        </div>
+                        <div nz-col nzSpan="2">
+                          <img src="../../../assets/delete.png" style="width: 15px;height: 12px" >
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </nz-dropdown>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nz-card>
+      <div style="float: right; margin-top: 5%">
+        <nz-checkbox-wrapper style="width: 100%;" (nzOnChange)="log($event)">
+          <div nz-col nzSpan="8"><label nz-checkbox nzValue={{event_details.name}}></label></div>
+        </nz-checkbox-wrapper>
+      </div>
+    </div>
+  </div>
+</div>

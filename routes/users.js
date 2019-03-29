@@ -3,7 +3,22 @@ const router = express.Router();
 const fs = require('fs');
 const {google} = require('googleapis');
 const googleAuth = require('google-auth-library');
+const jwt = require('jsonwebtoken');
+const checkAuth = require('../middleware/check-auth');
+const calendarMiddleware = require('../middleware/google-calendar-auth');
 
+router.post('/checkTokenUserId',(req,res,next)=>{
+  const decodedToken = jwt.verify(req.body.token,'secret-code-for-token');
+  if(decodedToken.userId === req.body.userId){
+    res.status(200).json({
+      message: 'Match Successfully.'
+    });
+  }else{
+    res.status(404).json({
+      message: 'Invalid Token'
+    });
+  }
+});
 
 router.post('/checkMeetingPlatform',(req,res,next)=>{
   console.log(req.body);
@@ -22,9 +37,7 @@ router.post('/checkMeetingPlatform',(req,res,next)=>{
   });
 });
 
-
 router.post('/getcalendarlist',(req,res,next)=>{
-
   let usernameQuery = "SELECT token_path FROM `calendly` WHERE email = '"+req.body.email+"'";
   db.query(usernameQuery, (err, result) => {
     if (err!==null) {
@@ -70,6 +83,145 @@ router.post('/insertevent',(req,res,next)=>{
       const token = fs.readFileSync(TOKEN_PATH);
       oauth2Client.setCredentials(JSON.parse(token));
       const calendar = google.calendar({version: 'v3'});
+          const event = {
+            'summary': req.body.userName + ' and ' + req.body.meetIngData.subject,
+            location: 'Noida',
+            description: 'Event Name: ' + req.body.eventType + '\n'+
+              'Need to make changes to this event ?' + '\n'+
+              'Cancel:' +'\n'+
+              'http://localhost:4200/' + '\n'+
+              'Reschedule:' +'\n'+
+              'http://localhost:4200/' + '\n'+'\n'+
+              'Powered by CloudMeetIn.com ',
+            start: {
+              dateTime: req.body.meetIngData.starttime,
+              timeZone: req.body.timeZone
+            },
+            end: {
+              dateTime: req.body.meetIngData.endtime,
+              timeZone: req.body.timeZone
+            },
+            attendees: [{ email: req.body.email }, { email: req.body.inviteeEmail }],
+            reminders: {
+              useDefault: true,
+            }
+          };
+          console.log(event);
+          calendar.events.insert({
+            auth: oauth2Client,
+            calendarId: req.body.email,
+            resource: event,
+            "sendUpdates": "all",
+          }, function(err, event) {
+            if (err) {
+              // console.log('There was an error contacting the Calendar service: ' + err);
+              res.status(500).json( {
+                // message :  'There was an error contacting the Calendar service' +err
+              });
+
+            }
+            console.log("==================================================================");
+            console.log('Event created==========================>>>', event.data);
+
+            console.log("==================================================================");
+            res.status(200).json( {
+              message :  'Event is successfully added in google calendar',
+              data: event.data
+            });
+          })
+    }
+  });
+});
+
+// Insert event in google calendar using google calendar api
+router.post('/updateEvent',(req,res,next)=>{
+  console.log("updateEVnt", req.body);
+  let usernameQuery = "SELECT token_path FROM `calendly` WHERE email = '"+req.body.email+"'";
+  db.query(usernameQuery, (err, result) => {
+    if (err !== null) {
+      return res.status(500).send(err);
+    } else {
+      const TOKEN_PATH =  result[0].token_path;
+      console.log(TOKEN_PATH);
+      const googleSecrets = JSON.parse(fs.readFileSync('credentials.json')).installed;
+      const oauth2Client = new googleAuth.OAuth2Client(
+        googleSecrets.client_id,
+        googleSecrets.client_secret,
+        googleSecrets.redirect_uris[0]
+      );
+      const token = fs.readFileSync(TOKEN_PATH);
+      oauth2Client.setCredentials(JSON.parse(token));
+      const calendar = google.calendar({version: 'v3'});
+      const event = {
+        'summary': 'A' + ' and ' +  req.body.inviteeEmail,
+        location: 'Noida',
+        description: 'Event Name: ' + req.body.eventType + '\n'+
+          'Need to make changes to this event ?' + '\n'+
+          'Cancel:' +'\n'+
+          'http://localhost:4200/' + '\n'+
+          'Reschedule:' +'\n'+
+          'http://localhost:4200/' + '\n'+'\n'+
+          'Powered by CloudMeetIn.com ',
+        start: {
+          dateTime: '2019-03-21T09:00:00Z',
+          timeZone: req.body.data.timeZone
+        },
+        end: {
+          dateTime: '2019-03-21T09:15:00Z',
+          timeZone: req.body.data.timeZone
+        },
+        attendees: [{ email: req.body.email }, { email: req.body.inviteeEmail }],
+        reminders: {
+          useDefault: true,
+        }
+      };
+      console.log(event);
+      calendar.events.insert({
+        auth: oauth2Client,
+        calendarId: req.body.email,
+        resource: event,
+        "sendUpdates": "all",
+      }, function(err, event) {
+        if (err) {
+          // console.log('There was an error contacting the Calendar service: ' + err);
+          res.status(500).json( {
+            // message :  'There was an error contacting the Calendar service' +err
+          });
+
+        }
+        console.log("==================================================================");
+        console.log('Event created==========================>>>', event.data);
+
+        console.log("==================================================================");
+        res.status(200).json( {
+          message :  'Event is successfully added in google calendar',
+          data: event.data
+        });
+      })
+    }
+  });
+});
+
+// For update the event in google calendar
+router.post('/eventUpdate',(req,res,next)=> {
+  let usernameQuery = "SELECT token_path, calanderId FROM `calendly` WHERE email = '"+req.body.email+"'";
+  db.query(usernameQuery, (err, result) => {
+    if (err !== null) {
+      return res.status(500).send(err);
+    } else {
+      const TOKEN_PATH =  result[0].token_path;
+      const calendarId =  result[0].calanderId;
+      console.log("Calendar ID---------------------", calendarId);
+      console.log(TOKEN_PATH);
+      const googleSecrets = JSON.parse(fs.readFileSync('credentials.json')).installed;
+      const oauth2Client = new googleAuth.OAuth2Client(
+        googleSecrets.client_id,
+        googleSecrets.client_secret,
+        googleSecrets.redirect_uris[0]
+      );
+      const token = fs.readFileSync(TOKEN_PATH);
+      oauth2Client.setCredentials(JSON.parse(token));
+      const calendar = google.calendar({version: 'v3'});
       console.log('Request body ', req.body.meetIngData);
       const event = {
         'summary': req.body.meetIngData.subject,
@@ -81,40 +233,128 @@ router.post('/insertevent',(req,res,next)=>{
           'dateTime': req.body.meetIngData.endtime,
           'timeZone': 'Asia/Kolkata',
         },
+
       };
-      /* const event = {
-         'summary': 'Task Example By Sumit',
-         'start': {
-           'dateTime': '2019-01-15T12:00:00-05:00',
-           'timeZone': 'Asia/Kolkata',
-         },
-         'end': {
-           'dateTime': '2019-01-15T12:00:00-05:00',
-           'timeZone': 'Asia/Kolkata',
-         },
-       };*/
-      console.log(event);
-      calendar.events.insert({
+      // console.log(event);
+      calendar.events.patch({
         auth: oauth2Client,
-        calendarId: req.body.email,
-        resource: event,
+        calendarId: calendarId,
+        eventId: req.body.eventId,
+        resource: event
       }, function(err, event) {
         if (err) {
           console.log('There was an error contacting the Calendar service: ' + err);
-          res.status(500).json( {
+         /* res.status(500).json( {
             message :  'There was an error contacting the Calendar service' +err
-          });
-          return;
+          });*/
         }
-        console.log('Event created: %s', event.htmlLink);
+        console.log("==================================================================");
+        console.log('Event updated ==========================>>>', event.data);
+        console.log("==================================================================");
         res.status(200).json( {
-          message :  'Event is successfully added in google calendar'
+          message :  'Event is successfully updated in google calendar',
+          data: event.data
         });
-
       });
     }
   });
+});
 
+function removeEvents(auth, calendar, calendarId, eventID, callback){
+
+  calendar.events.delete({
+    auth: auth,
+    calendarId: calendarId,
+    eventId: eventID,
+  }, function(err) {
+    if (err) {
+      console.log('Error: ' + err);
+     callback(err);
+    }
+     callback("200");
+  });
+}
+
+/*// For delete the event in google calendar
+router.post('/delete',(req,res,next)=>{
+  let calendarID = req.body.email;
+  let eventId = req.body.meetingDetail.eventID;
+  let usernameQuery = "SELECT token_path FROM `calendly` WHERE email = '"+req.body.email+"'";
+  db.query(usernameQuery, (err, result) => {
+    if (err !== null) {
+      return res.status(500).send(err);
+    } else {
+      const TOKEN_PATH =  result[0].token_path;
+      console.log(TOKEN_PATH);
+      const googleSecrets = JSON.parse(fs.readFileSync('credentials.json')).installed;
+      const oauth2Client = new googleAuth.OAuth2Client(
+        googleSecrets.client_id,
+        googleSecrets.client_secret,
+        googleSecrets.redirect_uris[0]
+      );
+      const token = fs.readFileSync(TOKEN_PATH);
+      oauth2Client.setCredentials(JSON.parse(token));
+      const calendar = google.calendar({version: 'v3'});
+      removeEvents(oauth2Client, calendar, calendarID, eventId,  (response) =>{
+        if(response === "200") {
+          let updateUserQuery = "UPDATE `calendlymeeting` SET  `cancel` = 'true' ,`cancelMessage` = '"+req.body.meetingDetail.cancelMessage+"', `cancelBy` = '"+req.body.meetingDetail.cancelBy+"' WHERE `calendlymeeting`.`id` = '" + req.body.meetingDetail.id + "'";
+          db.query(updateUserQuery, (err, result) => {
+            if (err !== null) {
+              console.log('Req', req.body.id);
+              res.status(500).json(err);
+            } else {
+              res.status(200).json({
+                message: 'Event remove from gmail calendar',
+              });
+            }
+          });
+        } else {
+          res.status(500).json(err);
+        }
+      });
+    }
+  });
+});*/
+
+// For delete the event in google calendar
+router.post('/delete',(req,res,next)=>{
+  let calendarID = req.body.email;
+  let eventId = req.body.meetingDetail.eventID;
+  let usernameQuery = "SELECT token_path FROM `calendly` WHERE email = '"+req.body.email+"'";
+  db.query(usernameQuery, (err, result) => {
+    if (err !== null) {
+      return res.status(500).send(err);
+    } else {
+      const TOKEN_PATH =  result[0].token_path;
+      console.log(TOKEN_PATH);
+      const googleSecrets = JSON.parse(fs.readFileSync('credentials.json')).installed;
+      const oauth2Client = new googleAuth.OAuth2Client(
+        googleSecrets.client_id,
+        googleSecrets.client_secret,
+        googleSecrets.redirect_uris[0]
+      );
+      const token = fs.readFileSync(TOKEN_PATH);
+      oauth2Client.setCredentials(JSON.parse(token));
+      const calendar = google.calendar({version: 'v3'});
+      removeEvents(oauth2Client, calendar, calendarID, eventId,  (response) =>{
+        if(response === "200") {
+          let updateUserQuery = "UPDATE `calendlymeeting` SET  `cancel` = 'true' ,`cancelMessage` = '"+req.body.meetingDetail.cancelMessage+"', `cancelBy` = '"+req.body.meetingDetail.cancelBy+"' WHERE `calendlymeeting`.`id` = '" + req.body.meetingDetail.id + "'";
+          db.query(updateUserQuery, (err, result) => {
+            if (err !== null) {
+              console.log('Req', req.body.id);
+              res.status(500).json(err);
+            } else {
+              res.status(200).json({
+                message: 'Event remove from gmail calendar',
+              });
+            }
+          });
+        } else {
+          res.status(500).json(err);
+        }
+      });
+    }
+  });
 });
 
 router.post('/signinwithgoogle',(req,res,next)=>{
@@ -203,7 +443,7 @@ router.post('/updateConfiguration',(req,res,next)=>{
 
 router.post('/checkuseremail',(req,res,next)=>{
   console.log(req.body);
-  let usernameQuery = "SELECT email FROM `calendly` WHERE email = '" + req.body.email + "'";
+  let usernameQuery = "SELECT * FROM `calendly` WHERE email = '" + req.body.email + "'";
   db.query(usernameQuery, (err, result) => {
     console.log("result=====",result);
     console.log("err=====",err);
@@ -220,20 +460,48 @@ router.post('/checkuseremail',(req,res,next)=>{
 
 router.post('/checkemailpassword',(req,res,next)=>{
 
-
-
   console.log(req.body);
-  let usernameQuery = "SELECT email, fullName, userId FROM `calendly` WHERE email = '" + req.body.emailID + "' AND password = '"+ req.body.password+"'";
+  let usernameQuery = "SELECT * FROM `calendly` WHERE email = '" + req.body.emailID + "' AND password = '"+ req.body.password+"'";
   db.query(usernameQuery, (err, result) => {
     console.log("result=====",result);
     console.log("err=====",err);
     if (err!==null) {
       return res.status(500).send(err);
     }else {
-      res.status(200).json({
-        message: 'Search Successfully.',
-        data: result
-      });
+      if(result.length > 0){
+          let userId = result[0].userId;
+          console.log("UserId=====",userId);
+       /*  calendarMiddleware.calCheckToken(userId,(calTokenStatus) => {
+           if(calTokenStatus === 200) {
+             const token = jwt.sign({
+               userId: userId
+             },'secret-code-for-token',{expiresIn: '1h'});
+
+             res.status(200).json({
+               message: 'Login Successfully.',
+               data: result,
+               token: token,
+               expiresIn: 3600
+             });
+           }
+         });*/
+        const token = jwt.sign({
+          userId: userId
+        },'secret-code-for-token',{expiresIn: '1h'});
+
+        res.status(200).json({
+          message: 'Login Successfully.',
+          data: result,
+          token: token,
+          expiresIn: 3600
+        });
+
+      }else{
+        res.status(200).json({
+          message: 'Invalid Credentials',
+          data: result
+        });
+      }
     }
   });
 });
@@ -245,7 +513,10 @@ router.post('/checkuser',(req,res,next)=>{
     console.log("result=====",result);
     console.log("err=====",err);
     if (err!==null) {
-      return res.status(500).send(err);
+      return res.status(500).json({
+        message: 'Internal Server Error.',
+        data: err
+      });
     }else {
       res.status(200).json({
         message: 'Sign Up Successfully.',
@@ -280,7 +551,10 @@ router.post('/updateUserProfile',(req,res,next)=>{
     console.log("result=====",result);
     console.log("err=====",err);
     if (err!==null) {
-      return res.status(500).send(err);
+      return res.status(500).json({
+        message: 'Internal Server Error.',
+        data: err
+      });
     }else {
       res.status(200).json({
         message: 'userId updated Successfully.',
@@ -395,7 +669,7 @@ router.get('/signup/calendar',(req,res,next)=>{
 
 
 
-router.post('/login',(req,res,next)=>{
+/*router.post('/login',(req,res,next)=>{
   let fetchUser;
   User.findOne({
     email:req.body.email
@@ -430,7 +704,7 @@ router.post('/login',(req,res,next)=>{
   }).catch(err =>{
     console.log(err);
   });
-});
+});*/
 
 // Get the start time and end time from database
 router.post('/gettime',(req,res,next)=>{

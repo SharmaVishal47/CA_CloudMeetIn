@@ -1,19 +1,27 @@
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12" style="text-align: center; margin-top: 25px">
-      <div >
-        <h6>Confirmed</h6>
-        <p>You are scheduled with {{userId}}</p>
-      </div>
-      <hr>
-      <div class="col-lg-6" style="margin: auto">
-        <div class="card-body text-left">
-          <h5>{{meetingTime}}</h5>
-          <p>{{meetingDateTime}}</p>
-          <p>{{meetingTimeZone}}</p>
-        </div>
-        <h6>A calendar invitation has been sent to your email address.</h6>
-      </div>
+<nz-row nzJustify="center" nzAlign="middle" *ngIf="visibleButton">
+  <nz-col nzSpan="6" nzOffset="3" style="margin-top: 50px;" align="start">
+    <button nz-button nzType="primary"
+            style="color: #707070;background: none;border-color: #707070;width: 130px;align-content: center" (click)="backToHome()">
+      <i nz-icon nzType="double-left" nzTheme="outline"></i>Back To Home
+    </button>
+  </nz-col>
+  <nz-col nzSpan="6" style="margin-top: 50px;" align="end">
+  </nz-col>
+</nz-row>
+
+<nz-row nzJustify="center" nzAlign="middle">
+  <nz-col nzSpan="18" nzOffset="3" align="center">
+    <div align="center">
+      <h5 align="center" style="margin-top: 10%">Confirmed </h5><br>
+      <p>You are scheduled with {{userId}}</p><br>
+      <nz-card style="width:40%;" align="start" >
+        <p>{{meetingTime}}</p>
+        <p style="color:#FF4165">{{meetingDateTime}}</p>
+        <p>{{meetingTimeZone}}</p>
+        <p>A calendar invitation has been sent to your email address.</p>
+      </nz-card>
     </div>
-  </div>
-</div>
+
+  </nz-col>
+</nz-row>
+

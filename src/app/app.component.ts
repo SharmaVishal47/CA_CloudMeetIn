@@ -16,7 +16,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.meetingService.authStatusListener.subscribe((response) => {
       this.removeHeader = response;
-      console.log("Remove Header ---> ", this.removeHeader);
       this.cdRef.detectChanges();
     }, error1 => {
       console.log(error1);

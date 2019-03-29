@@ -1,0 +1,69 @@
+<div nz-row style="margin-top: 20px" *ngIf="!alreadyIntegrated">
+  <div nz-col nzSpan="4">
+  </div>
+  <div nz-col nzSpan="16">
+    <div nz-row>
+      <div nz-col nzSpan="6">
+        <button nz-button nzType="primary" style="color: blue;background: none;border-color: blue;width: 80%;align-content: center" routerLink="/integrations">Back</button>
+      </div>
+      <div nz-col nzSpan="12">
+        <h6>Zoom Information</h6>
+      </div>
+    </div>
+    <div style="margin-top: 50px">
+      <nz-card>
+        <div nz-row nzSpan="24">
+          <div nz-col nzSpan="12" >
+            <h5><b>Features that save you time:</b></h5>
+            <div style="margin-left: 4%">
+              <h4>&#9679; Automatically create Zoom at the time an event is scheduled.</h4>
+              <h4>&#9679; Instantly share unique conferencing details upon confirmation.</h4>
+            </div>
+            <h5>Supports any Zoom account:</h5>
+            <div style="margin-left: 4%">
+              <h4>&#9679; Web conferencing url on all Zoom accounts.</h4>
+              <h4>&#9679; Call-In Instructions on Paid Zoom accounts.</h4>
+            </div>
+            <div nz-col nzSpan="12" style="margin-top: 20px">
+              <button nz-button nzType="primary" (click)="zoomMeetingIntegration()">Connect Zoom</button>
+            </div>
+          </div>
+          <div nz-col nzSpan="12" style="height: 100%">
+            <img src="./../../../assets/Logo_c_new.svg" style="alignment: center">
+          </div>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+  <div nz-col nzSpan="4">
+  </div>
+</div>
+<div *ngIf="alreadyIntegrated">
+  <div nz-row style="margin-top: 20px">
+    <div nz-col nzSpan="3" nzOffset="3">
+      <button nz-button nzType="primary" style="color: blue;background: none;border-color: blue;width: 80%;align-content: center" routerLink="/integrations">Back</button>
+    </div>
+    <div nz-col nzSpan="15">
+      <h6>Zoom Information</h6>
+    </div>
+  </div>
+  <div nz-row style="margin-top: 20px" >
+    <div nz-col nzSpan="4" nzOffset="2">
+    </div>
+    <div nz-col nzSpan="16">
+      <nz-card>
+        <div nz-row nzType="flex" nzJustify="center">
+          <b>You have done integration with Zoom</b>
+        </div>
+        <br>
+        <div nz-row nzType="flex" nzJustify="center">
+          <button nz-button nzType="info" (click)="disconnectZoomIntegration()" style="background: #FF4165; color: white">Disconnect Zoom Integration</button>
+        </div>
+      </nz-card>
+    </div>
+    <div nz-col nzSpan="4">
+    </div>
+  </div>
+</div>
+
+

@@ -1,34 +1,108 @@
-<div class="container">
-  <div class="row">
-    <div class="col-lg-8" style="margin: auto">
-      <mat-card class="example-card">
-          <mat-card-header class="card">
-            <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title>Your Google Calendar’s connected!</mat-card-title>
-            <br>
-            <mat-card-subtitle style="font-size: 16px">CA Calendly will auto-check your calendar for busy times and add new events as they are scheduled.</mat-card-subtitle>
-            <div class="col-lg-3">
-              <img mat-card-image src="https://www.icone-png.com/png/19/18890.png" alt="Photo of a Shiba Inu" width="20">
-            </div>
-          </mat-card-header>
-        <br>
-        <mat-card-content>
-          <div class="container">
-            <h6>Here’s how Calendly will work with </h6>
-            <h6>{{email}}</h6>
-          </div>
-          <br><br>
-          <ol>
-            <li>We’ll check <strong>{{email}} </strong> for conflicts <a (click)="openCalendarOption()" style="cursor: pointer;color: #00A2FF ">Edit</a></li>
-            <hr>
-            <li>We’ll add events to <strong>{{email}} </strong><a (click)="openCalendarEvent()" style="cursor: pointer;color: #00A2FF">Edit</a></li>
-          </ol>
-        </mat-card-content>
-        <mat-card-actions>
-          <button style="color: white" mat-button (click)="updateEventCalendar()" class="btn btn-primary">Continue</button>
-          <button mat-button type="button" (click)="setUpLater()">Set up later</button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
+<div nz-row nzType="flex" nzJustify="center" style="margin-top: 50px">
+  <div nz-col>
+    <img src="../../../assets/Logo_c_new.svg" alt="" width="80px">
   </div>
 </div>
+<div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
+  <div nz-col nzSpan="14">
+      <nz-card >
+        <div nz-col nzType="flex" nzJustify="center">
+          <h5>Your Google Calendar's connected!</h5>
+          <h6>CloudMeetIn will auto-check calendar for busy times and add new events as they are scheduled.</h6>
+        </div>
+        <hr>
+        <div nz-row>
+          <div nz-col [nzXs]="{ span: 12, offset: 0 }" [nzLg]="{ span: 12, offset: 0}">
+            <h4 style="margin-top: 20px">Here's how CloudMeetIn will work with</h4>
+            <h3 style="margin-top: 20px">{{email}}</h3>
+          </div>
+          <div nz-col [nzXs]="{ span: 12, offset: 0}" [nzLg]="{ span: 12, offset: 0 }">
+            <img src="../../../assets/Reminder.svg" alt="" class="logo-container">
+          </div>
+        </div>
+        <div nz-row style="margin-top: 2%">
+          <div nz-col nzSpan="12">
+            <h3>We’ll check <strong>{{email}} </strong> for conflicts.</h3>
+          </div>
+          <div nz-col nzSpan="6" nzOffset="4">
+            <h3 (click)="openCalendarOption(false)" style="cursor: pointer;color: #00A2FF; float: right">Edit</h3>
+          </div>
+        </div>
+        <hr>
+        <div nz-row>
+          <div nz-col nzSpan="12">
+            <h3>We’ll add events to <strong>{{email}}.</strong></h3>
+          </div>
+          <div nz-col nzSpan="6" nzOffset="4">
+            <h3 (click)="openCalendarEvent(true)" style="cursor: pointer;color: #00A2FF; float: right">Edit</h3>
+          </div>
+        </div>
+      </nz-card>
+      <div nz-row>
+        <div nz-col nzSpan="8">
+        </div>
+        <div nz-col nzSpan="8" nzOffset="8">
+          <nz-form-control>
+            <button nz-button class="primary"  (click)="updateEventCalendar()" [disabled]="!((checkEvent > 0) && (eventString))">Continue</button>
+          </nz-form-control>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="title" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <!--Show the Checkbox Model -->
+  <nz-checkbox-wrapper style="width: 100%;" (nzOnChange)="log($event)" *ngIf="!onCheckBoxModelStatus" >
+    <div nz-row *ngFor="let calendarSummary of data | keyvalue">
+      <div nz-col nzSpan="14"><label nz-checkbox nzValue="{{calendarSummary.key}}" [ngModel]="true">{{calendarSummary.value}}</label></div>
+    </div>
+  </nz-checkbox-wrapper>
+  <!--Show the radio button model-->
+    <div nz-row *ngIf="onCheckBoxModelStatus">
+      <div nz-col nzSpan="14"><label nz-radio nzValue="{{eventString}}" [ngModel]="true">{{eventString}}</label></div>
+    </div>
+  <ng-template #title>
+    <p>Which calendar should we add new events to?</p>
+  </ng-template>
+</nz-modal>
+
+
+
+
+<!--
+<div class="container top-margin">
+<div class="row">
+<div class="col-lg-8" style="margin: auto">
+<mat-card class="example-card">
+<mat-card-header class="card">
+<div mat-card-avatar class="example-header-image"></div>
+<mat-card-title class="top-margin heading">Your Google Calendar’s connected!</mat-card-title>
+<br>
+<mat-card-subtitle style="font-size: 16px">CloudMeetIn will auto-check your calendar for busy times and add new events as they are scheduled.</mat-card-subtitle>
+<div class="col-lg-3 top-margin">
+<img mat-card-image src="https://www.icone-png.com/png/19/18890.png" alt="Photo of a Shiba Inu" width="20">
+</div>
+</mat-card-header>
+<br>
+<mat-card-content>
+<div class="container">
+<h6>Here’s how CloudMeetIn will work with </h6>
+<h6>{{email}}</h6>
+</div>
+<br><br>
+<ol>
+<li>We’ll check <strong>{{email}} </strong> for conflicts <a (click)="openCalendarOption()" style="cursor: pointer;color: #00A2FF ">Edit</a></li>
+<hr>
+<li>We’ll add events to <strong>{{email}} </strong><a (click)="openCalendarEvent()" style="cursor: pointer;color: #00A2FF">Edit</a></li>
+</ol>
+</mat-card-content>
+<mat-card-actions style="justify-content: flex-end;display: flex;">
+<button style="color: white" mat-button (click)="updateEventCalendar()" class="btn btn-primary" [disabled]="!(checkEvent && checkCalendar)">Continue</button>
+&lt;!&ndash; <button mat-button type="button" (click)="setUpLater()">Set up later</button>&ndash;&gt;
+</mat-card-actions>
+</mat-card>
+</div>
+</div>
+</div>-->
+

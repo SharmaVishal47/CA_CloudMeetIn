@@ -1,0 +1,43 @@
+<nz-layout style="background: white; margin-top: 2%">
+  <div nz-row>
+    <div nz-col nzSpan="12" nzOffset="6">
+      <nz-content>
+        <nz-divider nzText="How can we help you?"></nz-divider>
+        <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
+          <input type="text" nz-input placeholder="Search">
+        </nz-input-group>
+        <ng-template #suffixButton>
+          <button nz-button nzType="primary" nzSize="large" nzSearch>Search</button>
+        </ng-template>
+          <div style="background: white;padding:30px;">
+            <div nz-row [nzGutter]="8">
+              <div nz-col [nzSpan]="8">
+                <nz-card [nzCover]="coverTemplate">
+                  <nz-card-meta nzTitle="Getting Started" nzDescription="https://cloudanalogy.com"></nz-card-meta>
+                </nz-card>
+                <ng-template #coverTemplate>
+                  <img alt="example" src="https://www.icontactimg.com/content/resources/getting-started-icon.fvff4c43b.png"/>
+                </ng-template>
+              </div>
+              <div nz-col [nzSpan]="8">
+                <nz-card [nzCover]="coverTemplate_1">
+                  <nz-card-meta nzTitle="Availability" nzDescription="https://cloudanalogy.com"></nz-card-meta>
+                </nz-card>
+                <ng-template #coverTemplate_1>
+                  <img alt="example" src="http://squarecubed.co.uk/wp-content/uploads/2017/05/availability-icon.png"/>
+                </ng-template>
+              </div>
+              <div nz-col [nzSpan]="8">
+                <nz-card [nzCover]="coverTemplate_3">
+                  <nz-card-meta nzTitle="Customize Your Event Types" nzDescription="https://cloudanalogy.com"></nz-card-meta>
+                </nz-card>
+                <ng-template #coverTemplate_3>
+                  <img alt="example" src="http://download.topemc.ir/images/spareparts.png"/>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+      </nz-content>
+    </div>
+  </div>
+</nz-layout>

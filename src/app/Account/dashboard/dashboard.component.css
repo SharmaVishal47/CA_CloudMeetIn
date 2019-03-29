@@ -5,6 +5,84 @@
 .col-md-6{
   flex: 1 1;
 }
+.my-block {
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.body{
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: table;
+}
+
+h4 {
+  font-size: calc(0.50em + 2vmin);
+  font-family: Roboto-Regular, sans-serif;
+  line-height: 1.4;
+  color: #4D5055;
+  word-wrap: break-word;
+  word-break: break-word;
+
+}
+h6{
+  font-size: calc(0.50em + 1vmin);
+  font-family: Roboto-Regular, sans-serif;
+  line-height: 1.4;
+  color: #4D5055;
+  word-wrap: break-word;
+  word-break: break-word;
+  float: right;
+}
+.centerText{
+  margin-top: -10px;
+  font-size: calc(0.50em + 2vmin);
+  font-family: 'Roboto-Medium', sans-serif;
+  line-height: 1.4;
+  color: #4D5055;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+.centerTextSmall{
+  margin-top: -10px;
+  font-size: calc(0.50em + 1vmin);
+  font-family: 'Roboto-Medium', sans-serif;
+  line-height: 1.4;
+  color: #4D5055;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+.button-submit{
+  color: white;
+  background: #FF4165;
+  border-radius: 5px;
+  font-size: calc(0.50em + 1vmin);
+  font-family: 'Roboto-Regular', sans-serif;
+  width: 80px;
+  height: 30px;
+  border-color:#FF4165;
+  alignment: center;
+  float: right;
+  margin-top: -10px
+}
+
+.fontStyle{
+  font-size:calc(0.50em + 0.7vmin);
+  font-family: 'Roboto-Medium', sans-serif;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.fontStyleButton{
+  font-size:calc(0.50em + 0.7vmin);
+  font-family: 'Roboto-Medium', sans-serif;
+  margin-top: auto;
+  margin-bottom: auto;
+  background: none;
+  color: #707070;
+}
 
 .example-header-image {
   background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
@@ -33,4 +111,71 @@
 }
 .mat-expansion-panel:hover {
   border: 1px solid blue;
+}
+.remove-padding {
+  font-size:calc(0.50em + 0.7vmin);
+  font-family: 'Roboto-Regular', sans-serif;
+  color: #707070;
+  margin: 0;
+  padding: 0;
+}
+.clBlue {
+  font-size:calc(0.50em + 0.7vmin);
+  font-family: 'Roboto-Medium', sans-serif;
+  color: #FF4165;
+}
+.muted {
+  color: rgba(0, 0, 0, 0.44);
+  margin-top: 10px;
+  cursor: pointer;
+}
+h5{
+  font-size: 14px;
+}
+h5:hover {
+  color: blue;
+}
+.demo-non-form {
+  color: initial;
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0 12px 0;
+  border: 1px solid #ccc;
+  border-radius: 0;
+  font-family: arial, verdana, sans-serif;
+  font-size: 14px;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+}
+
+.demo-container {
+  padding: 0 1em;
+}
+
+.external-container {
+  display: flex;
+}
+
+.external-container button.external-button {
+  font-weight: 400;
+  padding: 10px;
+  margin: 6px 0 12px 16px;
+}
+hr.style-one {
+  border: 0;
+  height: 1px;
+  background: #f1eded;
+  background-image: -webkit-linear-gradient(left, #ccc, #333, #ccc);
+  background-image: -moz-linear-gradient(left, #ccc, #333, #ccc);
+  background-image: -ms-linear-gradient(left, #ccc, #333, #ccc);
+  background-image: -o-linear-gradient(left, #ccc, #333, #ccc);
+}
+.custom-icon {
+  font-size: 10px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+.custom-circle {
+
+  width:10px;height:10px;margin-top: auto;margin-bottom: auto;border-radius: 50%;display: inline-block;
 }

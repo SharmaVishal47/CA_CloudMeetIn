@@ -1,107 +1,315 @@
-<div class="container">
-  <div class="row" style="margin-top: 5%">
-    <div class="col-md-4" id="marginSpace">
-      <h6>My Calendly</h6>
-    </div>
-    <div class="col-md-6"></div>
-    <div class="col-md-2" id="marginSpace1">
-      All Past
+<div nz-row [@slideInLeft]="{ value: slideInLeft, params: { timing: myTiming || 0.7, delay: myDelay || 0 } }">
+  <div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
+    <div nz-col nzSpan="18">
+      <nz-tabset [nzSize]="size" [nzTabBarExtraContent]="extraTemplate" >
+        <nz-tab [nzTitle]="titleTemplate">
+          <ng-template #titleTemplate>
+            Cloudmeetin
+          </ng-template>
+
+          <div nz-row>
+            <div nz-col nzSpan="20">
+              <div *ngIf="eventListTypeCheck" style="margin-left: 15px">
+                <div nz-row>
+                  <div nz-col nzSpan="2" *ngFor="let event_details of EventTypeSlotDashboardForShow;let i = index">
+                    <nz-dropdown>
+                      <a nz-dropdown>
+                        <div class="row" >
+                          <div class="custom-circle" [ngStyle]="{'background-color': event_details.color}"></div><p class="fontStyle">&nbsp;&nbsp;{{event_details.name}}<b class="fontStyle"><i nz-icon type="down" class="custom-icon"  theme="outline"></i></b></p>
+                        </div>
+                      </a>
+                      <ul nz-menu nzSelectable style="margin-top: 12px">
+                        <li nz-menu-item (click)="editEvent(event_details.event_id,i)">
+                          <a>&nbsp;Edit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="../../../assets/edit.png" style="width: 15px;height: 12px" ></a>
+                        </li>
+                        <hr>
+                        <li nz-menu-item (click)="copyEvent(event_details.link)" >
+                          <a >&nbsp;Copy&nbsp;&nbsp;&nbsp;&nbsp;<img src="../../../assets/copy-document.png" style="width: 15px;height: 12px" ></a>
+                        </li>
+                        <hr>
+                        <li nz-menu-item >
+                          <a href="mailto:?subject=My CloudMeetIn Scheduling Page Link&body=You can easily see my real-time availability and schedule time with me at http://localhost:4200/{{userId}}/{{event_details.link}}">&nbsp;Email&nbsp;&nbsp;&nbsp;&nbsp;<img src="../../../assets/mail.png" style="width: 15px;height: 12px" ></a>
+                        </li>
+                      </ul>
+                    </nz-dropdown>
+                  </div>
+                  <div nz-col nzSpan="3" *ngIf="eventListTypeCheck">
+                    <p routerLink="/eventMainPage" class="fontStyle" style="cursor: pointer">&nbsp;&nbsp;more<i nz-icon type="right"  class="custom-icon" theme="outline"></i></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div nz-col nzSpan="4" style="margin-top: 5px">
+              <button nz-button nzSize="small" nzType="primary" class="button-submit" data-toggle="collapse" data-target="#collapseExample" aria-controls="collapseExample"><i class="fa fa-filter"></i>&nbsp;&nbsp;Filter</button>
+            </div>
+          </div>
+          <div class="collapse col-lg-12" id="collapseExample" style="padding-left: 0">
+            <p style="margin-top: 10px; padding: 0">Show me events matching</p>
+            <div style="display: flex">
+              <div class="col-lg-2" style="padding-left: 0">
+                <p class="remove-padding">Events Type</p>
+                <div style="display: flex">
+                  <nz-dropdown>
+                    <a nz-dropdown>
+                    <span class="clBlue">
+                    All Event Types
+                    </span>
+                      <img src="../../../assets/down_arrow.svg" alt="" height="12" width="12" style="margin-left: 10px;margin-bottom: 5px; cursor: pointer" id="dropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </a>
+                    <ul nz-menu nzSelectable>
+                      <li nz-menu-item >
+                        <div class="col-lg-12" style="font-size: 13px">
+                          <nz-input-group [nzSuffix]="suffixIconSearch">
+                            <input type="text" nz-input placeholder="Search">
+                          </nz-input-group>
+                          <ng-template #suffixIconSearch>
+                            <i nz-icon type="search"></i>
+                          </ng-template>
+                          <br>
+                          <small style="font-family: 'Roboto-Regular', sans-serif; color: #FF4165;" nz-checkbox [(ngModel)]="allChecked" (ngModelChange)="updateAllChecked()" [nzIndeterminate]="indeterminate">Select all / Clear</small> <br><br>
+                          <div>
+                            <p style="font-family: 'Roboto-Regular', sans-serif; color: #707070; font-size: small">My Events</p>
+                            <br>
+                          </div>
+                          <div nz-row>
+                            <nz-checkbox-group nz-col nzSpan="4" [(ngModel)]="checkOptionsOne" (ngModelChange)="updateSingleChecked()">
+                              <br>
+                            </nz-checkbox-group>
+                            <br>
+                            <button nz-button nzSize="small" class="login-form-button" style="background-color:#FF4165; color: white;float: right;margin-top: 10px" (click)="filterByEvent()">OK</button>
+                          </div>
+                        </div>
+                      </li>
+                      <li nz-menu-item>
+
+                      </li>
+                    </ul>
+                  </nz-dropdown>
+                </div>
+              </div>
+              <div class="col-lg-2" style="padding-left: 0">
+                <p class="remove-padding">Status</p>
+                <div style="display: flex">
+                  <nz-dropdown >
+                    <a nz-dropdown>
+                    <span class="clBlue">
+                    Active Events
+                    </span>
+                      <img src="../../../assets/down_arrow.svg" alt="" height="12" width="12" style="margin-left: 10px;margin-bottom: 5px; cursor: pointer" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </a>
+                    <ul nz-menu nzSelectable >
+                      <li nz-menu-item >
+                        <div class="col-lg-12" style="font-size: 13px">
+                          <br>
+                          <small style="font-family: 'Roboto-Regular', sans-serif; color: #FF4165;" nz-checkbox [(ngModel)]="allCheckedEvent" (ngModelChange)="updateEventAllChecked()" [nzIndeterminate]="indeterminateEvent">Select all / Clear</small> <br>
+                          <br>
+                          <br>
+                          <div nz-row>
+                            <nz-checkbox-group nz-col nzSpan="4" [(ngModel)]="checkOptionsOneEvent" (ngModelChange)="updateEventSingleChecked()">
+                              <br>
+                            </nz-checkbox-group>
+                            <br>
+                            <button nz-button nzSize="small" class="login-form-button" style="background-color:#FF4165; color: white;float: right;margin-top: 10px" (click)="filterByActive()">OK</button>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </nz-dropdown>
+                </div>
+              </div>
+              <div class="col-lg-2" style="padding-left: 0">
+                <p class="remove-padding">Tracking ID</p>
+                <div style="display: flex">
+                  <nz-dropdown [nzTrigger]="'click'">
+                    <a nz-dropdown>
+                    <span class="clBlue">
+                    All IDs
+                    </span>
+                      <img src="../../../assets/down_arrow.svg" alt="" height="12" width="12" style="margin-left: 10px;margin-bottom: 5px; cursor: pointer" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </a>
+                    <ul nz-menu nzSelectable>
+                      <li class="col-lg-12">
+                        <nz-input-group [nzSuffix]="suffixIconSearch">
+                          <input type="text" nz-input placeholder="Search">
+                        </nz-input-group>
+                      </li>
+
+                      <li nz-menu-item >
+                        <div class="col-lg-12" style="font-size: 13px">
+
+                          <ng-template #suffixIconSearch>
+                            <i nz-icon type="search"></i>
+                          </ng-template>
+                          <br>
+                          <small style="font-family: 'Roboto-Regular', sans-serif; color: #FF4165;" nz-checkbox [(ngModel)]="allChecked" (ngModelChange)="updateAllChecked()" [nzIndeterminate]="indeterminate">Select all / Clear</small> <br>
+                          <div>
+                            <p>My Events</p>
+                            <br>
+                          </div>
+                          <div nz-row>
+                            <nz-checkbox-group nz-col nzSpan="4" [(ngModel)]="checkOptionsOne" (ngModelChange)="updateSingleChecked()">
+                              <br>
+                            </nz-checkbox-group>
+                            <br>
+                          </div>
+                        </div>
+                      </li>
+                      <li nz-menu-item>
+
+                      </li>
+                      <hr>
+                      <li nz-menu-item>
+
+                      </li>
+                    </ul>
+                  </nz-dropdown>
+                </div>
+              </div>
+              <button nz-button nzSize="small" class="login-form-button" style="background-color:#FF4165; color: white;float: right;margin-top: 10px" (click)="resetFilter()" *ngIf="showReset">Reset</button>
+            </div>
+          </div>
+        </nz-tab>
+        <nz-tab [nzTitle]="titleTemplate1" *ngIf="teamCheck">
+          <ng-template #titleTemplate1 >
+            Teams
+          </ng-template>
+        </nz-tab>
+        <nz-tab [nzTitle]="titleTemplate2" *ngIf="userCheck">
+          <ng-template #titleTemplate2>
+            Users
+          </ng-template>
+          shrma1
+        </nz-tab>
+      </nz-tabset>
+      <ng-template #extraTemplate>
+        <div class="row" style="margin-right: 5px">
+          <p style="color: #707070;font-size: medium;">All Upcoming&nbsp;&nbsp;<!--&nbsp;&nbsp;<i nz-icon type="down" theme="outline"></i>--></p>
+          <form nz-form [nzLayout]="'inline'" [formGroup]="validateDatePicker">
+            <div nz-form-item>
+              <div nz-form-control>
+                <nz-range-picker
+                  formControlName="dateRange"
+                  [nzRanges]="ranges1"
+                  nzFormat="yyyy/MM/dd"
+                  [(ngModel)]="dateRange"
+                  (ngModelChange)="onChange($event)"
+                ></nz-range-picker><!--(ngModelChange)="onChange($event)"-->
+              </div>
+            </div>
+          </form>
+        </div>
+      </ng-template>
     </div>
   </div>
-  <hr/>
-</div>
-<mat-card class="example-card">
-  <mat-card-content>
-    <div style="margin-left: 8%; display: flex">
-      <div style="display: flex">
-         <svg width="30" height="30">
-        <circle cx="15" cy="15" r="10" fill="#DFC12D"></circle>
-      </svg>
-        <button mat-button [matMenuTriggerFor]="menu"> Meeting 15 min</button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item>Edit</button>
-          <button mat-menu-item>Copy URL</button>
-          <button mat-menu-item>Email URL</button>
-        </mat-menu>
+  <hr class="style-one">
+  <div *ngIf="recordExists">
+    <div nz-row nzType="flex" nzJustify="center" style="margin-bottom: 10px">
+      <div nz-col nzSpan="18">
+        <p style="color: #707070; font-family: 'Roboto-Medium', sans-serif; font-size: small">Displaying {{displaySize}} of {{totalSize}} Events</p>
       </div>
-
-      <div style="display: flex">
-        <svg width="30" height="30">
-          <circle cx="15" cy="15" r="10" fill="blue"></circle>
-        </svg>
-        <button mat-button [matMenuTriggerFor]="menu"> Meeting 30 min</button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item>Edit</button>
-          <button mat-menu-item>Copy URL</button>
-          <button mat-menu-item>Email URL</button>
-        </mat-menu>
-      </div>
-
-      <div style="display: flex">
-        <svg width="30" height="30">
-          <circle cx="15" cy="15" r="10" fill="red"></circle>
-        </svg>
-        <button mat-button [matMenuTriggerFor]="menu"> Meeting 60 min</button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item>Edit</button>
-          <button mat-menu-item>Copy URL</button>
-          <button mat-menu-item>Email URL</button>
-        </mat-menu>
-      </div>
-      <strong style="margin-left:45%; cursor: pointer; color: #393034">Show Filter
-      <!--<mat-icon> home</mat-icon>-->
-      </strong>
-
     </div>
-  </mat-card-content>
-
-</mat-card>
-<div class="container" *ngIf="scheduling">
-  <div class="row" style="margin-top: 5%">
-    <div class="col-md-4"></div>
-    <div class="col-md-4"><p>You have no Calendly events yet.
-      As events are scheduled with you, they’ll appear here</p>
-      <button type="button" class="btn btn-info">View our Quick Start Guide</button>
-      <p style="margin-top: 5%">Need tips? Check out our<a href="#" style="color: #00A2FF">Knowledge Base</a> </p>
-    </div>
-    <div class="col-md-4"></div>
-  </div>
-</div>
-
-<div class="container" style="margin-top: 3%;margin-bottom: 5%">
-  <p style="margin-bottom: 3%">Displaying {{indexSelect}} of {{lengthOfEvent}} Events</p>
-  <mat-accordion [multi]="true">
-    <mat-expansion-panel *ngFor="let data of responseData; let selectIndex = index">
-      <mat-expansion-panel-header>
-        <mat-panel-title style="display: flex" (click)="onSelectIndex(selectIndex)">
-          <svg width="30" height="30" style="margin-top: 5px">
-            <circle cx="15" cy="15" r="10" fill="#DFC12D" *ngIf="data.eventType == '15min'"></circle>
-            <circle cx="15" cy="15" r="10" fill="blue" *ngIf="data.eventType == '30min'"></circle>
-            <circle cx="15" cy="15" r="10" fill="#EE5353" *ngIf="data.eventType == '60min'"></circle>
-          </svg>
-          <p style="margin-top: 10px">{{data.meetingTime}}</p>
-        </mat-panel-title>
-        <mat-panel-description>
-<span> <a style="color: #00A2FF"> <b>{{fullName}}</b> </a> &nbsp; with you <br> <b >{{  data.eventType}} {{event}}</b>
+    <div *ngFor="let item of meetingListMapSorted|keyvalue;">
+      <div nz-row nzType="flex" nzJustify="center">
+        <div nz-col nzSpan="18">
+          <p style="color: #707070; font-family: 'Roboto-Medium', sans-serif; font-size: medium; text-align: center;margin-bottom: -10px;margin-top: 5px">{{item.key | date :'EEEE , dd-MM-yyyy'}}</p>
+        </div>
+      </div>
+      <br>
+      <div nz-row nzType="flex" nzJustify="center" *ngFor="let data of item.value; let selectIndex = index;">
+        <div nz-col nzSpan="18"    *ngIf="data.cancel !== allEvent">
+          <nz-collapse [nzBordered]="false" class="custom-card" >
+            <nz-collapse-panel [nzHeader]="titleTemplateHeader">
+              <div nz-row nzAlign="middle" nzJustify="center">
+                <nz-col nzSpan="14" nzOffset="9" align="start">
+                  <hr/>
+                </nz-col>
+              </div>
+              <div nz-row nzAlign="middle" nzJustify="center">
+                <nz-col nzSpan="6" nzOffset="1" align="start" >
+                  <span style="margin-left:30px">Created Date - {{data.createdDate | date}}</span>
+                </nz-col>
+                <nz-col nzSpan="8" nzOffset="2" align="start">
+                  <div *ngIf="data.showCard">
+                    <span ><h5>Email <i class=" fa fa-pencil" (click)="visibleContent(item.key,selectIndex)"></i></h5></span>
+                    {{data.schedulerEmail}}
+                  </div>
+                  <div *ngIf="!data.showCard">
+                    <form nz-form [formGroup]="updateEmail">
+                      <nz-form-item>
+                        <nz-form-control>
+                          <input type="email" nz-input id="nickname" value="{{data.schedulerEmail}}" style="width: 70%" formControlName="email" >
+                          <nz-form-explain *ngIf="updateEmail.get('email')?.dirty && updateEmail.get('email')?.errors">Please input your email!</nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <span>
+A notification will be sent to the updated email address.
+<i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle" theme="outline"></i>
 </span>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <section class="container1">
-        <div style="height: 150px; width: 150px; margin-top:5%" class="one">
-          <button mat-button style="border: 1px solid grey; width:100px; ">Reschedule</button><br/><br/>
-          <button mat-button style="border: 1px solid grey; width:100px; ">Cancel</button>
-        </div>
-        <div class="two">
-          <hr/>
-          <b>EMAIL</b> <mat-icon>pencil</mat-icon><br>
-          {{data.schedulerEmail}}<br><br>
-          <b> INVITEE TIME ZONE</b><br>
-          {{data.timeZone}}
-          <br><br><br>
-          <i>{{data.meetingDate | date}} </i>
-        </div>
-      </section>
+                      <br>
+                      <button nz-button nzSize="small" class="login-form-button" style="background-color:#FF4165; color: white;" (click)="updateContent(item.key,selectIndex, data)"><span>Update</span> </button> &nbsp;&nbsp;&nbsp;&nbsp;
+                      <button nz-button nzSize="small" class="login-form-button" style="border-color:#707070; color: #707070;" (click)="inVisibleContent(item.key,selectIndex)" ><span> Cancel </span></button>
+                    </form>
+                  </div>
 
-    </mat-expansion-panel>
-  </mat-accordion>
+                </nz-col>
+                <nz-col nzSpan="6" align="start">
+                  <h5>Invitee Time Zone</h5>
+                  {{data.timeZone}}
+                </nz-col>
+              </div>
+              <div nz-row style="margin-top:2%" nzAlign="middle" nzJustify="center" *ngIf="data.reschedulerName" >
+                <nz-col nzSpan="20" align="center">
+                  <a > Reschedule by {{data.reschedulerName}} </a> &nbsp;: <span style="color: #FF4165" >{{data.rescheduleReason}}</span>
+                </nz-col>
+              </div>
+              <div nz-row style="margin-top: 5%" nzAlign="middle" nzJustify="center">
+                <nz-col nzSpan="24" align="center" *ngIf="!data.cancel">
+                  <button nz-button nzSize="small" class="login-form-button" style="background-color:#FF4165; color: white; width: 150px" (click)="onRescheduleMeeting(data)"><i class="fa fa-refresh"></i> &nbsp;&nbsp;&nbsp;<span>Reschedule</span> </button> &nbsp;&nbsp;&nbsp;&nbsp;
+                  <button nz-button nzSize="small" class="login-form-button" style="border-color:#707070; color: #707070; width: 150px" (click)="onCancelMeeting(data,item.key,selectIndex)"><i nz-icon type="close" theme="outline"></i><span> Cancel </span></button>
+                </nz-col>
+              </div>
+              <ng-template #titleTemplateHeader>
+                <div nz-row nzAlign="middle" nzJustify="center">
+                  <div nz-col nzSpan="1" style="margin-top:20px ">
+                    <svg width="40" height="40" style="margin-top:2px">
+                      <circle cx="15" cy="15" r="13" fill="#DFC12D" *ngIf="data.eventType == '15min'"></circle>
+                      <circle cx="15" cy="15" r="13" fill="blue" *ngIf="data.eventType == '30min'"></circle>
+                      <circle cx="15" cy="15" r="13" fill="red" *ngIf="data.eventType == '60min'"></circle>
+                      <circle cx="15" cy="15" r="13" fill="#36FF0E" *ngIf="data.eventType == '45min'"></circle>
+                    </svg>
+                  </div>
+                  <div nz-col nzSpan="7" style="margin-top:15px;">
+                    {{data.meetingTime}}<br>
+                    Event Type <b style="color: #707070" class="fnt" >{{ data.eventType}} {{event}}</b>
+                  </div>
+                  <div nz-col nzSpan="16" style="margin-top: 13px" *ngIf="!data.cancel">
+                    <a style="color: #FF4165; "> <b>{{data.schedulerName}}</b> </a> &nbsp; with you <br>
+                  </div>
+                  <div nz-col nzSpan="16" style="margin-top: 13px" *ngIf="data.cancel">
+                    <s><a style="color: #FF4165; "> <b>{{data.schedulerName}}</b> </a> &nbsp; with you <br></s>
+                    <div nz-row>
+                      <p style="color: #FF4165;font-family: Roboto-Medium, sans-serif;">Cancelled by {{data.cancelBy}}: <span style="color: #4D5055;font-family: Roboto-Medium, sans-serif;"> &nbsp;&nbsp;"{{data.cancelMessage}}"</span> </p>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </nz-collapse-panel>
+          </nz-collapse>
+        </div>
+      </div>
+    </div>
+    <div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px " >
+      <h6>You've reached the end of the list.</h6>
+    </div>
+  </div>
+  <div nz-row nzType="flex" nzJustify="center" *ngIf="!recordExists" >
+    <div nz-col nzSpan="18">
+      <div style="text-align: center;margin-top: 15%">
+        <p class="centerText">You have no upcoming events yet.</p>
+        <p class="centerText">As events are scheduled with you, they'll appear here.</p>
+        <p class="centerTextSmall">Need tips? Check out our <span style="color: #FF4165;cursor: pointer">Knowledge base</span></p>
+      </div>
+    </div>
+  </div>
 </div>
+
