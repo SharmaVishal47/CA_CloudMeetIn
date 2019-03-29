@@ -10,7 +10,7 @@ export class AppComponent implements OnInit {
   constructor(private meetingService: MeetingService, private cdRef: ChangeDetectorRef) {
   }
 
-  title = 'CA-Calendly';
+  title = 'CloudMeetIn';
 
   removeHeader: boolean;
   ngOnInit(): void {
