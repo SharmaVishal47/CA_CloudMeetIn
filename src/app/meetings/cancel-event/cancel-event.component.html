@@ -1,0 +1,72 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10" style="margin: auto;" *ngIf="!cancelStatus">
+      <div class="row" align="start">
+      </div>
+      <div class="row" align="center">
+        <div class="col-lg-12" style="margin-top:50px;" align="center">
+          <nz-avatar [nzSize]="100" nzIcon="user" nzSrc={{userRecords.profilePic}}></nz-avatar>
+        </div>
+      </div>
+      <div class="row" align="center">
+        <div class="col-lg-12" align="center">
+          <span>{{userRecords.fullName}}</span><br>
+        </div>
+      </div>
+      <div class="row" align="center">
+        <div class="col-lg-12" align="center">
+          <hr/>
+          <h5 align="center">Enter Cancellation Details. </h5>
+        </div>
+      </div>
+      <form nz-form [formGroup]="cancelForm" (ngSubmit)="onSubmit()">
+        <div class="container" align="center" >
+          <div class="row" align="center">
+            <div class="col-md-6" align="justify">
+
+              <h6>{{cancelMeetingResponse.eventType.toString().split('m')[0]}} Minute Meeting</h6>
+              <label>{{cancelMeetingResponse.eventType}}</label><br>
+              <label> <i nz-icon type="calendar" theme="outline"></i> {{cancelMeetingResponse.meetingTime | date:'shortTime'}} - {{cancelMeetingResponse.meetingEndTime | date:'shortTime'}},
+                {{cancelMeetingResponse.meetingTime | date:'EEEE'}}, {{cancelMeetingResponse.meetingTime | date }}</label><br>
+              <label> <i nz-icon type="clock-circle" theme="outline"></i>{{cancelMeetingResponse.timeZone}}</label>
+            </div>
+            <div class="col-md-6">
+              <nz-form-item>
+                <nz-form-control [nzSm]="22" [nzXs]="24">
+                  <nz-input-group [nzPrefix]="descriptionTemp">
+                    <textarea rows="5" nz-input formControlName="reason" placeholder="Reason for canceling"></textarea>
+                  </nz-input-group>
+                  <nz-form-explain
+                    *ngIf="cancelForm.get('reason').dirty && cancelForm.get('reason').errors">
+                    Please input your reason!
+                  </nz-form-explain>
+                </nz-form-control>
+              </nz-form-item>
+              <ng-template #descriptionTemp></ng-template>
+            </div>
+          </div>
+          <div class="row" align="center" style="margin-bottom: 20px">
+            <div class="col-lg-12" align="center">
+              <button nz-button type="submit" class="login-form-button"
+                      style="background-color:#FF4165; color: white; width: 200px"
+                      [disabled]="!cancelForm.valid">
+                {{btnValue}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-lg-4" style="margin: auto;" *ngIf="cancelStatus">
+      <h6 style="text-align: center">Cancellation Confirmed</h6>
+      <p>Your meeting with {{userRecords.fullName}} has been canceled.</p>
+      <hr>
+      <h6>{{cancelMeetingResponse.eventType.toString().split('m')[0]}} Minute Meeting</h6>
+      <label style="text-decoration: line-through;">{{cancelMeetingResponse.meetingTime | date:'shortTime'}} - {{cancelMeetingResponse.meetingEndTime | date:'shortTime'}},
+        {{cancelMeetingResponse.meetingTime | date:'EEEE'}}, {{cancelMeetingResponse.meetingTime | date }}</label><br>
+      <label style="text-decoration: line-through;">{{cancelMeetingResponse.timeZone}}</label>
+      <hr>
+    </div>
+  </div>
+</div>

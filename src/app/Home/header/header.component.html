@@ -8,7 +8,7 @@
   <div *ngIf="isAuthenticated">
     <a class="" routerLink="dashboard" style="margin-left: 10px; font-family: 'Roboto-Medium', sans-serif;font-size: 18px; text-decoration:none">CLOUDMEETIN</a>
   </div>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" style="border-color: rgb(255,102,203); " type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -17,32 +17,46 @@
         <div *ngIf="!isAuthenticated">
           <a class="nav-link active" routerLink="/" tabindex="-1" aria-disabled="true" style="visibility: hidden">Home</a>
         </div>
-
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0" style="width: 100%">
       <div style="margin: auto">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
+        <ul class="navbar-nav mr-auto navHeader" *ngIf="isAuthenticated">
+          <li class="nav-item" >
             <a class="nav-link" [routerLinkActive]="['change-background']" [routerLinkActiveOptions]="{exact:true}" routerLink="dashboard" tabindex="1" *ngIf="isAuthenticated">Dashboard</a>
           </li>
-          <li class="nav-item">
+         <!-- <li class="nav-item">
             <a class="nav-link " *ngIf="isAuthenticated" [routerLinkActive]="['change-background']" [routerLinkActiveOptions]="{exact:true}" style="cursor: pointer" routerLink="/eventMainPage">Event Types</a>
-          </li>
-          <li class="nav-item">
+          </li>-->
+          <!--<li class="nav-item">
             <a class="nav-link " *ngIf="isAuthenticated" [routerLinkActive]="['change-background']" [routerLinkActiveOptions]="{exact:true}" style="cursor: pointer">Quick Start</a>
-          </li>
+          </li>-->
           <li class="nav-item">
             <a class="nav-link " routerLink="/help" [routerLinkActive]="['change-background']" [routerLinkActiveOptions]="{exact:true}" *ngIf="isAuthenticated" style="cursor: pointer;">Help</a>
           </li>
+          <li class="nav-item paddingLeft " style="display: flex ;">
+            <img src={{userImagePreview}} class="avatar" *ngIf="isAuthenticated" alt="cim" >
+            <a class="nav-link" [routerLinkActive]="['change-background']" *ngIf="isAuthenticated" [matMenuTriggerFor]="menu" style="cursor: pointer">cloudmeetin.com/{{userId}}&#x25BC;<span class="sr-only">(current)</span></a>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}" (click)="openDialog()">Copy Your Link</button>
+              <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}" routerLink="/connection">Calendar connection</button>
+              <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}"routerLink="pofilesettings">Account Setting</button>
+              <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}"routerLink="availableTime">Available Time</button>
+             <!-- <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}">Users</button>-->
+              <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}" routerLink="integrations">Integration</button>
+              <!--<button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}">Billing</button>
+              <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}">Get help</button>-->
+              <button mat-menu-item style="line-height: 30px; margin-left: 15px;height: 30px; border: 1px solid #707070; width: 50%; color: #707070; font-family: 'Roboto-Light', sans-serif;margin-top: 10px" [routerLinkActive]="['change-background']" [routerLinkActiveOptions]="{exact:true}" (click)="onLogout()">Logout</button>
+            </mat-menu>
+          </li>
         </ul>
       </div>
-      <ul class="navbar-nav mr-auto">
+      <ul class="navbar-nav mrRight " style="margin-left: 1%;" *ngIf="!isAuthenticated" >
 
         <li class="nav-item">
           <a class="nav-link" routerLink="/features" [routerLinkActive]="['change-background']" [routerLinkActiveOptions]="{exact:true}" *ngIf="!isAuthenticated" style="cursor: pointer">Features<span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
+       <!-- <li class="nav-item">
           <a class="nav-link" routerLink="/pricing" [routerLinkActive]="['change-background']" [routerLinkActiveOptions]="{exact:true}" *ngIf="!isAuthenticated" style="cursor: pointer">Pricing<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
@@ -53,27 +67,15 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/team" [routerLinkActive]="['change-background']" [routerLinkActiveOptions]="{exact:true}" *ngIf="!isAuthenticated" style="cursor: pointer">For Teams<span class="sr-only">(current)</span></a>
-        </li>
+        </li>-->
         <li class="nav-item">
           <a class="nav-link" routerLink="/signup" [routerLinkActive]="['change-background']" [routerLinkActiveOptions]="{exact:true}" *ngIf="!isAuthenticated" style="cursor: pointer">Sign Up<span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" (click)="checkLogin()" [routerLinkActive]="['change-background']" [routerLinkActiveOptions]="{exact:true}" *ngIf="!isAuthenticated" style="cursor: pointer">{{loginText}}<span class="sr-only">(current)</span></a>
+        <li class="nav-item" *ngIf="loginText == 'Login'">
+          <a class="nav-link" routerLink="/login" [routerLinkActive]="['change-background']" [routerLinkActiveOptions]="{exact:true}" *ngIf="!isAuthenticated" style="cursor: pointer">{{loginText}}<span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item" style="display: flex">
-          <img [src]="userImagePreview" class="avatar" *ngIf="isAuthenticated" >
-          <a class="nav-link" [routerLinkActive]="['change-background']" *ngIf="isAuthenticated" [matMenuTriggerFor]="menu" style="cursor: pointer">CloudMeetIn.com/{{userId}}<span class="sr-only">(current)</span></a>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}"(click)="openDialog()">Share Your Link</button>
-            <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}"routerLink="/connection">Calendar connection</button>
-            <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}"routerLink="pofilesettings">Account Setting</button>
-            <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}"routerLink="availableTime">Available Time</button>
-            <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}">Users</button>
-            <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}" routerLink="integrations">Integration</button>
-            <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}">Billing</button>
-            <button mat-menu-item style="line-height: 30px;height: 30px;padding: 0px 40px 5px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}">Get help</button>
-            <button mat-menu-item style="line-height: 30px; margin-left: 15px;height: 40px; border: 1px solid #707070; width: 50%; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background']" [routerLinkActiveOptions]="{exact:true}"(click)="onLogout()">Logout</button>
-          </mat-menu>
+        <li class="nav-item" *ngIf="loginText == 'Account'">
+          <a class="nav-link" (click)="checkLogin()" [routerLinkActive]="['change-background']" [routerLinkActiveOptions]="{exact:true}" *ngIf="!isAuthenticated" style="cursor: pointer">{{loginText}}<span class="sr-only">(current)</span></a>
         </li>
       </ul>
     </form>

@@ -1,0 +1,68 @@
+<nz-spin nzTip="Loading..." [nzSpinning]="isSpinning" [nzSize]="'large'">
+  <div class="container" *ngIf="checkEventId">
+    <div class="row">
+      <div class="col-lg-12">
+        <p style="color: #707070;font-family: Roboto-Regular;margin-top: 15px">{{Meeting_owner}}</p>
+        <div class="row">
+          <div class="col-5">
+            <b><p style="color: #707070;font-family: Roboto-Medium;margin-top: -5px">{{meeting_time}}</p></b>
+          </div>
+          <div class="col-7">
+            <strong><p style="color: #707070;font-family: Roboto-Medium;margin-top: -5px;font-size: medium">Select a Date & Time</p></strong>
+          </div>
+        </div>
+        <hr>
+        <div class="row justify-content-md-center" style="margin-bottom: 4%">
+          <div class="col-sm-4" style="height: 500px;">
+            <div >
+              <mat-calendar (selectedChange)="select($event)" [minDate]="minDate" [maxDate]="maxDate" [dateFilter]="myFilter" [selected]="selected" >
+              </mat-calendar>
+              <div style="margin-left: 18%;margin-top: 10%">
+                <ng2-timezone-picker
+                  [timezone]="timeZone" (change)="changeTimezone($event)" style="min-width: 200px;position: absolute; alignment: center;margin-left: auto;margin-right: auto;width: 25%" >
+                </ng2-timezone-picker>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-1">
+          </div>
+          <div class="col-sm-4" style="height: 500px;overflow-y:scroll;">
+            <b><p style="color: #707070;font-family: Roboto-Regular;text-align: center;margin-top: 10px">{{selected | date: 'EEEE , d MMMM'}}</p></b>
+            <div style="height: 500px">
+              <p class="custom-card" style="margin-bottom: 5%;" *ngFor="let availableTimeSlot of availableSlot;let i = index" (click)="onCardClick(availableTimeSlot,i)">
+                {{availableTimeSlot.startTime | date:'h:mm a'}} - {{availableTimeSlot.endTime | date:'h:mm a' }}</p> <br>
+              <nz-modal [(nzVisible)]="confirmBoxSlot" [nzWidth]="600" [nzClosable]="false"  style="text-align: center;"
+                        [nzFooter]="footer">
+                <ng-template #footer >
+                </ng-template>
+                <p style="font-family: Roboto-Medium;color: #707070;font-size: medium;margin-top: 3%" >You're are about to confirm your booking at {{selectedTimeSlot.startTime| date:'h:mm a'}}. Are you Sure? </p>
+                <div nz-row style="margin-top: 10%">
+                  <div nz-col nzSpan="12" style="width: 40%;margin-bottom: -5%;">
+                    <nz-form-item>
+                      <nz-form-control>
+                        <button nz-button  class="login-button" style="float: right; background: #FF4165; color: white" (click)="confirmMeeting()">Confirm</button>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                  <div nz-col nzSpan="12" style="width: 40%; float: right;margin-bottom: -5%;">
+                    <nz-form-item>
+                      <nz-form-control>
+                        <button nz-button class="login-button" style="border: 1px solid #707070; color: #707070" (click)="closePopup()">Cancel</button>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                </div>
+              </nz-modal>
+              <ng-template #timeZone11>
+                <label>Time Zone Style</label>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container" *ngIf="!checkEventId">
+
+  </div>
+</nz-spin>

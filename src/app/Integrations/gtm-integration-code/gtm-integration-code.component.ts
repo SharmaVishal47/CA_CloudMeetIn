@@ -6,6 +6,7 @@ import {MatDialog, MatDialogConfig} from '@angular/material';
 import {AuthServiceLocal} from '../../Auth/auth.service';
 import {MeetingService} from '../../meetings/meeting.service';
 import {Component} from '@angular/core';
+import {MessageServiceService} from '../../Auth/message-service.service';
 
 @Component({
   selector: 'app-gtm-integration-code',
@@ -14,14 +15,14 @@ import {Component} from '@angular/core';
 })
 export class GTMIntegrationCodeComponent implements OnInit {
 
-  constructor(private httpClient: HttpClient,private route: ActivatedRoute,private dialog: MatDialog,private router: Router,private authService: AuthServiceLocal,private meetingService: MeetingService) { }
+  constructor(private messageService:MessageServiceService,private httpClient: HttpClient,private route: ActivatedRoute,private dialog: MatDialog,private router: Router,private authService: AuthServiceLocal,private meetingService: MeetingService) { }
   paramCode:string;
   ngOnInit() {
     this.meetingService.authStatusListener.next(true);
     this.paramCode = this.route.snapshot.queryParamMap.get('code');
     if (this.paramCode) {
       console.log("Code",this.paramCode);
-      let client_id_client_secret64 = window.btoa("nQK9NcecyeyuXtnY4dM9OvJ3yI5uhVxH"+':'+"qnAAlqfUmAwNOPpc");
+      let client_id_client_secret64 = window.btoa("2dWCGOZLt9Y28Rmc0xfWNz84kPGkEpfA"+':'+"9uFMfxwb5tG1zK0O");
       let httpHeaders = new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json',
@@ -51,19 +52,23 @@ export class GTMIntegrationCodeComponent implements OnInit {
             userId: localStorage.getItem('userId'),
             expires_in: expires_in
           };
-          this.httpClient.post<{message: string,data: []}>('http://localhost:3000/integration/gotomeetingAdd',body,).subscribe((responseData)=>{
+          this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/integration/gotomeetingAdd',body,).subscribe((responseData)=>{
             console.log("integrationForm responseData====",responseData.data);
-            const dialogConfig = new MatDialogConfig();
+            this.messageService.generateSuccessMessage("GTM Connected");
+            this.authService.autoAuthenticateUserAfterIntegration("integrations/gotomeeting");
+           /* const dialogConfig = new MatDialogConfig();
             dialogConfig.data = 'GTM Connected';
             let dialogRef = this.dialog.open(MessagedialogComponent, dialogConfig);
             dialogRef.afterClosed().subscribe(value => {
               this.authService.autoAuthenticateUserAfterIntegration("integrations/gotomeeting");
-            });
+            });*/
+
           },error => {
             console.log("error====",error);
-            const dialogConfig = new MatDialogConfig();
+            this.messageService.generateErrorMessage("Something gone wrong,Please try again.")
+           /* const dialogConfig = new MatDialogConfig();
             dialogConfig.data = "Something gone wrong,Please try again.";
-            this.dialog.open(MessagedialogComponent, dialogConfig);
+            this.dialog.open(MessagedialogComponent, dialogConfig);*/
           });
 
         },
@@ -71,7 +76,7 @@ export class GTMIntegrationCodeComponent implements OnInit {
           console.log("Error=========",err.message);
         });
     }else{
-      window.location.href = "https://api.getgo.com/oauth/v2/authorize?client_id=nQK9NcecyeyuXtnY4dM9OvJ3yI5uhVxH&response_type=code";
+      window.location.href = "https://api.getgo.com/oauth/v2/authorize?client_id=2dWCGOZLt9Y28Rmc0xfWNz84kPGkEpfA&response_type=code";
     }
   }
 }

@@ -76,25 +76,26 @@ import { ChangePasswordComponent } from './Auth/password/change-password/change-
 import { MainHeaderComponent } from './main-header/main-header.component';
 import { ZoomIntegrationComponent } from './Integrations/zoom-integration/zoom-integration.component';
 import { GTMIntegrationCodeComponent } from './Integrations/gtm-integration-code/gtm-integration-code.component';
-import { ClipboardModule } from 'ngx-clipboard';
+
 import { ChangeLoginEmailComponent } from './AccountSetting/change-login-email/change-login-email.component';
+import { CancelEventComponent } from './meetings/cancel-event/cancel-event.component';
+import {NgxUiLoaderModule} from 'ngx-ui-loader';
+import {NgxUiLoaderDemoService} from './meetings/ngx-ui-loader-demo.service';
+
+import { RescheduleMeetingComponent } from './meetings/reschedule-meeting/reschedule-meeting.component';
+import { RescheduleEventComponent } from './meetings/reschedule-event/reschedule-event.component';
+import {ClipboardModule} from 'ngx-clipboard';
+import { ErrorComponent } from './error/error.component';
+import {DialogChangeAccountPasswordComponent} from './AccountSetting/dialog-change-account-password/dialog-change-account-password.component';
 
 
 export function getAuthServiceConfigs() {
   let config = new AuthServiceConfig(
     [
-     /* {
-        id: FacebookLoginProvider.PROVIDER_ID,
-        provider: new FacebookLoginProvider("Your-Facebook-app-id")
-      },*/
       {
         id: GoogleLoginProvider.PROVIDER_ID,
-        provider: new GoogleLoginProvider("501215968373-ng1mtd1fm5rcfl07cia5h97ltfherhk4.apps.googleusercontent.com")
+        provider: new GoogleLoginProvider("812688497337-bnvqsplr9iv5ki7s733gde19bhnar61p.apps.googleusercontent.com")
       }
-     /* {
-        id: LinkedinLoginProvider.PROVIDER_ID,
-        provider: new LinkedinLoginProvider("1098828800522-m2ig6bieilc3tpqvmlcpdvrpvn86q4ks.apps.googleusercontent.com")
-      },*/
     ]
 );
   return config;
@@ -143,7 +144,11 @@ export function getAuthServiceConfigs() {
     ZoomIntegrationComponent,
     GTMIntegrationCodeComponent,
     ChangeLoginEmailComponent,
-
+    CancelEventComponent,
+    RescheduleMeetingComponent,
+    RescheduleEventComponent,
+    ErrorComponent,
+    DialogChangeAccountPasswordComponent
 
   ],
   imports: [
@@ -182,6 +187,7 @@ export function getAuthServiceConfigs() {
    /* NzDatePickerModule,*/
     IconModule,
     ClipboardModule,
+    NgxUiLoaderModule
   ],
   providers: [
       {
@@ -190,16 +196,17 @@ export function getAuthServiceConfigs() {
       },
     { provide: NZ_I18N, useValue: en_US },
     MatDatepickerModule,
-    DatePipe
+    DatePipe,
+    NgxUiLoaderDemoService
   ],
   bootstrap: [AppComponent],
-  entryComponents: [
-    CalendarOptionComponent,
-    CalendareventComponent,
-    MessagedialogComponent,
-    ShareYourLinkComponentComponent,
-    DialogcancelmessageComponent
-  ]
+    entryComponents: [
+      CalendarOptionComponent,
+      CalendareventComponent,
+      MessagedialogComponent,
+      ShareYourLinkComponentComponent,
+      DialogcancelmessageComponent
+    ]
 })
 
 export class AppModule { }

@@ -22,13 +22,13 @@ export class ZoomIntegrationComponent implements OnInit {
   ngOnInit() {
     this.user_id = localStorage.getItem('userId');
     this.zoomCode = this.route.snapshot.queryParamMap.get('code');
-    this.httpClient.post<any>('http://localhost:3000/zoom/checkintegrationstatus',{user_id: this.user_id}).subscribe((responseData)=>{
+    this.httpClient.post<any>('/zoom/checkintegrationstatus',{user_id: this.user_id}).subscribe((responseData)=>{
       console.log("Get Zoom Response Data", responseData );
       if(responseData.data.length > 0) {
         this.alreadyIntegrated = responseData.data[0].integrationStatus;
         this.refreshToken = responseData.data[0].refresh_token;
         console.log("Refresh Token", this.refreshToken);
-        this.httpClient.post<any>('http://localhost:3000/zoom/insert',{refreshToken: this.refreshToken, user_id: this.user_id}).subscribe((responseData1)=>{
+        this.httpClient.post<any>('/zoom/insert',{refreshToken: this.refreshToken, user_id: this.user_id}).subscribe((responseData1)=>{
           console.log("Get Zoom Response Data", responseData1 );
         });
       } else {
@@ -37,7 +37,7 @@ export class ZoomIntegrationComponent implements OnInit {
     });
     if((this.user_id && this.zoomCode) && !this.alreadyIntegrated) {
       if(this.zoomCode && this.user_id) {
-        this.httpClient.post<any>('http://localhost:3000/zoom/zoomcallback',{code: this.zoomCode, user_id: this.user_id}).subscribe((responseData)=>{
+        this.httpClient.post<any>('/zoom/zoomcallback',{code: this.zoomCode, user_id: this.user_id}).subscribe((responseData)=>{
           console.log("Zoom Response Data when details is insert in database", responseData );
 // this.alreadyIntegrated = true;
           const dialogConfig = new MatDialogConfig();
@@ -53,7 +53,8 @@ export class ZoomIntegrationComponent implements OnInit {
 
   zoomMeetingIntegration() {
     let zoomClientId = 'dvRsLP5cSOFosrcG4Df1w';
-    let myAppRedirect = 'http://localhost:4200/integrations/zoommeeting';
+    /*let myAppRedirect = 'http://localhost:4200/integrations/zoommeeting';*/
+    let myAppRedirect = 'https://dev.cloudmeetin.com/integrations/zoommeeting';
     window.location.href = "https://zoom.us/oauth/authorize" + "?response_type=code&client_id=" + zoomClientId + "&redirect_uri=" + myAppRedirect;
   }
 
@@ -64,7 +65,7 @@ export class ZoomIntegrationComponent implements OnInit {
       nzOkText: 'OK',
       nzCancelText: 'Cancel',
       nzOnOk: () =>{
-        this.httpClient.post<any>('http://localhost:3000/zoom/disconnectzoomintegration',{user_id: this.user_id}).subscribe((responseData)=>{
+        this.httpClient.post<any>('/zoom/disconnectzoomintegration',{user_id: this.user_id}).subscribe((responseData)=>{
           console.log("Zoom disconnect", responseData );
           this.alreadyIntegrated = false;
         })

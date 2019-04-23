@@ -58,11 +58,7 @@ router.post('/generateToken',(req,res,next)=>{
 
 router.post('/calendarId',(req,res,next)=>{
 
-<<<<<<< HEAD
-  let calendarQuery = "SELECT calendarEvent  FROM `calendly` WHERE userId = '"+req.body.userId+"'";
-=======
-  let calendarQuery = "SELECT calanderId FROM `calendly` WHERE userId = '"+req.body.userId+"'";
->>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
+  let calendarQuery = "SELECT calendarEvent FROM `calendly` WHERE userId = '"+req.body.userId+"'";
   console.log("calendarQuery===========",calendarQuery);
   db.query(calendarQuery, (err, result) => {
     if (err!==null) {
@@ -71,7 +67,7 @@ router.post('/calendarId',(req,res,next)=>{
     else {
       res.status(200).json({
         "message" : "Records successfully get",
-        "data" :  result
+        "data" : result
       });
     }
   });

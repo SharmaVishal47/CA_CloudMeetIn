@@ -1,6 +1,6 @@
 .col-lg-6 {
-   margin: auto;
- }
+  margin: auto;
+}
 .container{
   margin-top: 20px;
 }
@@ -10,25 +10,27 @@
 .has-error{
   border: 1px solid red;
 }
-
+i {
+  cursor: pointer;
+}
 button {
   margin-top: 20px;
-  background:  #FF4165;
+  background: #FF4165;
   color: white;
 }
- label {
-   font-size: calc(0.50em + 1vmin);
-   line-height: normal;
-   color: #707070;
-   margin: 0;
-   padding: 0;
- }
- h6 {
-   color: #707070;
-   font-size: calc(0.30em + 1vmin);
-   padding: 25px;
-   text-align: center;
- }
+label {
+  font-size: calc(0.50em + 1vmin);
+  line-height: normal;
+  color: #707070;
+  margin: 0;
+  padding: 0;
+}
+h6 {
+  color: #707070;
+  font-size: calc(0.30em + 1vmin);
+  padding: 25px;
+  text-align: center;
+}
 h5{
   color: #707070;
   text-align: center;
@@ -60,4 +62,3 @@ p{
 img {
   padding: 0 0 50px 0;
 }
-

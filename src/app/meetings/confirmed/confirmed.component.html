@@ -1,57 +1,61 @@
-<<<<<<< HEAD
-<nz-row nzJustify="center" nzAlign="middle" *ngIf="visibleButton">
-  <nz-col nzSpan="6" nzOffset="3" style="margin-top: 50px;" align="start">
-    <button nz-button nzType="primary"
-            style="color: #707070;background: none;border-color: #707070;width: 130px;align-content: center" (click)="backToHome()">
-      <i nz-icon nzType="double-left" nzTheme="outline"></i>Back To Home
-    </button>
-  </nz-col>
-  <nz-col nzSpan="6" style="margin-top: 50px;" align="end">
-  </nz-col>
-</nz-row>
-
-=======
->>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
-<nz-row nzJustify="center" nzAlign="middle">
-  <nz-col nzSpan="18" nzOffset="3" align="center">
-    <div align="center">
-      <h5 align="center" style="margin-top: 10%">Confirmed </h5><br>
-      <p>You are scheduled with {{userId}}</p><br>
-      <nz-card style="width:40%;" align="start" >
-        <p>{{meetingTime}}</p>
-        <p style="color:#FF4165">{{meetingDateTime}}</p>
-        <p>{{meetingTimeZone}}</p>
-        <p>A calendar invitation has been sent to your email address.</p>
-      </nz-card>
-<<<<<<< HEAD
-    </div>
-
-  </nz-col>
-</nz-row>
-=======
-    </div>
-
-  </nz-col>
-</nz-row>
-
-<!--<div class="container">
+<div class="container">
   <div class="row">
-    <div class="col-lg-12" style="text-align: center; margin-top: 25px">
-      <div >
-        <h6>Confirmed</h6>
-        <p>You are scheduled with {{userId}}</p>
-      </div>
-      <hr>
-      <div class="col-lg-6" style="margin: auto">
-        <div class="card-body text-left">
-          <h5>{{meetingTime}}</h5>
-          <p>{{meetingDateTime}}</p>
-          <p>{{meetingTimeZone}}</p>
+    <div class="col-lg-10" style="margin: auto;">
+      <div class="row" align="start">
+        <div class="col-md-5" align="start" *ngIf="visibleButton" style="margin-top: 5%;">
+          <button nz-button nzType="primary"
+                  style="color: #707070;background: none;border-color: #707070;width: 130px;align-content: center" (click)="backToHome()">
+            <i nz-icon nzType="double-left" nzTheme="outline"></i>Back To Home
+          </button>
         </div>
-        <h6>A calendar invitation has been sent to your email address.</h6>
+      </div>
+      <div class="row" align="center">
+        <div class="col-lg-12" style="margin-top:10%;" align="center">
+          <nz-avatar [nzSize]="100" nzIcon="user" nzSrc={{userImage}}></nz-avatar>
+        </div>
+      </div>
+      <div class="row" align="center">
+        <div class="col-lg-12" align="center">
+          <div align="center">
+            <h5 align="center" style="margin-top: 30px">Confirmed </h5><br>
+            <p>You are scheduled with {{userId}}</p><br>
+            <nz-card class="card_Width" align="start" >
+
+              <p><span class="custom-circle1" style="background-color: blue;"></span> &nbsp;&nbsp; {{meetingEvent}}</p>
+              <p style="color:#FF4165"><i nz-icon nzType="calendar" nzTheme="outline"></i>&nbsp;&nbsp; {{startTime| date:'h:mm a'}}-{{endTime| date:'h:mm a'}}
+                , {{meetingDate | date: 'EEEE ,MMMM d ,yyyy'}}</p>
+              <p><span><i nz-icon nzType="global" nzTheme="outline"></i> &nbsp;&nbsp; {{meetingTimeZone}}</span></p>
+              <p align="justify"><b>A calendar invitation has been sent to your email address.</b></p>
+            </nz-card>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>-->
->>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
-
+</div>
+<!--
+<nz-row nzJustify="center" nzAlign="middle" *ngIf="visibleButton">
+<nz-col nzSpan="6" nzOffset="3" style="margin-top: 50px;" align="start">
+<button nz-button nzType="primary"
+style="color: #707070;background: none;border-color: #707070;width: 130px;align-content: center" (click)="backToHome()">
+<i nz-icon nzType="double-left" nzTheme="outline"></i>Back To Home
+</button>
+</nz-col>
+<nz-col nzSpan="6" style="margin-top: 50px;" align="end">
+</nz-col>
+</nz-row>
+<nz-row nzJustify="center" nzAlign="middle">
+<nz-col nzSpan="18" nzOffset="3" align="center">
+<div align="center">
+<h5 align="center" style="margin-top: 10%">Confirmed </h5><br>
+<p>You are scheduled with {{userId}}</p><br>
+<nz-card style="width:40%;" align="start" >
+<p>{{meetingTime}}</p>
+<p style="color:#FF4165">{{meetingDateTime}}</p>
+<p>{{meetingTimeZone}}</p>
+<p>A calendar invitation has been sent to your email address.</p>
+</nz-card>
+</div>
+</nz-col>
+</nz-row>
+-->

@@ -11,9 +11,9 @@ import {SignUpService} from '../../Auth/sign-up.service';
 })
 export class AvailbilityComponent implements OnInit {
   email: string;
-  defaultStartTime = "09:00";
-  defaultEndTime = "18:00";
-
+  defaultStartTime = "06:00";
+  defaultEndTime = "24:00";
+  time = true;
 
   availabilityForm: FormGroup;
   listOfDays = ['1','2','3','4','5'];
@@ -26,6 +26,16 @@ export class AvailbilityComponent implements OnInit {
     });
     this.email = this.signUpService.getAuthUserEmail();
   }
+
+  checkTime(){
+    if(this.defaultStartTime < this.defaultEndTime){
+      console.log(' start time--> ', this.defaultStartTime);
+      console.log(' end time--> ',this.defaultEndTime);
+      this.time = true;
+      console.log('time-->',this.time);
+    }else{ this.time = false;}
+  }
+
   submitForm(): void {
     for (const i in this.availabilityForm.controls) {
       this.availabilityForm.controls[ i ].markAsDirty();

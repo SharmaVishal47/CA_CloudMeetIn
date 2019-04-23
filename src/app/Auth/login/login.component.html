@@ -3,21 +3,21 @@
     <img src="../../../assets/Logo_c_new.svg" alt="" width="80px">
   </div>
 </div>
-<div  nz-row nzType="flex" nzJustify="center" style="margin-top:50px ">
+<div nz-row nzType="flex" nzJustify="center" style="margin-top:50px ">
   <div nz-col >
     <h5 style="margin-bottom:30px ">Log into your CloudMeetIn account.</h5>
     <form nz-form [formGroup]="loginForm" class="login-form" (ngSubmit)="submitForm()">
       <nz-form-item>
         <nz-form-control>
-            <input type="text" nzSize="large" nz-input formControlName="emailID" placeholder="Username" required email >
+          <input type="text" nzSize="large" nz-input formControlName="emailID" placeholder="Username"  >
           <nz-form-explain *ngIf="loginForm.get('emailID').dirty && loginForm.get('emailID').errors">
-            Please enter username
+            Please enter valid email address!
           </nz-form-explain>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-control>
-            <input type="password" nzSize="large" nz-input formControlName="password" placeholder="Password">
+          <input type="password" nzSize="large" nz-input formControlName="password" placeholder="Password">
           <nz-form-explain *ngIf="loginForm.get('password').dirty && loginForm.get('password').errors">
             Please enter your password
           </nz-form-explain>
@@ -38,65 +38,65 @@
 
 <!--
 <div class="container">
-  <div class="row">
-    <div class="col-lg-6">
-      <div class="mid-horizontal">
-        <img src="https://www.pr-inside.com/images/uploads/pr/2018/97797/20181129_ca-logo_97797.png" alt="" width="80">
-        <br><br>
-        <p *ngIf="isLoginInStatus === 0 || isLoginInStatus === 2">Log into your CloudMeetIn account.</p>
-        <p *ngIf="isLoginInStatus === 1">Hi {{email}}!</p>
-      </div>
-      <div class="card text-left" *ngIf="isLoginInStatus === 0">
-        <div class="card-body">
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            <div class="form-group">
-              <label>Enter your email to get started.</label>
-              <input type="email" [ngClass]="{'has-error': !loginForm.get('email').valid && loginForm.get('email').touched}"
-                     formControlName="email" class="form-control" id="textName" placeholder="Email address">
-              <span class="help-block" *ngIf="!loginForm.get('email').valid && loginForm.get('email').touched">
-          <span class="text-danger" *ngIf="loginForm.get('email').errors" required>Email address required</span></span>
-            </div>
-            <button type="submit" class="btn btn-primary" [disabled]="!loginForm.valid">Get Started</button>
-          </form>
-        </div>
-        <div class="text-left">
-          <div class="card-body">
-            <h6>Don't have an account? <a routerLink="/signup">Sign up</a></h6>
-          </div>
-        </div>
-      </div>
-      &lt;!&ndash;if isSignInStatus === 2 &ndash;&gt;
-      <div class="card text-left" *ngIf="isLoginInStatus ===2">
-        <div class="card-body">
-          <form [formGroup]="loginForm1" (ngSubmit)="onSubmitWithPassword()">
-            <div class="form-group">
-              <label>Enter your email to get started.</label>
-              <input type="email" [ngClass]="{'has-error': !loginForm1.get('emailID').valid && loginForm1.get('emailID').touched}"
-                     formControlName="emailID" class="form-control" id="emailID" placeholder="Email address">
-              <span class="help-block" *ngIf="!loginForm1.get('emailID').valid && loginForm1.get('emailID').touched">
-          <span class="text-danger" *ngIf="loginForm1.get('emailID').errors" required>Email address required</span></span>
-            </div>
-            <div class="form-group">
-              <label>Choose a password with at least 8 characters.</label>
-              <input type="password" [ngClass]="{'has-error': !loginForm1.get('password').valid && loginForm1.get('password').touched}"
-                     formControlName="password" class="form-control" id="password" placeholder="Password">
-              <span class="help-block" *ngIf="!loginForm1.get('password').valid && loginForm1.get('password').touched">
-          <span class="text-danger" *ngIf="loginForm1.get('password').errors" required>Password required</span></span>
-            </div>
-            <button type="submit" class="btn btn-primary" [disabled]="!loginForm1.valid">Continue</button>
-          </form>
-        </div>
-      </div>
-      &lt;!&ndash;if isSignInStatus === 1 &ndash;&gt;
-      <div class="card text-sm-center" *ngIf="isLoginInStatus === 1">
-        <div class="card-body">
-          <p style="font-size: 16px" class="text-center">The easiest way for you to sign in is with Google.
-          </p>
-          <button class="btn btn-primary" (click)="socialSignIn('google')">Sign in with Google</button>
-        </div>
-        <p style="font-size: 14px">Prefer to Login account with a password?<a style="color: blue;cursor: pointer;" (click)="onLogin()">click here</a></p>
-      </div>
-    </div>
-  </div>
+<div class="row">
+<div class="col-lg-6">
+<div class="mid-horizontal">
+<img src="https://www.pr-inside.com/images/uploads/pr/2018/97797/20181129_ca-logo_97797.png" alt="" width="80">
+<br><br>
+<p *ngIf="isLoginInStatus === 0 || isLoginInStatus === 2">Log into your CloudMeetIn account.</p>
+<p *ngIf="isLoginInStatus === 1">Hi {{email}}!</p>
+</div>
+<div class="card text-left" *ngIf="isLoginInStatus === 0">
+<div class="card-body">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<div class="form-group">
+<label>Enter your email to get started.</label>
+<input type="email" [ngClass]="{'has-error': !loginForm.get('email').valid && loginForm.get('email').touched}"
+formControlName="email" class="form-control" id="textName" placeholder="Email address">
+<span class="help-block" *ngIf="!loginForm.get('email').valid && loginForm.get('email').touched">
+<span class="text-danger" *ngIf="loginForm.get('email').errors" required>Email address required</span></span>
+</div>
+<button type="submit" class="btn btn-primary" [disabled]="!loginForm.valid">Get Started</button>
+</form>
+</div>
+<div class="text-left">
+<div class="card-body">
+<h6>Don't have an account? <a routerLink="/signup">Sign up</a></h6>
+</div>
+</div>
+</div>
+&lt;!&ndash;if isSignInStatus === 2 &ndash;&gt;
+<div class="card text-left" *ngIf="isLoginInStatus ===2">
+<div class="card-body">
+<form [formGroup]="loginForm1" (ngSubmit)="onSubmitWithPassword()">
+<div class="form-group">
+<label>Enter your email to get started.</label>
+<input type="email" [ngClass]="{'has-error': !loginForm1.get('emailID').valid && loginForm1.get('emailID').touched}"
+formControlName="emailID" class="form-control" id="emailID" placeholder="Email address">
+<span class="help-block" *ngIf="!loginForm1.get('emailID').valid && loginForm1.get('emailID').touched">
+<span class="text-danger" *ngIf="loginForm1.get('emailID').errors" required>Email address required</span></span>
+</div>
+<div class="form-group">
+<label>Choose a password with at least 8 characters.</label>
+<input type="password" [ngClass]="{'has-error': !loginForm1.get('password').valid && loginForm1.get('password').touched}"
+formControlName="password" class="form-control" id="password" placeholder="Password">
+<span class="help-block" *ngIf="!loginForm1.get('password').valid && loginForm1.get('password').touched">
+<span class="text-danger" *ngIf="loginForm1.get('password').errors" required>Password required</span></span>
+</div>
+<button type="submit" class="btn btn-primary" [disabled]="!loginForm1.valid">Continue</button>
+</form>
+</div>
+</div>
+&lt;!&ndash;if isSignInStatus === 1 &ndash;&gt;
+<div class="card text-sm-center" *ngIf="isLoginInStatus === 1">
+<div class="card-body">
+<p style="font-size: 16px" class="text-center">The easiest way for you to sign in is with Google.
+</p>
+<button class="btn btn-primary" (click)="socialSignIn('google')">Sign in with Google</button>
+</div>
+<p style="font-size: 14px">Prefer to Login account with a password?<a style="color: blue;cursor: pointer;" (click)="onLogin()">click here</a></p>
+</div>
+</div>
+</div>
 </div>
 -->

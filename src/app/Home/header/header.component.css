@@ -63,7 +63,12 @@ a:hover {
   margin-top: 2px;
   border-radius: 50%;
 }
-
+.navHeader > li{
+  width: 125px;
+  text-align: center;
+  margin-left:3px;
+  margin-right:3px;
+}
 .change-background-one {
   font-family: 'Roboto-Regular', sans-serif;
   color: #707070;
@@ -73,5 +78,40 @@ a:hover {
   background: #FF4165;
   color: white;
   text-decoration: none;*/
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,102,203, 0.7)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+.mrRight{
+  margin-right:20% ;
+  alignment: left;
+}
+@media screen and (min-width: 600px) {
+  .paddingLeft {
+
+    padding-left:20%;
+  }
+  .navHeader > li{
+    width: 140px;
+    text-align: center;
+    margin-left:3px;
+    margin-right:3px;
+  }
+}
+@media screen and (min-width: 1500px) {
+  .paddingLeft {
+
+    padding-left:50%;
+  }
+  .mrRight{
+    margin-right:28% ;
+    alignment: left;
+  }
+}
+@media screen and (max-width: 500px) {
+  .paddingLeft{
+    padding-left: 1px;
+  }
 }
 

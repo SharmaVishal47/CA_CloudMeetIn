@@ -1,4 +1,279 @@
-<div class="container">
+<div nz-row nzType="flex" nzJustify="center" style="margin-top: 50px">
+  <div nz-col>
+    <img src="../../../assets/Logo_c_new.svg" alt="" width="80px">
+  </div>
+</div>
+<div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
+  <div nz-col [nzXs]="{ span: 22}" [nzMd]="{ span: 14}" [nzLg]="{ span: 14}">
+    <form nz-form [formGroup]="form" class="login-form" (ngSubmit)="updateConfiguration()">
+      <nz-card>
+        <div nz-col nzType="flex" nzJustify="center">
+          <h5>Update your Times & availability</h5>
+          <h6 align="center">Let Cloudmeetin know when you're typically available to<br> accept meetings.</h6>
+        </div>
+        <hr>
+        <div nz-row>
+          <p>Available Days</p>
+          <nz-form-item>
+            <nz-form-control>
+              <nz-input-group>
+                <nz-select style="width: 100%" nzMode="multiple" nzPlaceHolder="Please select" [(ngModel)]="availableDays"
+                           formControlName="selectedOption">
+                  <nz-option nzValue="0" nzLabel="Sunday"></nz-option>
+                  <nz-option nzValue="1" nzLabel="Monday"></nz-option>
+                  <nz-option nzValue="2" nzLabel="Tuesday"></nz-option>
+                  <nz-option nzValue="3" nzLabel="Wednesday"></nz-option>
+                  <nz-option nzValue="4" nzLabel="Thursday"></nz-option>
+                  <nz-option nzValue="5" nzLabel="Friday"></nz-option>
+                  <nz-option nzValue="6" nzLabel="Saturday"></nz-option>
+                </nz-select>
+              </nz-input-group>
+              <nz-form-explain *ngIf="form.get('selectedOption').dirty && form.get('selectedOption').errors">Please
+                select your available days!
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-row style="margin-top: 2%">
+          <p>Available Hours</p>
+          <div nz-col nzSpan="11" style="margin-right:8%">
+            <nz-form-item>
+              <nz-form-control>
+                <nz-input-group>
+                  <nz-select style="width: 100%;" nzPlaceHolder="Start Time" [(ngModel)]='defaultStartTime' nzAllowClear
+                             formControlName="inTime" (nzOpenChange)="checkTime()" [nzDisabled]="true">
+                    <nz-option nzValue="00:00" nzLabel="12:00am"></nz-option>
+                    <nz-option nzValue="01:00" nzLabel="01:00am"></nz-option>
+                    <nz-option nzValue="02:00" nzLabel="02:00am"></nz-option>
+                    <nz-option nzValue="03:00" nzLabel="03:00am"></nz-option>
+                    <nz-option nzValue="04:00" nzLabel="04:00am"></nz-option>
+                    <nz-option nzValue="05:00" nzLabel="05:00am"></nz-option>
+                    <nz-option nzValue="06:00" nzLabel="06:00am"></nz-option>
+                    <nz-option nzValue="07:00" nzLabel="07:00am"></nz-option>
+                    <nz-option nzValue="08:00" nzLabel="08:00am"></nz-option>
+                    <nz-option nzValue="09:00" nzLabel="09:00am"></nz-option>
+                    <nz-option nzValue="10:00" nzLabel="10:00am"></nz-option>
+                    <nz-option nzValue="11:00" nzLabel="11:00am"></nz-option>
+                    <nz-option nzValue="12:00" nzLabel="12:00pm"></nz-option>
+                    <nz-option nzValue="13:00" nzLabel="01:00pm"></nz-option>
+                    <nz-option nzValue="14:00" nzLabel="02:00pm"></nz-option>
+                    <nz-option nzValue="15:00" nzLabel="03:00pm"></nz-option>
+                    <nz-option nzValue="16:00" nzLabel="04:00pm"></nz-option>
+                    <nz-option nzValue="17:00" nzLabel="05:00pm"></nz-option>
+                    <nz-option nzValue="18:00" nzLabel="06:00pm"></nz-option>
+                    <nz-option nzValue="19:00" nzLabel="07:00pm"></nz-option>
+                    <nz-option nzValue="20:00" nzLabel="08:00pm"></nz-option>
+                    <nz-option nzValue="21:00" nzLabel="09:00pm"></nz-option>
+                    <nz-option nzValue="22:00" nzLabel="10:00pm"></nz-option>
+                    <nz-option nzValue="23:00" nzLabel="11:00pm"></nz-option>
+                    <nz-option nzValue="24:00" nzLabel="12:00am"></nz-option>
+                  </nz-select>
+                </nz-input-group>
+                <nz-form-explain *ngIf="form.get('inTime').dirty && form.get('inTime').errors">Please
+                  select start time!
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="11">
+            <nz-form-item>
+              <nz-form-control>
+                <nz-input-group>
+                  <nz-select style="width: 100%;" nzPlaceHolder="End Time" [(ngModel)]='defaultEndTime' nzAllowClear
+                             formControlName="outTime" (nzOpenChange)="checkTime()" [nzDisabled]="true">
+                    <nz-option nzValue="00:00" nzLabel="12:00am"></nz-option>
+                    <nz-option nzValue="01:00" nzLabel="01:00am"></nz-option>
+                    <nz-option nzValue="02:00" nzLabel="02:00am"></nz-option>
+                    <nz-option nzValue="03:00" nzLabel="03:00am"></nz-option>
+                    <nz-option nzValue="04:00" nzLabel="04:00am"></nz-option>
+                    <nz-option nzValue="05:00" nzLabel="05:00am"></nz-option>
+                    <nz-option nzValue="06:00" nzLabel="06:00am"></nz-option>
+                    <nz-option nzValue="07:00" nzLabel="07:00am"></nz-option>
+                    <nz-option nzValue="08:00" nzLabel="08:00am"></nz-option>
+                    <nz-option nzValue="09:00" nzLabel="09:00am"></nz-option>
+                    <nz-option nzValue="10:00" nzLabel="10:00am"></nz-option>
+                    <nz-option nzValue="11:00" nzLabel="11:00am"></nz-option>
+                    <nz-option nzValue="12:00" nzLabel="12:00pm"></nz-option>
+                    <nz-option nzValue="13:00" nzLabel="01:00pm"></nz-option>
+                    <nz-option nzValue="14:00" nzLabel="02:00pm"></nz-option>
+                    <nz-option nzValue="15:00" nzLabel="03:00pm"></nz-option>
+                    <nz-option nzValue="16:00" nzLabel="04:00pm"></nz-option>
+                    <nz-option nzValue="17:00" nzLabel="05:00pm"></nz-option>
+                    <nz-option nzValue="18:00" nzLabel="06:00pm"></nz-option>
+                    <nz-option nzValue="19:00" nzLabel="07:00pm"></nz-option>
+                    <nz-option nzValue="20:00" nzLabel="08:00pm"></nz-option>
+                    <nz-option nzValue="21:00" nzLabel="09:00pm"></nz-option>
+                    <nz-option nzValue="22:00" nzLabel="10:00pm"></nz-option>
+                    <nz-option nzValue="23:00" nzLabel="11:00pm"></nz-option>
+                    <nz-option nzValue="24:00" nzLabel="12:00am"></nz-option>
+                  </nz-select>
+                </nz-input-group>
+                <nz-form-explain *ngIf="form.get('outTime').dirty && form.get('outTime').errors">Please
+                  select end time!
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <div nz-row style="margin-top: 2%">
+          <p align="center">Don't worry! You'll be able to further customize your availability later on.</p>
+        </div>
+
+      </nz-card>
+      <div nz-row align="center"  nzType="flex" nzJustify="center">
+        <div nz-col nzSpan="10" align="start">
+          <nz-form-control>
+            <button nz-button class="primary" type="submit" [disabled]="!form.valid || !time">Update</button>
+          </nz-form-control>
+        </div>
+        <div nz-col nzSpan="10" nzOffset="2" align="end">
+          <nz-form-control>
+            <button nz-button class="primary" (click)="setUpLater()">Cancel</button>
+          </nz-form-control>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!--
+<div class="container top-margin">
+  <div class="row">
+    <div class="col-lg-8" style="margin: auto">
+      <form [formGroup]="form">
+        <mat-card class="example-card">
+          <mat-card-header class="card">
+            <div mat-card-avatar class="example-header-image"></div>
+            <br>
+            <mat-card-title class="top-margin heading">Set your availability</mat-card-title>
+            <br>
+            <mat-card-subtitle style="font-size: 16px">Let CloudMeetIn know when you’re typically available to accept meetings.</mat-card-subtitle>
+            <br>
+            <div class="col-lg-3">
+              <img mat-card-image src="http://src.onlinedown.net/new_img/apk_logo/2016/0411/257251_1460343696_0041.png" alt="Photo of a Shiba Inu" width="20" style="margin: auto;">
+            </div>
+          </mat-card-header>
+          <br>
+          <mat-card-content class="container">
+            <h6>Available Hours</h6>
+            <div class="col-lg-8">
+              <div class="form-group col-lg-8" >
+                <select class="form-control" formControlName="inTime" [(ngModel)]='defaultStartTime'>
+                  <option value="00:00">12:00am</option>
+                  <option value="01:00">01:00am</option>
+                  <option value="02:00">02:00am</option>
+                  <option value="03:00">03:00am</option>
+                  <option value="04:00">04:00am</option>
+                  <option value="05:00">05:00am</option>
+                  <option value="06:00">06:00am</option>
+                  <option value="07:00">07:00am</option>
+                  <option value="08:00">08:00am</option>
+                  <option value="09:00">09:00am</option>
+                  <option value="10:00">10:00am</option>
+                  <option value="11:00">11:00am</option>
+                  <option value="12:00">12:00pm</option>
+                  <option value="13:00">01:00pm</option>
+                  <option value="14:00">02:00pm</option>
+                  <option value="15:00">03:00pm</option>
+                  <option value="16:00">04:00pm</option>
+                  <option value="17:00">05:00pm</option>
+                  <option value="18:00">06:00pm</option>
+                  <option value="19:00">07:00pm</option>
+                  <option value="20:00">08:00pm</option>
+                  <option value="21:00">09:00pm</option>
+                  <option value="22:00">10:00pm</option>
+                  <option value="23:00">11:00pm</option>
+                </select>
+              </div>
+              <div class="form-group col-lg-8" >
+                <select class="form-control" id="sel1" formControlName="outTime"  [(ngModel)]='defaultEndTime'>
+                  <option value="00:00">12:00am</option>
+                  <option value="01:00">01:00am</option>
+                  <option value="02:00">02:00am</option>
+                  <option value="03:00">03:00am</option>
+                  <option value="04:00">04:00am</option>
+                  <option value="05:00">05:00am</option>
+                  <option value="06:00">06:00am</option>
+                  <option value="07:00">07:00am</option>
+                  <option value="08:00">08:00am</option>
+                  <option value="09:00">09:00am</option>
+                  <option value="10:00">10:00am</option>
+                  <option value="11:00">11:00am</option>
+                  <option value="12:00">12:00pm</option>
+                  <option value="13:00">01:00pm</option>
+                  <option value="14:00">02:00pm</option>
+                  <option value="15:00">03:00pm</option>
+                  <option value="16:00">04:00pm</option>
+                  <option value="17:00">05:00pm</option>
+                  <option value="18:00">06:00pm</option>
+                  <option value="19:00">07:00pm</option>
+                  <option value="20:00">08:00pm</option>
+                  <option value="21:00">09:00pm</option>
+                  <option value="22:00">10:00pm</option>
+                  <option value="23:00">11:00pm</option>
+                </select>
+              </div>
+            </div>
+            <h6>Available Days</h6>
+            <div class="col-lg-8">
+              <table class="table table-bordered">
+                <tbody>
+                <tr>
+                  <td>
+                    <label class="form-check-label text-center">
+                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('0', $event.target.checked)"><br>Sunday
+                    </label>
+                  </td>
+                  <td>
+                    <label class="form-check-label text-center">
+                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('1', $event.target.checked)"><br>Mondays
+                    </label>
+                  </td>
+                  <td>
+                    <label class="form-check-label text-center">
+                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('2', $event.target.checked)"><br>Tuesdays
+                    </label>
+                  </td>
+                  <td>
+                    <label class="form-check-label text-center">
+                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('3', $event.target.checked)"><br>Wednesdays
+                    </label>
+                  </td>
+                  <td>
+                    <label class="form-check-label text-center">
+                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('4', $event.target.checked)"> <br>Thursdays
+                    </label>
+                  </td>
+                  <td>
+                    <label class="form-check-label text-center">
+                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('5', $event.target.checked)"> <br>Fridays
+                    </label>
+                  </td>
+                  <td>
+                    <label class="form-check-label text-center">
+                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('6', $event.target.checked)"><br>Saturdays
+                    </label>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <p style="text-align: center; color: #949AA3; margin: 10px"> Don’t worry! You’ll be able to further customize your availability later on.</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="updateConfiguration()" [disabled]="form.invalid">Continue</button>
+            &lt;!&ndash;<button mat-button (click)="setUpLater()">Set up later</button>&ndash;&gt;
+          </mat-card-actions>
+        </mat-card>
+      </form>
+    </div>
+  </div>
+</div>
+-->
+
+
+<!--<div class="container">
   <div class="row">
     <div class="col-lg-8" style="margin: auto">
       <form [formGroup]="form">
@@ -130,4 +405,4 @@
       </form>
     </div>
   </div>
-</div>
+</div>-->

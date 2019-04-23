@@ -5,6 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {MessagedialogComponent} from '../messagedialog/messagedialog.component';
 import {AuthServiceLocal} from '../Auth/auth.service';
+import {MessageServiceService} from '../Auth/message-service.service';
 
 @Component({
   selector: 'app-available-date-time',
@@ -12,106 +13,83 @@ import {AuthServiceLocal} from '../Auth/auth.service';
   styleUrls: ['./available-date-time.component.css']
 })
 export class AvailableDateTimeComponent implements OnInit {
-
+  time;
   form: FormGroup;
-  dayFormArray: FormArray;
   userId;
   defaultStartTime:string;
   defaultEndTime:string;
   availableDays:[];
   item;
   email;
-  chk1;chk2;chk3;chk4;chk5;chk6;chk7;
+// chk1;chk2;chk3;chk4;chk5;chk6;chk7;
 
-  constructor(private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private fb: FormBuilder,private dialog: MatDialog , private authService:AuthServiceLocal) {}
+  constructor(private messageService: MessageServiceService,private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private fb: FormBuilder,private dialog: MatDialog , private authService:AuthServiceLocal) {}
   ngOnInit() {
     this.email = this.authService.getUserEmaild();
-    this.chk1 = <HTMLInputElement> document.getElementById("ch1");
-    this.chk2 = <HTMLInputElement> document.getElementById("ch2");
-    this.chk3 = <HTMLInputElement> document.getElementById("ch3");
-    this.chk4 = <HTMLInputElement> document.getElementById("ch4");
-    this.chk5 = <HTMLInputElement> document.getElementById("ch5");
-    this.chk6 = <HTMLInputElement> document.getElementById("ch6");
-    this.chk7 = <HTMLInputElement> document.getElementById("ch7");
-
     this.userId = this.authService.getUserId();
-    this.form = new FormGroup({
-      inTime: new FormControl(null,[Validators.required]),
-      outTime: new FormControl(null,[Validators.required]),
-      selectedOption: this.fb.array([],[Validators.required])
+    /* this.form = new FormGroup({
+    inTime: new FormControl(null,[Validators.required]),
+    outTime: new FormControl(null,[Validators.required]),
+    selectedOption: this.fb.array([],[Validators.required])
+    });*/
+    this.form = this.fb.group({
+      inTime: [ null, [ Validators.required ] ],
+      outTime: [ null, [ Validators.required ] ],
+      selectedOption: [ null, [ Validators.required ] ],
     });
-
-    this.httpClient.post<{message: string,data: []}>('http://localhost:3000/user/getTimeAvailability',{'userId': this.userId}).subscribe(
+    this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/user/getTimeAvailability',{'userId': this.userId}).subscribe(
       res =>{
         console.log("res===========",res);
         this.defaultStartTime = res.data['0'].startTime;
         this.defaultEndTime = res.data['0'].endTime;
         this.availableDays = res.data['0'].availableDays.toString().split(',');
-        let availableDays = res.data['0'].availableDays.toString().split(',');
-        const emailFormArray = <FormArray>this.form.controls.selectedOption;
-        for(let item of availableDays){
-          emailFormArray.push(new FormControl(item));
-        }
-        this.dayFormArray = emailFormArray;
-        for(this.item of this.availableDays){
-          if(this.item==0){
-            this.chk1.checked=true;
-          }
-          if(this.item==1){
-            this.chk2.checked=true;
-          }
-          if(this.item==2){
-            this.chk3.checked=true;
-          }
-          if(this.item==3){
-            this.chk4.checked=true;
-          }
-          if(this.item==4){
-            this.chk5.checked=true;
-          }
-          if(this.item==5){
-            this.chk6.checked=true;
-          }
-          if(this.item==6){
-            this.chk7.checked=true;
-          }
-        }
-        // this.router.navigate(['']);
+        this.checkTime();
       },err => {
         console.log("Error=========",err.message);
-        const dialogConfig = new MatDialogConfig();
+        this.messageService.generateErrorMessage(JSON.stringify(err));
+        /*const dialogConfig = new MatDialogConfig();
         dialogConfig.data = err;
-        this.dialog.open(MessagedialogComponent, dialogConfig);
+        this.dialog.open(MessagedialogComponent, dialogConfig);*/
       });
   }
+
+  checkTime(){
+    if(this.defaultStartTime < this.defaultEndTime){
+      console.log(' start time--> ', this.defaultStartTime);
+      console.log(' end time--> ',this.defaultEndTime);
+      this.time = true;
+      console.log('time-->',this.time);
+    }else{ this.time = false;}
+  }
+
   updateConfiguration() {
     this.form.value['userId'] = this.userId;
     console.log("Value=====",this.form.value);
-    this.httpClient.post<any>('http://localhost:3000/user/updateUserConfiguration',this.form.value).subscribe((responseData)=>{
+    this.httpClient.post<any>('https://dev.cloudmeetin.com/user/updateUserConfiguration',this.form.value).subscribe((responseData)=>{
       console.log("responseData====",responseData);
       this.router.navigate(["dashboard"]);
     },error => {
-      const dialogConfig = new MatDialogConfig();
+      this.messageService.generateErrorMessage(JSON.stringify(error));
+     /* const dialogConfig = new MatDialogConfig();
       dialogConfig.data = error;
-      this.dialog.open(MessagedialogComponent, dialogConfig);
+      this.dialog.open(MessagedialogComponent, dialogConfig);*/
     });
   }
 
-  onChange(email: string, isChecked: boolean) {
-    const emailFormArray = <FormArray>this.form.controls.selectedOption;
-    if (isChecked) {
-      emailFormArray.push(new FormControl(email));
-    } else {
-      let index = emailFormArray.controls.findIndex(x => x.value == email);
-      emailFormArray.removeAt(index);
-    }
-    this.dayFormArray = emailFormArray;
+  /* onChange(email: string, isChecked: boolean) {
+  const emailFormArray = <FormArray>this.form.controls.selectedOption;
+  if (isChecked) {
+  emailFormArray.push(new FormControl(email));
+  } else {
+  let index = emailFormArray.controls.findIndex(x => x.value == email);
+  emailFormArray.removeAt(index);
   }
-
+  this.dayFormArray = emailFormArray;
+  }
+  */
   setUpLater() {
-   // this.router.navigate(["dashboard/"+this.email]);
+// this.router.navigate(["dashboard/"+this.email]);
     this.router.navigate(["dashboard"]);
   }
 
 }
-

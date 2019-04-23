@@ -36,12 +36,16 @@ import {ChangePasswordComponent} from './Auth/password/change-password/change-pa
 import {ForgetPasswordComponent} from './Auth/password/forget-password/forget-password.component';
 import {TryAgainForgetPasswordComponent} from './Auth/password/try-again-forget-password/try-again-forget-password.component';
 import {ChangeLoginEmailComponent} from './AccountSetting/change-login-email/change-login-email.component';
+import {RescheduleMeetingComponent} from './meetings/reschedule-meeting/reschedule-meeting.component';
+import {RescheduleEventComponent} from './meetings/reschedule-event/reschedule-event.component';
+import {CancelEventComponent} from './meetings/cancel-event/cancel-event.component';
+import {ErrorComponent} from './error/error.component';
 
 const appRoutes: Routes = [
   /* Main Components*/
   {path: '', component: HomeComponent},
   {path: 'changePassword/:data', component: ChangePasswordComponent},
- /* {path: 'dashboard/:email', component: DashboardComponent,canActivate: [AuthGuard]},*/
+  /* {path: 'dashboard/:email', component: DashboardComponent,canActivate: [AuthGuard]},*/
   {path: 'dashboard', component: DashboardComponent,canActivate: [AuthGuard]},
 
   {path: 'pofilesettings', component: AccountSettingComponent,canActivate: [AuthGuard]},
@@ -59,7 +63,7 @@ const appRoutes: Routes = [
   {path: 'eventMainPage', component: EventsMainPageComponent,canActivate: [AuthGuard]},
   {path: 'newEvent', component: NewEventComponent},
   {path: 'newEvent/create', component: CreateEventComponent,canActivate: [AuthGuard]},
- /* {path: 'newEvent/create', component: CreateEventComponent},*/
+  /* {path: 'newEvent/create', component: CreateEventComponent},*/
   {path: 'login', component: LoginComponent},
   {path: 'mainheader', component: MainHeaderComponent},
   {path: 'forgetPassword', component: ForgetPasswordComponent},
@@ -74,15 +78,24 @@ const appRoutes: Routes = [
   {path: 'userRole', component: UserRoleComponentComponent},
   /* End Sign Up settings components routing */
 
+
+  /*Meeting Reschedule*/
+  {path: 'reschedule/:id', component: RescheduleMeetingComponent},
+
   {path: 'meeting', component: MettingComponent},
+  {path: 'cancellations/:id', component: CancelEventComponent},
   {path: 'features', component: FeaturesComponent},
   {path: 'account', component: AccountComponent},
   {path: 'team', component: TeamComponent},
+  {path: 'error', component: ErrorComponent},
+
   {path: 'confirmedMeeting', component: ConfirmedComponent},
-  {path: ':userId', component: SchedulingPageComponent},
+
+  {path: ':userId/:selectTime/:schedulingPage', component: ScheduleEventComponent},
   {path: ':userId/:selectTime', component: MettingComponent},
-  {path: ':userId/:selectTime/:selectDay', component: ScheduleDateComponent},
-  {path: ':userId/:selectTime/:selectDay/:schedulingPage', component: ScheduleEventComponent},
+  {path: ':userId', component: SchedulingPageComponent},
+
+  /*  {path: ':userId/:selectTime/:selectDay', component: ScheduleDateComponent},*/
 
 ];
 @NgModule({

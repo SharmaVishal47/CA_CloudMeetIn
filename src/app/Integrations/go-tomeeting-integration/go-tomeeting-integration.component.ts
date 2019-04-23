@@ -6,6 +6,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {AuthServiceLocal} from '../../Auth/auth.service';
 import {MeetingService} from '../../meetings/meeting.service';
 import {NzModalService} from 'ng-zorro-antd';
+import {MessageServiceService} from '../../Auth/message-service.service';
 @Component({
   selector: 'app-go-tomeeting-integration',
   templateUrl: './go-tomeeting-integration.component.html',
@@ -15,7 +16,7 @@ export class GoTomeetingIntegrationComponent implements OnInit {
 
   emailId: string;
   userId: string;
-  constructor(private dialog: MatDialog,private httpClient: HttpClient,private authService:AuthServiceLocal,private meetingService: MeetingService,private router: Router,private modalService: NzModalService) { }
+  constructor(private messageService:MessageServiceService,private dialog: MatDialog,private httpClient: HttpClient,private authService:AuthServiceLocal,private meetingService: MeetingService,private router: Router,private modalService: NzModalService) { }
   alreadyIntegrated = false;
   gtmIntegratedEmail: string;
 
@@ -47,12 +48,13 @@ export class GoTomeetingIntegrationComponent implements OnInit {
       nzOkText: 'OK',
       nzCancelText: 'Cancel',
       nzOnOk: () =>{
-        this.httpClient.post<any>('http://localhost:3000/meeting/disconnectgtmintegration',{userId: this.userId}).subscribe((responseData)=>{
+        this.httpClient.post<any>('/meeting/disconnectgtmintegration',{userId: this.userId}).subscribe((responseData)=>{
           this.alreadyIntegrated = false;
         },error => {
-          const dialogConfig = new MatDialogConfig();
+          this.messageService.generateErrorMessage(JSON.stringify(error));
+         /* const dialogConfig = new MatDialogConfig();
           dialogConfig.data = JSON.stringify(error);
-          this.dialog.open(MessagedialogComponent, dialogConfig);
+          this.dialog.open(MessagedialogComponent, dialogConfig);*/
         });
       }
     });

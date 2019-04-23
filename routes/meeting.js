@@ -1,22 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const schedule = require('node-schedule');
+const ULID = require('ulid');
+const localStorage = require('localStorage');
+const request = require('request');
+const cron = require('node-cron');
 
-let startTime = new Date(Date.now());
-let j = schedule.scheduleJob({ start: startTime, rule: '*/60*30 * * * * *' }, function(){
-
-  /*let j = schedule.scheduleJob({hour: 0, minute: 0, dayOfWeek: 0}, function(){//run every sunday at 12am*/
-  let usernameQuery = "SELECT * FROM `g2meetingintegration`";
-  db.query(usernameQuery, (err, result) => {
+cron.schedule('*/30 * * * *', () => {
+  let gtmQuery = "SELECT * FROM `g2meetingintegration`";
+  console.log("gtmQuery===========",gtmQuery);
+  db.query(gtmQuery, (err, result) => {
     if (err!==null) {
       return;
-    }else {
+    } else {
+      console.log("GTM DataBAse===========",result);
       if(result.length>0){
         for(let i=0;i<result.length;i++){
           let refreshToken = result[i].refresh_token;
           let userId = result[i].userId;
           if(refreshToken != null && refreshToken != undefined){
-            let data = "nQK9NcecyeyuXtnY4dM9OvJ3yI5uhVxH"+':'+"qnAAlqfUmAwNOPpc";
+            //let data = "nQK9NcecyeyuXtnY4dM9OvJ3yI5uhVxH"+':'+"qnAAlqfUmAwNOPpc";
+            let data = "2dWCGOZLt9Y28Rmc0xfWNz84kPGkEpfA"+':'+"9uFMfxwb5tG1zK0O";
             let buff = new Buffer(data);
             let client_id_client_secret64 = buff.toString('base64');
             const url = 'https://api.getgo.com/oauth/v2/token?grant_type=refresh_token&refresh_token='+refreshToken;
@@ -29,6 +33,7 @@ let j = schedule.scheduleJob({ start: startTime, rule: '*/60*30 * * * * *' }, fu
               }
             }, function (error, response, body) {
               if (error) {
+                console.log("GTM error=====",error);
               }else{
                 body = JSON.parse(body);
                 console.log("GTM body=====",body);
@@ -78,7 +83,11 @@ router.post('/getAccessToken', function(req, res) {
 });
 
 router.post('/addMeetingWithGtm',(req,res,next)=>{
-  let query = "INSERT INTO `calendlymeeting` ( g2mMeetingId,g2mMeetingUrl,userId, timeZone, eventType, meetingTime, meetingDate,schedulerName,schedulerEmail,schedulerPhone,schedulerDescription, g2mMeetingCallNo) VALUES ('"+req.body.g2mMeetingId+"','"+req.body.g2mMeetingUrl+"','"+req.body.userId+"', '" + req.body.timeZone + "', '" + req.body.eventType + "', '" + req.body.time + "', '" + req.body.date + "', '" + req.body.schedulerName + "','"+req.body.schedulerEmail+"','"+req.body.schedulerPhone+"','"+req.body.schedulerDescription+"','"+req.body.g2mMeetingCallNo+"')";
+  let meetingUniqueId = ULID.ulid();
+  localStorage.setItem("meetingId",meetingUniqueId );
+  let query = "INSERT INTO `calendlymeeting` (meetingId,g2mMeetingId,g2mMeetingUrl,userId, timeZone, eventType, meetingTime, meetingDate,schedulerName,schedulerEmail,schedulerPhone,schedulerDescription, g2mMeetingCallNo,meetingEndTime,createdDate) VALUES ('"+meetingUniqueId+"','"+req.body.g2mMeetingId+"','"+req.body.g2mMeetingUrl+"','"+req.body.userId+"', '" + req.body.timeZone + "', '" + req.body.eventType + "', '" + req.body.starttime + "', '" + req.body.date + "', '" + req.body.schedulerName + "','"+req.body.schedulerEmail+"','"+req.body.schedulerPhone+"','"+req.body.schedulerDescription+"','"+req.body.g2mMeetingCallNo+"','"+req.body.endtime+"','"+req.body.createdDate+"')";
+
+  console.log("addMeetingWithGtm query=====",query);
   db.query(query, (err, result) => {
     console.log("result=====",result);
     console.log("err=====",err);
@@ -92,8 +101,11 @@ router.post('/addMeetingWithGtm',(req,res,next)=>{
     }
   });
 });
+
 router.post('/addMeeting',(req,res,next)=>{
-  let query = "INSERT INTO `calendlymeeting` ( userId, timeZone, eventType, meetingTime, meetingDate,schedulerName,schedulerEmail,schedulerPhone,schedulerDescription) VALUES ('"+req.body.userId+"', '" + req.body.timeZone + "','" + req.body.eventType + "', '" + req.body.time + "', '" + req.body.date + "', '" + req.body.schedulerName + "','"+req.body.schedulerEmail+"','"+req.body.schedulerPhone+"','"+req.body.schedulerDescription+"')";
+  let meetingUniqueId = ULID.ulid();
+  localStorage.setItem("meetingId",meetingUniqueId );
+  let query = "INSERT INTO `calendlymeeting` ( userId, meetingId, timeZone, eventType, meetingTime, meetingEndTime,meetingDate,schedulerName,schedulerEmail,schedulerPhone,schedulerDescription,createdDate) VALUES ('"+req.body.userId+"', '" + meetingUniqueId + "', '" + req.body.timeZone + "','" + req.body.eventType + "', '" + req.body.starttime+ "', '"+ req.body.endtime+ "', '" + req.body.date + "', '" + req.body.schedulerName + "','"+req.body.schedulerEmail+"','"+req.body.schedulerPhone+"','"+req.body.schedulerDescription+"','"+req.body.createdDate+"')";
   db.query(query, (err, result) => {
     console.log("result=====",result);
     console.log("err=====",err);
@@ -111,8 +123,9 @@ router.post('/addMeeting',(req,res,next)=>{
 // Update meeting record when user select reschedule meetings
 router.post('/rescheduleMeeting',(req,res,next)=>{
   console.log("req..................", req.body);
-  let query =
-    "UPDATE `calendlymeeting` SET  `timeZone` = '"+req.body.timeZone+"',`meetingTime` = '"+req.body.time+"',`meetingDate` = '"+req.body.date+"',`schedulerName` = '"+req.body.schedulerName+"',`schedulerEmail` = '"+req.body.schedulerEmail+"',`reschedulerName` = '"+req.body.reschedulerName+"',`rescheduleReason` = '"+req.body.rescheduleReason+"' WHERE `userId` = '" + req.body.userId + "' AND `eventId` = '"+req.body.eventId+"'";
+  let meetingUniqueId  = ULID.ulid();
+  localStorage.setItem("meetingId",meetingUniqueId );
+  let query = "UPDATE `calendlymeeting` SET `meetingId` = '"+meetingUniqueId+"', `timeZone` = '"+req.body.timeZone+"',`meetingTime` = '"+req.body.starttime+"', `meetingEndTime` = '"+req.body.endtime+"',`meetingDate` = '"+req.body.date+"',`schedulerName` = '"+req.body.schedulerName+"',`schedulerEmail` = '"+req.body.schedulerEmail+"',`reschedulerName` = '"+req.body.reschedulerName+"',`rescheduleReason` = '"+req.body.rescheduleReason+"' WHERE `userId` = '" + req.body.userId + "' AND `eventId` = '"+req.body.eventId+"'";
   console.log("Update -------------------> ",query);
   db.query(query, (err, result) => {
     if (err!==null) {
@@ -120,7 +133,8 @@ router.post('/rescheduleMeeting',(req,res,next)=>{
     }else {
       res.status(200).json({
         message: 'Meeting Reschedule Successfully.',
-        data: result
+        data: result,
+        meetingUniqueId: meetingUniqueId
       });
     }
   });
@@ -176,6 +190,22 @@ router.post('/disconnectgtmintegration', function(req, res) {
             message: 'GTM integration disconnect successfully.',
           });
         }
+      });
+    }
+  });
+});
+
+
+router.get('/getmeetingrecords:meetingUID', (req, res, next) => {
+  let query = "SELECT * FROM `calendlymeeting` WHERE meetingId ='" + req.params.meetingUID + "'";
+  console.log("-----------meetingUID Query  ", query);
+  db.query(query, (err, result) => {
+    if (err !== null) {
+      return res.status(500).send(err);
+    } else {
+      res.status(200).json({
+        message: 'One meeting records get successfully.',
+        data: result
       });
     }
   });

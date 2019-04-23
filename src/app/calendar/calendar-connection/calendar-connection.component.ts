@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AuthServiceLocal} from '../../Auth/auth.service';
 import {SignUpService} from '../../Auth/sign-up.service';
 import {MessagedialogComponent} from '../../messagedialog/messagedialog.component';
+import {MessageServiceService} from '../../Auth/message-service.service';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class CalendarConnectionComponent implements OnInit {
   public calendarId;
   public email;
   switchValue: false;
-  constructor(private route: ActivatedRoute, private dialog: MatDialog,private httpClient: HttpClient,private authService:AuthServiceLocal,private router:Router, private signUpService: SignUpService) {
+  constructor(private messageService: MessageServiceService,private route: ActivatedRoute, private dialog: MatDialog,private httpClient: HttpClient,private authService:AuthServiceLocal,private router:Router, private signUpService: SignUpService) {
     this.userId = this.authService.getUid();
     console.log('UserId ', this.userId);
   }
@@ -42,19 +43,16 @@ export class CalendarConnectionComponent implements OnInit {
     console.log("responseData token ---- ",responseData);
     //this.OnCreateAccount();
     });*/
-    this.httpClient.post<{message: string,data: []}>('http://localhost:3000/googleCalendar/calendarId',{'userId': this.userId}).subscribe(
+    this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/googleCalendar/calendarId',{'userId': this.userId}).subscribe(
       res =>{
         console.log('Response---> ',res);
-<<<<<<< HEAD
         this.calendar = res.data['0'].calendarEvent
-=======
-        this.calendar = res.data['0'].calanderId
->>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
       },err => {
         console.log("Error=========",err.message);
-        const dialogConfig = new MatDialogConfig();
+        this.messageService.generateErrorMessage(JSON.stringify(err));
+       /* const dialogConfig = new MatDialogConfig();
         dialogConfig.data = err;
-        this.dialog.open(MessagedialogComponent, dialogConfig);
+        this.dialog.open(MessagedialogComponent, dialogConfig);*/
       });
   }
 

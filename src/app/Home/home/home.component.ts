@@ -14,6 +14,8 @@ import {
 export class HomeComponent implements OnInit {
   signUp: FormGroup;
   email: string;
+  checkBoxCheck: false;
+  checkboxValue: false;
   constructor(private fb: FormBuilder, private route: ActivatedRoute,private router:Router, private meetingService: MeetingService) { }
 
 
@@ -37,5 +39,8 @@ export class HomeComponent implements OnInit {
       this.signUp.controls[ i ].updateValueAndValidity();
     }
     this.router.navigate(['signup/'+this.signUp.value.email]);
+  }
+  checkCheckBoxvalue(event){
+    console.log(this.checkboxValue)
   }
 }

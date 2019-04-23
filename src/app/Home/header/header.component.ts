@@ -7,6 +7,7 @@ import {ShareYourLinkComponentComponent} from '../../share-your-link-component/s
 import {HeaderserviceService} from '../headerservice.service';
 import {AccountSettingComponent} from '../../AccountSetting/account-setting/account-setting.component';
 import {AccountSettingsService} from '../../AccountSetting/account-setting/account-settings.service';
+import {NzMessageService} from 'ng-zorro-antd';
 
 
 @Component({
@@ -20,43 +21,55 @@ export class HeaderComponent implements OnInit,OnDestroy {
   userId: string;
   profilePic: string;
   isAuthenticated = false;
+  url;
   private authListnerSubscription: Subscription;
   loginText = 'Login';
   userImagePreview: any;
-  constructor(private accountSettingService: AccountSettingsService, private headerService: HeaderserviceService,private authService: AuthServiceLocal,private router:Router,private dialog: MatDialog) { }
+  constructor(private accountSettingService: AccountSettingsService, private headerService: HeaderserviceService,private authService: AuthServiceLocal,private router:Router,private dialog: MatDialog, private message: NzMessageService ) { }
 
   ngOnInit() {
     /*this.accountSettingService.getImagePath();*/
     this.accountSettingService.imagePriview.subscribe((response) => {
       console.log("Re=============> ", response);
       this.userImagePreview = response;
-      if(this.userImagePreview === null|| this.userImagePreview === undefined || this.userImagePreview === "null" ){
-        this.userImagePreview = "../../../assets/logo.svg";
+      console.log("this.userImagePreview----",this.userImagePreview);
+      if(this.userImagePreview === null|| this.userImagePreview === undefined || this.userImagePreview === "null" || this.userImagePreview === "" ){
+
+        this.userImagePreview = "../../../assets/group_people.png";
       }
     });
-    this.headerService.userImageLink.subscribe((response) => {
+   /* this.headerService.userImageLink.subscribe((response) => {
       if(response) {
         this.userImagePreview = response;
         if(this.userImagePreview === null|| this.userImagePreview === undefined || this.userImagePreview === "null" ){
           this.userImagePreview = "../../../assets/logo.svg";
         }
       }
-    });
+    });*/
 
     this.headerService.getTokenExpiry();
     this.authListnerSubscription = this.authService.authStatusListener.subscribe(isAuth =>{
       this.isAuthenticated = isAuth;
       this.emailId = this.authService.getUserEmaild();
       this.userId = this.authService.getUserId();
+
+      this.url = 'https://cloudmeetin.com/'+this.userId;
+
       this.userImagePreview = this.authService.getprofilePic();
-      if(this.userImagePreview === null|| this.userImagePreview === undefined || this.userImagePreview === "null" ){
-        this.userImagePreview = "../../../assets/logo.svg";
+      console.log("this.userImagePreview----",this.userImagePreview);
+      if(this.userImagePreview === null|| this.userImagePreview === undefined || this.userImagePreview === "null" || this.userImagePreview === ""){
+
+        this.userImagePreview = "../../../assets/group_people.png";
       }
     });
+
     this.userId = this.authService.getUserId();
+    this.url = 'https://cloudmeetin.com/'+this.userId;
     this.userImagePreview = this.authService.getprofilePic();
-    if(this.userImagePreview === null|| this.userImagePreview === undefined || this.userImagePreview === "null" ){
-      this.userImagePreview = "../../../assets/logo.svg";
+    console.log("this.userImagePreview----",this.userImagePreview);
+    if(this.userImagePreview === null|| this.userImagePreview === undefined || this.userImagePreview === "null" || this.userImagePreview === ""){
+
+      this.userImagePreview = "../../../assets/group_people.png";
     }
     /* this.authService.autoAuthenticateUser();*/
     this.isAuthenticated = this.authService.getIsAuthenticated();
@@ -95,9 +108,21 @@ export class HeaderComponent implements OnInit,OnDestroy {
   }
 
   openDialog(){
-    const dialogConfig = new MatDialogConfig();
+    /*const dialogConfig = new MatDialogConfig();
     dialogConfig.data = "";
-    this.dialog.open(ShareYourLinkComponentComponent, dialogConfig);
+    this.dialog.open(ShareYourLinkComponentComponent, dialogConfig);*/
+    let selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = this.url;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
+    this.message.create('success', `The URL successfully copied.`);
   }
 
   checkLogin() {

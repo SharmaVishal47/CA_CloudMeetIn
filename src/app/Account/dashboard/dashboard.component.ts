@@ -32,7 +32,7 @@ import { slideInLeft} from 'ng-animate';
   ],
 })
 export class DashboardComponent implements OnInit {
-
+  allowClear = false;
   /* Dialog Functionality*/
   allChecked = true;
   indeterminate = false;
@@ -80,6 +80,7 @@ export class DashboardComponent implements OnInit {
   dateRange = null;
   validateDatePicker: FormGroup;
   eventListTypeCheck = false;
+  isSpinning = true;
   constructor(
     private authService: AuthServiceLocal,
     private router:Router,
@@ -96,8 +97,9 @@ export class DashboardComponent implements OnInit {
     this.validateDatePicker = this.fb.group({
       dateRange: [this.dateRange]
     });
+    this.meetingService.removeHeader(false);
     this.userId = this.authService.getUserId();
-    this.httpClient.post<any>('http://localhost:3000/events/getevents', {userId :this.authService.getUserId()}).subscribe(
+    this.httpClient.post<any>('https://dev.cloudmeetin.com/events/getevents', {userId :this.authService.getUserId()}).subscribe(
       response => {
         console.log("Response Event Data --- > ", response);
         if(response.data.length > 0){
@@ -131,8 +133,9 @@ export class DashboardComponent implements OnInit {
       CancelledEvent: new FormControl(null, [Validators.required])
     });
     this.fullName= this.authService.getFullName();
-    this.httpClient.post<any>('http://localhost:3000/meeting/getMeetingRecord',{userId: this.authService.getUserId()}).subscribe((responseData)=>{
+    this.httpClient.post<any>('https://dev.cloudmeetin.com/meeting/getMeetingRecord',{userId: this.authService.getUserId()}).subscribe((responseData)=>{
       console.log("responseData====",responseData);
+      this.isSpinning = false;
       this.responseData = responseData.data;
       this.lengthOfEvent = this.responseData.length;
       if(this.responseData.length > 0){
@@ -209,7 +212,7 @@ export class DashboardComponent implements OnInit {
     this.allChecked = true;
     this.indeterminate = false;
     this.checkOptionsOne = [];
-    this.httpClient.post<any>('http://localhost:3000/events/getevents', {userId :this.authService.getUserId()}).subscribe(
+    this.httpClient.post<any>('https://dev.cloudmeetin.com/events/getevents', {userId :this.authService.getUserId()}).subscribe(
       response => {
         console.log("Response Event Data --- > ", response);
         if(response.data.length > 0){
@@ -518,7 +521,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getUserList(){
-    this.httpClient.post<{message: string,data: []}>('http://localhost:3000/usertable/getuserlist',{'userId': this.authService.getUserId()}).subscribe(res =>{
+    this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/usertable/getuserlist',{'userId': this.authService.getUserId()}).subscribe(res =>{
       console.log("res getuserlist=========",res);
       if(res.data.length > 0){
         this.userCheck = true;
@@ -528,7 +531,7 @@ export class DashboardComponent implements OnInit {
     });
   }
   getTeamList(){
-    this.httpClient.post<{message: string,data: []}>('http://localhost:3000/team/getteamlist',{'userId': this.authService.getUserId()}).subscribe(res =>{
+    this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/team/getteamlist',{'userId': this.authService.getUserId()}).subscribe(res =>{
       console.log("getteamlist=========",res);
       if(res.data.length > 0){
         this.teamCheck = true;
@@ -549,9 +552,17 @@ export class DashboardComponent implements OnInit {
     dialogRef.afterClosed().subscribe(value => {
       if(value !== undefined){
         if(value !== "false"){
-          this.cancelMessage = value;
+          /*this.cancelMessage = value;
           meetingDetail["cancelMessage"] = value;
           meetingDetail["cancelBy"] = this.authService.getUserId();
+          this.meetingService.cancelMeetingSchedule(meetingDetail);
+          this.afterCancelMeeting(key,index,meetingDetail);*/
+          this.cancelMessage = value;
+          meetingDetail["cancelMessage"] = value;
+          /*meetingDetail["cancelBy"] = this.authService.getUserId();*/
+          meetingDetail["cancelBy"] = this.authService.getFullName();
+          meetingDetail['invitee'] = meetingDetail.schedulerName;
+          meetingDetail.eventType = meetingDetail.eventType.split('m')[0];
           this.meetingService.cancelMeetingSchedule(meetingDetail);
           this.afterCancelMeeting(key,index,meetingDetail);
         }
@@ -566,8 +577,9 @@ export class DashboardComponent implements OnInit {
   }
 
   onRescheduleMeeting(data: any) {
-    localStorage.setItem('rescheduleRecord', JSON.stringify(data));
-    this.meetingService.saveRescheduleRecord(data.eventType, data.schedulerEmail, this.authService.getUserId(), this.authService.getFullName(), data.eventID);
+    //localStorage.setItem('rescheduleRecord', JSON.stringify(data));
+    //this.meetingService.saveRescheduleRecord(data.eventType, data.schedulerEmail, this.authService.getUserId(), this.authService.getFullName(), data.eventID);
+    this.router.navigate(['reschedule/'+data.meetingId]);
   }
 
   submit() {
@@ -586,7 +598,7 @@ export class DashboardComponent implements OnInit {
   }
 
   copyEvent(event_link: string) {
-    this.copyLink = 'http://localhost:4200/'+this.userId+"/"+event_link;
+    this.copyLink = 'https://dev.cloudmeetin.com/'+this.userId+"/"+event_link;
     let selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
     selBox.style.left = '0';

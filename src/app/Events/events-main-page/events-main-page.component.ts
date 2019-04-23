@@ -68,7 +68,7 @@ export class EventsMainPageComponent implements OnInit {
   }
 
   getUserList(){
-    this.httpClient.post<{message: string,data: []}>('http://localhost:3000/usertable/getuserlist',{'userId': this.userId}).subscribe(res =>{
+    this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/usertable/getuserlist',{'userId': this.userId}).subscribe(res =>{
       console.log("res getuserlist=========",res);
       if(res.data.length > 0){
         this.userCheck = true;
@@ -79,7 +79,7 @@ export class EventsMainPageComponent implements OnInit {
     });
   }
   getTeamList(){
-    this.httpClient.post<{message: string,data: []}>('http://localhost:3000/team/getteamlist',{'userId': this.userId}).subscribe(res =>{
+    this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/team/getteamlist',{'userId': this.userId}).subscribe(res =>{
       console.log("getteamlist=========",res);
       if(res.data.length > 0){
         this.teamCheck = true;

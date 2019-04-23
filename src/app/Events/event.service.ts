@@ -28,7 +28,7 @@ export class EventService {
   /* This function used for create a new event*/
   createEvent(creatEventData: any) {
     creatEventData['user_id'] = this.user_id;
-    this.httpClient.post<any>('http://localhost:3000/events/createevent', creatEventData).subscribe(
+    this.httpClient.post<any>('https://dev.cloudmeetin.com/events/createevent', creatEventData).subscribe(
       res => {
       },
       err => {
@@ -37,7 +37,7 @@ export class EventService {
 
   updateEvent(updateEventData: any, eventId: string) {
     updateEventData['user_id'] = this.user_id;
-    this.httpClient.post<any>('http://localhost:3000/events/updateEvent', {updateEventData: updateEventData, eventId: eventId}).subscribe(
+    this.httpClient.post<any>('https://dev.cloudmeetin.com/events/updateEvent', {updateEventData: updateEventData, eventId: eventId}).subscribe(
       res => {
       },
       err => {
@@ -46,7 +46,7 @@ export class EventService {
 
   checkMeetingPlatform() {
     if (this.user_id) {
-      this.httpClient.post<any>('http://localhost:3000/user/checkMeetingPlatform', {userId: this.user_id}).subscribe(
+      this.httpClient.post<any>('https://dev.cloudmeetin.com/user/checkMeetingPlatform', {userId: this.user_id}).subscribe(
         res => {
           console.log("Respinser ---------- ", res);
           this.checkMeetingPlatformAvailability.next(res);
@@ -105,7 +105,7 @@ export class EventService {
     console.log("Total data --- > ", newEventModel);
 
     if (checkStatus) {
-      this.httpClient.post<any>('http://localhost:3000/events/advancedfeatureupdate', {
+      this.httpClient.post<any>('https://dev.cloudmeetin.com/events/advancedfeatureupdate', {
         userId: this.user_id,
         events: newEventModel,
         eventId: eventId
@@ -117,7 +117,7 @@ export class EventService {
         err => {
         });
     } else {
-      this.httpClient.post<any>('http://localhost:3000/events/advancedfeatureupdate', {
+      this.httpClient.post<any>('https://dev.cloudmeetin.com/events/advancedfeatureupdate', {
         userId: this.user_id,
         events: newEventModel,
         eventId: eventId
@@ -131,7 +131,7 @@ export class EventService {
   }
 
   getUserSelectEvents() {
-    this.httpClient.post<any>('http://localhost:3000/events/getevents', {userId: this.user_id}).subscribe(
+    this.httpClient.post<any>('https://dev.cloudmeetin.com/events/getevents', {userId: this.user_id}).subscribe(
       res => {
         console.log("Response --- >  ", res);
         /*if(res.data.length > 0) {
@@ -170,18 +170,18 @@ export class EventService {
   }
 
   getOneEventRecords(eventId: string) {
-    return this.httpClient.get<any>('http://localhost:3000/events/' + eventId + '/' + this.user_id)
+    return this.httpClient.get<any>('https://dev.cloudmeetin.com/events/' + eventId + '/' + this.user_id)
   }
 
   singleEventDelete(eventId: string) {
-    this.httpClient.post<any>('http://localhost:3000/events/delete', {eventId: eventId, userId: this.user_id}).subscribe((response) => {
+    this.httpClient.post<any>('https://dev.cloudmeetin.com/events/delete', {eventId: eventId, userId: this.user_id}).subscribe((response) => {
       console.log('Successfully Deleted', response);
       this.getUserSelectEvents();
     });
   }
 /* This function used getting the event slot from the sign-up table*/
   getAvailabilitySlotTime() {
-    return this.httpClient.post<{ message: string, data: [] }>('http://localhost:3000/user/getTimeAvailability', {'userId': this.user_id})
+    return this.httpClient.post<{ message: string, data: [] }>('https://dev.cloudmeetin.com/user/getTimeAvailability', {'userId': this.user_id})
   }
 
   convertTimeInto12(startTime: any, endTime: any) {
@@ -205,7 +205,7 @@ export class EventService {
 
   getSelectedDateSlot (eventId: string, selected_date: Date) {
     return this.httpClient.post<{ message: string, data: [] }>(
-      'http://localhost:3000/events/getselecteddateslot', {selected_date: selected_date, eventId : eventId})
+      'https://dev.cloudmeetin.com/events/getselecteddateslot', {selected_date: selected_date, eventId : eventId})
   }
 
 
@@ -229,7 +229,7 @@ export class EventService {
     }
     console.log('========>>>> From  ',addFromSlots.join(','));
     console.log('========>>>> To  ',addToSlots.join(','));
-    return this.httpClient.post<{ message: string, data: [] }>('http://localhost:3000/events/insertslots', {
+    return this.httpClient.post<{ message: string, data: [] }>('https://dev.cloudmeetin.com/events/insertslots', {
       startTime: addFromSlots.join(','),
       endTime: addToSlots.join(','),
       av_ua: true,

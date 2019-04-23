@@ -6,3 +6,18 @@
   margin: 0;
   padding: 0;
 }
+.smallWidth {
+  width: 150px;
+}
+@media screen and (min-width: 600px) {
+  .smallWidth {
+    width: 150px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .smallWidth {
+    width: 90%;
+    margin: 2%;
+  }
+}

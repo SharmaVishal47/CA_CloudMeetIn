@@ -1,45 +1,92 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<div class="container">
+<!--<ngx-ui-loader
+  [fgsColor]="demoService.config.fgsColor"
+  [fgsPosition]="demoService.config.fgsPosition"
+  [fgsSize]="demoService.config.fgsSize"
+  [fgsType]="demoService.config.fgsType"
+  [bgsColor]="demoService.config.bgsColor"
+  [bgsOpacity]="demoService.config.bgsOpacity"
+  [bgsPosition]="demoService.config.bgsPosition"
+  [bgsSize]="demoService.config.bgsSize"
+  [bgsType]="demoService.config.bgsType"
+  [logoPosition]="demoService.config.logoPosition"
+  [logoSize]="demoService.config.logoSize"
+  [logoUrl]="demoService.config.logoUrl"
+  [overlayColor]="demoService.config.overlayColor"
+  [pbColor]="demoService.config.pbColor"
+  [pbDirection]="demoService.config.pbDirection"
+  [pbThickness]="demoService.config.pbThickness"
+  [hasProgressBar]="demoService.config.hasProgressBar"
+  [text]="demoService.config.text"
+  [textColor]="demoService.config.textColor"
+  [textPosition]="demoService.config.textPosition"
+  [loaderId]="'loader-01'"></ngx-ui-loader>-->
+
+<nz-spin nzTip="Loading..." [nzSpinning]="isSpinning" [nzSize]="'large'">
+<div class="container" >
   <div class="row">
     <div class="col-lg-12">
-      <a style="font-size: 12px;" (click)="goToDashboard()" *ngIf="checkReschedule">
-        <i style="font-size: 16px; margin-right: 5px" class="fa">&#xf104;</i>Dashboard</a>
-      <div class="col-lg-8">
-        <div class="mid-horizontal">
-          <p>{{Meeting_owner}}</p>
+      <button  nz-button nzType="primary"
+               style="color: #707070;background: none;border-color: #707070;width: 100px;align-content: center" routerLink="/{{userId}}">
+        <i nz-icon nzType="double-left" nzTheme="outline"></i> Back
+      </button>
+      <p style="color: #707070;font-family: Roboto-Regular;margin-top: 15px">{{Meeting_owner}}</p>
+      <div class="row">
+        <div class="col-5">
+          <b><p style="color: #707070;font-family: Roboto-Medium;margin-top: -5px">{{meeting_time}}</p></b>
+        </div>
+        <div class="col-7">
+          <strong><p style="color: #707070;font-family: Roboto-Medium;margin-top: -5px;font-size: medium">Select a Date & Time</p></strong>
         </div>
       </div>
       <hr>
-      <div class="col-md-10">
-        <div class="col-md-10">
-          <svg width="40" height="40">
-            <circle cx="15" cy="15" r="10" fill="#DFC12D" *ngIf="meeting_time == '15 Minute Meeting'"></circle>
-            <circle cx="15" cy="15" r="10" fill="blue" *ngIf="meeting_time == '30 Minute Meeting'"></circle>
-            <circle cx="15" cy="15" r="10" fill="#EE5353" *ngIf="meeting_time == '60 Minute Meeting'"></circle>
-          </svg>
-          <p>
-            {{meeting_time}}
-          </p>
+      <div class="row justify-content-md-center"  ngxUiLoaderBlurred [blur]="demoService.config.blur" style="margin-bottom: 4%">
+        <div class="col-sm-4" style="height: 500px;">
+          <div >
+            <mat-calendar (selectedChange)="select($event)" [minDate]="minDate" [maxDate]="maxDate" [dateFilter]="myFilter" [selected]="selected" >
+            </mat-calendar>
+            <div style="margin-left: 18%;margin-top: 10%">
+              <ng2-timezone-picker
+                [timezone]="timeZone" (change)="changeTimezone($event)" style="min-width: 200px;position: absolute; alignment: center;margin-left: auto;margin-right: auto;width: 25%" >
+              </ng2-timezone-picker>
+            </div>
+          </div>
         </div>
-        <div class="col-md-10">
-          Times are in <ng2-timezone-picker
-          [timezone]="timeZone" (change)="changeTimezone($event)" style="min-width: 200px">
-        </ng2-timezone-picker>
+        <div class="col-sm-1">
+        </div>
+        <div class="col-sm-4" style="height: 500px;overflow-y:scroll;">
+          <b><p style="color: #707070;font-family: Roboto-Regular;text-align: center;margin-top: 10px">{{selected | date: 'EEEE , d MMMM'}}</p></b>
+          <div style="height: 500px">
+            <p class="custom-card" style="margin-bottom: 5%;" *ngFor="let availableTimeSlot of availableSlot;let i = index" (click)="onCardClick(availableTimeSlot,i)">
+              {{availableTimeSlot.startTime | date:'h:mm a'}} - {{availableTimeSlot.endTime | date:'h:mm a' }}</p> <br>
+            <nz-modal [(nzVisible)]="confirmBoxSlot" [nzWidth]="600" [nzClosable]="false"  style="text-align: center;"
+                      [nzFooter]="footer">
+              <ng-template #footer >
+              </ng-template>
+              <p style="font-family: Roboto-Medium;color: #707070;font-size: medium;margin-top: 3%" >You're are about to confirm your booking at {{selectedTimeSlot.startTime| date:'h:mm a'}}. Are you Sure? </p>
+              <div nz-row style="margin-top: 10%">
+                <div nz-col nzSpan="12" style="width: 40%;margin-bottom: -5%;">
+                  <nz-form-item>
+                    <nz-form-control>
+                      <button nz-button  class="login-button" style="float: right; background: #FF4165; color: white" (click)="confirmMeeting()">Confirm</button>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col nzSpan="12" style="width: 40%; float: right;margin-bottom: -5%;">
+                  <nz-form-item>
+                    <nz-form-control>
+                      <button nz-button class="login-button" style="border: 1px solid #707070; color: #707070" (click)="closePopup()">Cancel</button>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </div>
+            </nz-modal>
+            <ng-template #timeZone11>
+              <label>Time Zone Style</label>
+            </ng-template>
+          </div>
         </div>
       </div>
-      <hr>
-      <div class="col-lg-8">
-        <div class="mid-horizontal">
-          <h6 style="font-weight:bold;">{{select_day}}</h6>
-        </div>
-        <mat-form-field class="example-full-width">
-          <input matInput [min]="startDate" [matDatepickerFilter]="myFilter" [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]='selectDate'>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker touchUi #picker></mat-datepicker>
-        </mat-form-field>
-        {{selectDate|  date:'MM/dd/yyyy'}}
-      </div>
-      <button style="float: right" type="button" class="btn btn-primary" (click)="OnContinue()">Continue</button>
     </div>
   </div>
 </div>
+</nz-spin>

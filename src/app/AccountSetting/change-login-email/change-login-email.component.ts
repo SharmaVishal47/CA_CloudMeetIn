@@ -14,20 +14,20 @@ export class ChangeLoginEmailComponent implements OnInit {
   queryData;
   email;
   valid;
-  userEmail;
+  /*userEmail;*/
   constructor(private accountService:AccountSettingsService, private fb: FormBuilder,private router: Router,private activatedRoute: ActivatedRoute,private authService:AuthServiceLocal) { }
   ngOnInit() {
-    this.userEmail = this.authService.getUserEmaild();
+   // this.authService.logOutOnEmailChange();
+    /*this.userEmail = this.authService.getUserEmaild();*/
     this.changPasswordForm = this.fb.group({
       password: [ null, [ Validators.required ] ]
     });
     this.activatedRoute.queryParams.subscribe(params => {
-
       this.queryData = params['data'];
       this.email = params['email'];
       console.log(' QueryParams--->',this.queryData);
       console.log(' QueryParams email--->',this.email);
-      console.log(' user email--->',this.userEmail);
+     /* console.log(' user email--->',this.userEmail);*/
     });
     //this.accountService.getUserEmail();
  this.accountService.checkTokenDataUpdateEmail(this.queryData,this.email);

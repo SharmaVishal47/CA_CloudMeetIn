@@ -13,16 +13,20 @@
 h6{
   color: #707070;
   text-align: center;
+  font-family: Roboto-Regular, sans-serif;
   font-size: calc(0.50em + 1.5vmin);;
 }
 h5{
-  color: black;
+  color:  #707070;
   text-align: start;
+  font-family: Roboto-Medium, sans-serif;
+
   font-size: calc(0.50em + 1.5vmin);;
 }
 h4{
-  color: black;
+  color:  #707070;
   text-align: start;
-  font-size: calc(0.30em + 1.30vmin);;
+  font-family: Roboto-Regular, sans-serif;
+  font-size: calc(0.30em + 1.50vmin);;
 }
 

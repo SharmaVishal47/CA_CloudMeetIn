@@ -6,6 +6,7 @@ import {MatDialog, MatDialogConfig} from '@angular/material';
 import {MessagedialogComponent} from '../../messagedialog/messagedialog.component';
 import {SignUpService} from '../../Auth/sign-up.service';
 import * as moment from 'moment-timezone';
+import {MessageServiceService} from '../../Auth/message-service.service';
 
 @Component({
   selector: 'app-settings',
@@ -19,7 +20,7 @@ export class SettingsComponent implements OnInit {
   timeZone: string = "Asia/Kolkata";
   _userSelectTimeZone ;
 
-  constructor(private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private dialog: MatDialog,private signUpService: SignUpService) { }
+  constructor(private messageService:MessageServiceService,private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private dialog: MatDialog,private signUpService: SignUpService) { }
 
   ngOnInit() {
 
@@ -48,14 +49,16 @@ export class SettingsComponent implements OnInit {
       if(this._userSelectTimeZone) {
         this.signUpService.updateTimeZoneUserId(this.email,this._userSelectTimeZone,this.form.value.userId);
       }else{
-        const dialogConfig = new MatDialogConfig();
+        this.messageService.generateErrorMessage("Please Select Time Zone")
+       /* const dialogConfig = new MatDialogConfig();
         dialogConfig.data = "Please Select Time Zone";
-        this.dialog.open(MessagedialogComponent, dialogConfig);
+        this.dialog.open(MessagedialogComponent, dialogConfig);*/
       }
     }else{
-      const dialogConfig = new MatDialogConfig();
+      this.messageService.generateErrorMessage("Please choose another UserId")
+      /*const dialogConfig = new MatDialogConfig();
       dialogConfig.data = "Please choose another UserId";
-      this.dialog.open(MessagedialogComponent, dialogConfig);
+      this.dialog.open(MessagedialogComponent, dialogConfig);*/
     }
   }
 

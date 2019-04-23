@@ -8,6 +8,9 @@ import {MessagedialogComponent} from '../../messagedialog/messagedialog.componen
 import {SignUpService} from '../sign-up.service';
 /*import * as AllIcons from 'ant-icons-angular/icons';*/
 import {IconDefinition, IconService} from '@ant-design/icons-angular';
+import {MessageServiceService} from '../message-service.service';
+import {AuthServiceLocal} from '../auth.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-signup',
@@ -15,21 +18,23 @@ import {IconDefinition, IconService} from '@ant-design/icons-angular';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
-
+  isSpinning = false;
   signUp: FormGroup;
   isSignInStatus = 0;
   email = '';
   param1;
   _emailID ;
   signUpForm: FormGroup;
-  emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
+  passwordVisible = false;
+  password: string;
+  emailAuth :Subscription;
   constructor(private _iconService: IconService, private fb: FormBuilder, private socialAuthService: AuthService,
               private router:Router,private httpClient: HttpClient,private route: ActivatedRoute,private dialog: MatDialog,
-              private signUpService: SignUpService) {
+              private signUpService: SignUpService,
+              private messageService:MessageServiceService ,private authService: AuthServiceLocal) {
 
   }
   ngOnInit() {
-
     this.param1 = this.route.snapshot.queryParamMap.get('code');
     if (this.param1) {
       this._emailID = localStorage.getItem('emailSignUp');
@@ -41,10 +46,10 @@ export class SignupComponent implements OnInit {
       this.signUpService.generateToken(this.param1,this._emailID);
     }
     this.signUp = new FormGroup({
-      email: new FormControl(null, [Validators.required, Validators.pattern(this.emailPattern)])
+      email: new FormControl(null, [Validators.email,Validators.required])
     });
     this.signUpForm = new FormGroup({
-      emailID: new FormControl(null, [Validators.required, Validators.pattern(this.emailPattern)]),
+      emailID: new FormControl(null, [Validators.email , Validators.required]),
       fullName: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [Validators.required]),
     });
@@ -76,20 +81,20 @@ export class SignupComponent implements OnInit {
 
           this.signUpService.generateGmailAuthUrl();
         }else{
-          const dialogConfig = new MatDialogConfig();
-          dialogConfig.data = "Unauthorized access,Email does not match!";
-          this.dialog.open(MessagedialogComponent, dialogConfig);
+          this.messageService.generateErrorMessage("Unauthorized access,Email does not match!");
         }
       }
     );
   }
   onSubmit() {
     this.signUpService.checkUserEmail(this.signUp.value);
-    this.signUpService.getCheckEmailListener().subscribe((responseData: {data: String,message: String})=>{
+    this.emailAuth = this.signUpService.getCheckEmailListener().subscribe((responseData: {data: String,message: String})=>{
       if(responseData.data.length>0){
-        const dialogConfig = new MatDialogConfig();
+        this.messageService.generateErrorMessage("Email already exist.");
+        this.emailAuth.unsubscribe();
+       /* const dialogConfig = new MatDialogConfig();
         dialogConfig.data = "Email already exists.";
-        this.dialog.open(MessagedialogComponent, dialogConfig);
+        this.dialog.open(MessagedialogComponent, dialogConfig);*/
       }else{
         this.email = this.signUp.value.email;
         this.socialSignIn('google');
@@ -106,5 +111,10 @@ export class SignupComponent implements OnInit {
     this.signUpForm.patchValue({
       emailID: this._emailID
     });
+  }
+
+  navigateToLogin() {
+    this.isSpinning = true;
+    this.authService.autoAuthenticateUser();
   }
 }

@@ -4,7 +4,7 @@
   </div>
 </div>
 <div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
-  <div nz-col nzSpan="14">
+  <div nz-col [nzXs]="{ span: 22}" [nzMd]="{ span: 14}" [nzLg]="{ span: 14}">
     <form nz-form [formGroup]="availabilityForm" class="login-form" (ngSubmit)="submitForm()">
       <nz-card>
         <div nz-col nzType="flex" nzJustify="center">
@@ -41,7 +41,7 @@
               <nz-form-control>
                 <nz-input-group>
                   <nz-select style="width: 100%;" nzPlaceHolder="Start Time" [(ngModel)]='defaultStartTime' nzAllowClear
-                             formControlName="inTime">
+                             formControlName="inTime" (nzOpenChange)="checkTime()" [nzDisabled]="true">
                     <nz-option nzValue="00:00" nzLabel="12:00am"></nz-option>
                     <nz-option nzValue="01:00" nzLabel="01:00am"></nz-option>
                     <nz-option nzValue="02:00" nzLabel="02:00am"></nz-option>
@@ -66,6 +66,7 @@
                     <nz-option nzValue="21:00" nzLabel="09:00pm"></nz-option>
                     <nz-option nzValue="22:00" nzLabel="10:00pm"></nz-option>
                     <nz-option nzValue="23:00" nzLabel="11:00pm"></nz-option>
+                    <nz-option nzValue="24:00" nzLabel="12:00am"></nz-option>
                   </nz-select>
                 </nz-input-group>
                 <nz-form-explain *ngIf="availabilityForm.get('inTime').dirty && availabilityForm.get('inTime').errors">Please
@@ -79,7 +80,7 @@
               <nz-form-control>
                 <nz-input-group>
                   <nz-select style="width: 100%;" nzPlaceHolder="End Time" [(ngModel)]='defaultEndTime' nzAllowClear
-                             formControlName="outTime">
+                             formControlName="outTime" (nzOpenChange)="checkTime()" [nzDisabled]="true">
                     <nz-option nzValue="00:00" nzLabel="12:00am"></nz-option>
                     <nz-option nzValue="01:00" nzLabel="01:00am"></nz-option>
                     <nz-option nzValue="02:00" nzLabel="02:00am"></nz-option>
@@ -104,6 +105,7 @@
                     <nz-option nzValue="21:00" nzLabel="09:00pm"></nz-option>
                     <nz-option nzValue="22:00" nzLabel="10:00pm"></nz-option>
                     <nz-option nzValue="23:00" nzLabel="11:00pm"></nz-option>
+                    <nz-option nzValue="24:00" nzLabel="12:00am"></nz-option>
                   </nz-select>
                 </nz-input-group>
                 <nz-form-explain *ngIf="availabilityForm.get('outTime').dirty && availabilityForm.get('outTime').errors">Please
@@ -123,7 +125,7 @@
         </div>
         <div nz-col nzSpan="8">
           <nz-form-control>
-            <button nz-button class="primary" type="submit" [disabled]="!availabilityForm.valid">Continue</button>
+            <button nz-button class="primary" type="submit" [disabled]="!availabilityForm.valid || !time">Continue</button>
           </nz-form-control>
         </div>
       </div>
@@ -134,135 +136,135 @@
 
 <!--
 <div class="container top-margin">
-  <div class="row">
-    <div class="col-lg-8" style="margin: auto">
-      <form [formGroup]="form">
-        <mat-card class="example-card">
-          <mat-card-header class="card">
-            <div mat-card-avatar class="example-header-image"></div>
-            <br>
-            <mat-card-title class="top-margin heading">Set your availability</mat-card-title>
-            <br>
-            <mat-card-subtitle style="font-size: 16px">Let CloudMeetIn know when you’re typically available to accept meetings.</mat-card-subtitle>
-            <br>
-            <div class="col-lg-3">
-              <img mat-card-image src="http://src.onlinedown.net/new_img/apk_logo/2016/0411/257251_1460343696_0041.png" alt="Photo of a Shiba Inu" width="20" style="margin: auto;">
-            </div>
-          </mat-card-header>
-          <br>
-          <mat-card-content class="container">
-            <h6>Available Hours</h6>
-            <div class="col-lg-8">
-              <div class="form-group col-lg-8" >
-                <select class="form-control" formControlName="inTime" [(ngModel)]='defaultStartTime'>
-                  <option value="00:00">12:00am</option>
-                  <option value="01:00">01:00am</option>
-                  <option value="02:00">02:00am</option>
-                  <option value="03:00">03:00am</option>
-                  <option value="04:00">04:00am</option>
-                  <option value="05:00">05:00am</option>
-                  <option value="06:00">06:00am</option>
-                  <option value="07:00">07:00am</option>
-                  <option value="08:00">08:00am</option>
-                  <option value="09:00">09:00am</option>
-                  <option value="10:00">10:00am</option>
-                  <option value="11:00">11:00am</option>
-                  <option value="12:00">12:00pm</option>
-                  <option value="13:00">01:00pm</option>
-                  <option value="14:00">02:00pm</option>
-                  <option value="15:00">03:00pm</option>
-                  <option value="16:00">04:00pm</option>
-                  <option value="17:00">05:00pm</option>
-                  <option value="18:00">06:00pm</option>
-                  <option value="19:00">07:00pm</option>
-                  <option value="20:00">08:00pm</option>
-                  <option value="21:00">09:00pm</option>
-                  <option value="22:00">10:00pm</option>
-                  <option value="23:00">11:00pm</option>
-                </select>
-              </div>
-              <div class="form-group col-lg-8" >
-                <select class="form-control" id="sel1" formControlName="outTime"  [(ngModel)]='defaultEndTime'>
-                  <option value="00:00">12:00am</option>
-                  <option value="01:00">01:00am</option>
-                  <option value="02:00">02:00am</option>
-                  <option value="03:00">03:00am</option>
-                  <option value="04:00">04:00am</option>
-                  <option value="05:00">05:00am</option>
-                  <option value="06:00">06:00am</option>
-                  <option value="07:00">07:00am</option>
-                  <option value="08:00">08:00am</option>
-                  <option value="09:00">09:00am</option>
-                  <option value="10:00">10:00am</option>
-                  <option value="11:00">11:00am</option>
-                  <option value="12:00">12:00pm</option>
-                  <option value="13:00">01:00pm</option>
-                  <option value="14:00">02:00pm</option>
-                  <option value="15:00">03:00pm</option>
-                  <option value="16:00">04:00pm</option>
-                  <option value="17:00">05:00pm</option>
-                  <option value="18:00">06:00pm</option>
-                  <option value="19:00">07:00pm</option>
-                  <option value="20:00">08:00pm</option>
-                  <option value="21:00">09:00pm</option>
-                  <option value="22:00">10:00pm</option>
-                  <option value="23:00">11:00pm</option>
-                </select>
-              </div>
-            </div>
-            <h6>Available Days</h6>
-            <div class="col-lg-8">
-              <table class="table table-bordered">
-                <tbody>
-                <tr>
-                  <td>
-                    <label class="form-check-label text-center">
-                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('0', $event.target.checked)"><br>Sunday
-                    </label>
-                  </td>
-                  <td>
-                    <label class="form-check-label text-center">
-                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('1', $event.target.checked)"><br>Mondays
-                    </label>
-                  </td>
-                  <td>
-                    <label class="form-check-label text-center">
-                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('2', $event.target.checked)"><br>Tuesdays
-                    </label>
-                  </td>
-                  <td>
-                    <label class="form-check-label text-center">
-                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('3', $event.target.checked)"><br>Wednesdays
-                    </label>
-                  </td>
-                  <td>
-                    <label class="form-check-label text-center">
-                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('4', $event.target.checked)"> <br>Thursdays
-                    </label>
-                  </td>
-                  <td>
-                    <label class="form-check-label text-center">
-                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('5', $event.target.checked)"> <br>Fridays
-                    </label>
-                  </td>
-                  <td>
-                    <label class="form-check-label text-center">
-                      <input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('6', $event.target.checked)"><br>Saturdays
-                    </label>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-            <p style="text-align: center; color: #949AA3; margin: 10px"> Don’t worry! You’ll be able to further customize your availability later on.</p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="updateConfiguration()" [disabled]="form.invalid">Continue</button>
-            &lt;!&ndash;<button mat-button (click)="setUpLater()">Set up later</button>&ndash;&gt;
-          </mat-card-actions>
-        </mat-card>
-      </form>
-    </div>
-  </div>
+<div class="row">
+<div class="col-lg-8" style="margin: auto">
+<form [formGroup]="form">
+<mat-card class="example-card">
+<mat-card-header class="card">
+<div mat-card-avatar class="example-header-image"></div>
+<br>
+<mat-card-title class="top-margin heading">Set your availability</mat-card-title>
+<br>
+<mat-card-subtitle style="font-size: 16px">Let CloudMeetIn know when you’re typically available to accept meetings.</mat-card-subtitle>
+<br>
+<div class="col-lg-3">
+<img mat-card-image src="http://src.onlinedown.net/new_img/apk_logo/2016/0411/257251_1460343696_0041.png" alt="Photo of a Shiba Inu" width="20" style="margin: auto;">
+</div>
+</mat-card-header>
+<br>
+<mat-card-content class="container">
+<h6>Available Hours</h6>
+<div class="col-lg-8">
+<div class="form-group col-lg-8" >
+<select class="form-control" formControlName="inTime" [(ngModel)]='defaultStartTime'>
+<option value="00:00">12:00am</option>
+<option value="01:00">01:00am</option>
+<option value="02:00">02:00am</option>
+<option value="03:00">03:00am</option>
+<option value="04:00">04:00am</option>
+<option value="05:00">05:00am</option>
+<option value="06:00">06:00am</option>
+<option value="07:00">07:00am</option>
+<option value="08:00">08:00am</option>
+<option value="09:00">09:00am</option>
+<option value="10:00">10:00am</option>
+<option value="11:00">11:00am</option>
+<option value="12:00">12:00pm</option>
+<option value="13:00">01:00pm</option>
+<option value="14:00">02:00pm</option>
+<option value="15:00">03:00pm</option>
+<option value="16:00">04:00pm</option>
+<option value="17:00">05:00pm</option>
+<option value="18:00">06:00pm</option>
+<option value="19:00">07:00pm</option>
+<option value="20:00">08:00pm</option>
+<option value="21:00">09:00pm</option>
+<option value="22:00">10:00pm</option>
+<option value="23:00">11:00pm</option>
+</select>
+</div>
+<div class="form-group col-lg-8" >
+<select class="form-control" id="sel1" formControlName="outTime" [(ngModel)]='defaultEndTime'>
+<option value="00:00">12:00am</option>
+<option value="01:00">01:00am</option>
+<option value="02:00">02:00am</option>
+<option value="03:00">03:00am</option>
+<option value="04:00">04:00am</option>
+<option value="05:00">05:00am</option>
+<option value="06:00">06:00am</option>
+<option value="07:00">07:00am</option>
+<option value="08:00">08:00am</option>
+<option value="09:00">09:00am</option>
+<option value="10:00">10:00am</option>
+<option value="11:00">11:00am</option>
+<option value="12:00">12:00pm</option>
+<option value="13:00">01:00pm</option>
+<option value="14:00">02:00pm</option>
+<option value="15:00">03:00pm</option>
+<option value="16:00">04:00pm</option>
+<option value="17:00">05:00pm</option>
+<option value="18:00">06:00pm</option>
+<option value="19:00">07:00pm</option>
+<option value="20:00">08:00pm</option>
+<option value="21:00">09:00pm</option>
+<option value="22:00">10:00pm</option>
+<option value="23:00">11:00pm</option>
+</select>
+</div>
+</div>
+<h6>Available Days</h6>
+<div class="col-lg-8">
+<table class="table table-bordered">
+<tbody>
+<tr>
+<td>
+<label class="form-check-label text-center">
+<input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('0', $event.target.checked)"><br>Sunday
+</label>
+</td>
+<td>
+<label class="form-check-label text-center">
+<input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('1', $event.target.checked)"><br>Mondays
+</label>
+</td>
+<td>
+<label class="form-check-label text-center">
+<input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('2', $event.target.checked)"><br>Tuesdays
+</label>
+</td>
+<td>
+<label class="form-check-label text-center">
+<input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('3', $event.target.checked)"><br>Wednesdays
+</label>
+</td>
+<td>
+<label class="form-check-label text-center">
+<input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('4', $event.target.checked)"> <br>Thursdays
+</label>
+</td>
+<td>
+<label class="form-check-label text-center">
+<input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('5', $event.target.checked)"> <br>Fridays
+</label>
+</td>
+<td>
+<label class="form-check-label text-center">
+<input type="checkbox" class="form-check-input" name="optradio" (change)="onChange('6', $event.target.checked)"><br>Saturdays
+</label>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p style="text-align: center; color: #949AA3; margin: 10px"> Don’t worry! You’ll be able to further customize your availability later on.</p>
+</mat-card-content>
+<mat-card-actions>
+<button mat-raised-button color="primary" (click)="updateConfiguration()" [disabled]="form.invalid">Continue</button>
+&lt;!&ndash;<button mat-button (click)="setUpLater()">Set up later</button>&ndash;&gt;
+</mat-card-actions>
+</mat-card>
+</form>
+</div>
+</div>
 </div>
 -->

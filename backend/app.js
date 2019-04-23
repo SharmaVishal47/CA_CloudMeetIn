@@ -17,20 +17,30 @@ const mysql = require('mysql');
 const eventsRoutes = require('../routes/events');
 const sendResetPasswordEmail = require('../routes/sendPasswordEmail');
 
-const db = mysql.createConnection({
+/*const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
   database: 'ca_calendly'
+});*/
+/*Main Data Base*/
+/*const db = mysql.createConnection({
+  host: '166.62.118.106',
+  user: 'cloudmee_analogy',
+  port: '3306',
+  password: 'uLm7OCMf,b7k',
+  database: 'cloudmee_ca_calendly'
+});*/
+
+/*Dev Data Base*/
+const db = mysql.createConnection({
+  host: '166.62.118.106',
+  user: 'cloudmee_dev',
+  port: '3306',
+  password: 'XcH2RzZ4f=Pa',
+  database: 'cloudmee_dev_cloudmeetin'
 });
 
-/*const db = mysql.createConnection({
-  host: 'remotemysql.com',
-  database: 'AbnTJmqmxu',
-  user: 'AbnTJmqmxu',
-  password: '3xq7QZUsWs'
-
-});*/
 db.connect((err) => {
   if (err) {
     throw err;

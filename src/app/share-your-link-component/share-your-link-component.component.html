@@ -2,17 +2,26 @@
   <form [formGroup]="myForm">
     <h6 style="margin-left: 25%">Share Your Link</h6>
     <div class="container">
-      <div class="form-group">
+      <div class="form-group" >
         <label for="copyLink">Copy Your Link</label>
-        <input type="text"
-               id="copyLink"
-               class="form-control"
-               formControlName="copyLink" />
+        <div style="display: flex">
+          <input type="text"
+                 id="copyLink"
+                 class="form-control"
+                 formControlName="copyLink" #inputTarget readonly style="background-color: white"/>
+          <i nz-icon nzType="copy" nzTitle="Copy" nzTheme="outline" [ngxClipboard]="inputTarget" style="
+font-size: 20px;color: #FF4165; margin-left: 5px; line-height: unset; cursor: pointer" nz-tooltip (click)="onCopied()"></i>
+        </div>
       </div>
-      <div class="form-group">
+      <div class="form-group" >
         <label for="emailLink">Email Your Link</label>
-        <input type="text" id="emailLink" class="form-control"
-               formControlName="emailLink">
+        <div style="display: flex">
+          <input type="text" id="emailLink" class="form-control"
+                 formControlName="emailLink" readonly style="background-color: white">
+
+          <i nz-icon nzType="mail" nzTheme="outline" nzTitle="Email" style="
+font-size: 20px;color: #FF4165; margin-left: 5px; line-height: unset; cursor: pointer" nz-tooltip></i>
+        </div>
       </div>
       <!--<div class="form-group">-->
       <!--<label for="Embed">Embed on Your Website</label>-->

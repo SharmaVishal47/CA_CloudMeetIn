@@ -26,20 +26,6 @@ export class AuthServiceLocal implements OnInit{
   ngOnInit(){
   }
 
-  /*validateUser(data: {email: string}){
-    this.httpClient.post<any>('http://localhost:3000/password/validateUser',data).subscribe((responseData)=>{
-      if(responseData.data.length>0){
-        console.log('Response-------->',responseData.data);
-        this.router.navigate(['/tryAgain']);
-        this.token = responseData.token;
-      }else{
-        this.messageService.generateErrorMessage("Sorry its an invalid email id plz try again ! ");
-        this.authStatusListener.next(false);
-      }
-    },error => {
-      this.messageService.generateErrorMessage("Could not send email!! Plz check your connection ");
-    });
-  }*/
   getAuthStatusListener(){
     return this.authStatusListener.asObservable();
   }
@@ -61,6 +47,17 @@ export class AuthServiceLocal implements OnInit{
   getFullName(){
     return this.fullName;
   }
+  logOutOnEmailChange(){
+    this.isAuthenticated = false;
+    this.userId = null;
+    this.emailId = null;
+    this.fullName = null;
+    this.profilePic = null;
+    this.authStatusListener.next(false);
+    this.isAuth.next(this.isAuthenticated);
+    clearTimeout(this.tokenTimer);
+    this.clearAuthData();
+  }
   logout(){
     this.isAuthenticated = false;
     this.userId = null;
@@ -75,7 +72,7 @@ export class AuthServiceLocal implements OnInit{
   }
 
   loginUserAfterSignup(data: {emailID: string,password: string}){
-    this.httpClient.post<any>('http://localhost:3000/user/checkemailpassword',data).subscribe((responseData)=>{
+    this.httpClient.post<any>('https://dev.cloudmeetin.com/user/checkemailpassword',data).subscribe((responseData)=>{
       console.log("responseData=====",responseData);
       if(responseData.data.length>0){
         this.token = responseData.token;
@@ -85,31 +82,26 @@ export class AuthServiceLocal implements OnInit{
           this.fullName = responseData.data[0].fullName.toString();
           this.profilePic = responseData.data[0].profilePic
           this.isAuthenticated = true;
-<<<<<<< HEAD
           this.authStatusListener.next(true);
-=======
           this.router.navigate(['dashboard']);
           this.authStatusListener.next(true);
 
->>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
           const expiresIn = responseData.expiresIn;
           this.setAuthTimer(expiresIn);
           const now = new Date();
           const expirationDate = new Date(now.getTime() + expiresIn*1000);
           this.saveAuthData(this.token,expirationDate,responseData.data[0].userId,this.emailId);
-<<<<<<< HEAD
+
           /*this.eventService.createEventAfterSignUp(this.emailId);*/
           console.log("Call event create==========");
-          this.httpClient.post<any>('http://localhost:3000/events/createeventaftersignup', {email: this.emailId}).subscribe(
+          this.httpClient.post<any>('https://dev.cloudmeetin.com/events/createeventaftersignup', {email: this.emailId}).subscribe(
             res => {
               this.router.navigate(['dashboard']);
             },
             err => {
 
             });
-=======
 
->>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
         }else{
           console.log("Log97");
           this.router.navigate(['login']);
@@ -125,7 +117,7 @@ export class AuthServiceLocal implements OnInit{
   }
 
   loginUser(data: {emailID: string,password: string}){
-    this.httpClient.post<any>('http://localhost:3000/user/checkemailpassword',data).subscribe((responseData)=>{
+    this.httpClient.post<any>('https://dev.cloudmeetin.com/user/checkemailpassword',data).subscribe((responseData)=>{
       if(responseData.data.length>0){
         this.token = responseData.token;
         if(this.token){
@@ -144,40 +136,26 @@ export class AuthServiceLocal implements OnInit{
           this.saveAuthData(this.token,expirationDate,responseData.data[0].userId,this.emailId);
 
         }else{
-          const dialogConfig = new MatDialogConfig();
+          /*const dialogConfig = new MatDialogConfig();
           dialogConfig.data = "Please Login Again";
-          this.dialog.open(MessagedialogComponent, dialogConfig);
+          this.dialog.open(MessagedialogComponent, dialogConfig);*/
+          this.messageService.generateInfoMessage("Please Login Again");
           this.authStatusListener.next(false);
         }
       }else{
-        const dialogConfig = new MatDialogConfig();
+        this.messageService.generateErrorMessage("Invalid username/password.");
+        /*    const dialogConfig = new MatDialogConfig();
         dialogConfig.data = "Invalid username/password.";
-        this.dialog.open(MessagedialogComponent, dialogConfig);
+        this.dialog.open(MessagedialogComponent, dialogConfig);*/
         this.authStatusListener.next(false);
       }
     },error => {
-      const dialogConfig = new MatDialogConfig();
+      this.messageService.generateErrorMessage(error);
+      /* const dialogConfig = new MatDialogConfig();
       dialogConfig.data = error;
-      this.dialog.open(MessagedialogComponent, dialogConfig);
+      this.dialog.open(MessagedialogComponent, dialogConfig);*/
       this.authStatusListener.next(false);
     });
-  }
-
-  public getAuthData(){
-    const token = localStorage.getItem('token');
-    const expirationDate = localStorage.getItem('expiration');
-    const userId = localStorage.getItem('userId');
-    const emailId = localStorage.getItem('emailId');
-    if(!token || !expirationDate){
-
-      return;
-    }
-    return {
-      token: token,
-      expirationDate: expirationDate,
-      userId: userId,
-      emailId: emailId
-    };
   }
 
   autoAuthenticateUserAfterIntegration(path: string){
@@ -191,8 +169,8 @@ export class AuthServiceLocal implements OnInit{
       const now =new Date();
       const expiresIn =  Date.parse(authInfo.expirationDate) - now.getTime();
       if(expiresIn > 0){
-        this.httpClient.post<any>('http://localhost:3000/user/checkTokenUserId',{userId: authInfo.userId,token: authInfo.token}).subscribe((responseData)=>{
-          this.httpClient.post<any>('http://localhost:3000/user/checkuseremail',{email: authInfo.emailId}).subscribe((responseData)=>{
+        this.httpClient.post<any>('https://dev.cloudmeetin.com/user/checkTokenUserId',{userId: authInfo.userId,token: authInfo.token}).subscribe((responseData)=>{
+          this.httpClient.post<any>('https://dev.cloudmeetin.com/user/checkuseremail',{email: authInfo.emailId}).subscribe((responseData)=>{
             if(responseData.data.length > 0){
               this.fullName = responseData.data[0].fullName;
               this.profilePic = responseData.data[0].profilePic;
@@ -235,8 +213,8 @@ export class AuthServiceLocal implements OnInit{
       const now =new Date();
       const expiresIn =  Date.parse(authInfo.expirationDate) - now.getTime();
       if(expiresIn > 0){
-        this.httpClient.post<any>('http://localhost:3000/user/checkTokenUserId',{userId: authInfo.userId,token: authInfo.token}).subscribe((responseData)=>{
-          this.httpClient.post<any>('http://localhost:3000/user/checkuseremail',{email: authInfo.emailId}).subscribe((responseData)=>{
+        this.httpClient.post<any>('https://dev.cloudmeetin.com/user/checkTokenUserId',{userId: authInfo.userId,token: authInfo.token}).subscribe((responseData)=>{
+          this.httpClient.post<any>('https://dev.cloudmeetin.com/user/checkuseremail',{email: authInfo.emailId}).subscribe((responseData)=>{
             if(responseData.data.length > 0){
               this.fullName = responseData.data[0].fullName;
               this.profilePic = responseData.data[0].profilePic;
@@ -246,7 +224,7 @@ export class AuthServiceLocal implements OnInit{
               this.emailId = authInfo.emailId;
               this.authStatusListener.next(true);
               this.setAuthTimer(expiresIn/1000);
-             // this.router.navigate(["dashboard/"+authInfo.emailId]);
+              // this.router.navigate(["dashboard/"+authInfo.emailId]);
               this.router.navigate(["dashboard"]);
             }else{
               this.logout();
@@ -266,6 +244,25 @@ export class AuthServiceLocal implements OnInit{
     }
 
   }
+
+  public getAuthData(){
+    const token = localStorage.getItem('token');
+    const expirationDate = localStorage.getItem('expiration');
+    const userId = localStorage.getItem('userId');
+    const emailId = localStorage.getItem('emailId');
+    if(!token || !expirationDate){
+
+      return;
+    }
+    return {
+      token: token,
+      expirationDate: expirationDate,
+      userId: userId,
+      emailId: emailId
+    };
+  }
+
+
 
   private saveAuthData(token: string, expirationDate: Date, userId: string,email: string) {
     localStorage.setItem('token',token);
@@ -295,12 +292,12 @@ export class AuthServiceLocal implements OnInit{
 
   validateUser(data: {email: string}){
     console.log('Valid data ',data);
-    this.httpClient.post<any>('http://localhost:3000/password/validateUser',data).subscribe((responseData)=>{
+    this.httpClient.post<any>('https://dev.cloudmeetin.com/password/validateUser',data).subscribe((responseData)=>{
       if(responseData.data.length>0){
         console.log('Response token value-------->',responseData.token);
         console.log('Response Email value-------->',responseData.data[0].email);
-        this.httpClient.post<any>('http://localhost:3000/sendResetPasswordEmail/sendResetPasswordEmail',{
-          message: "You are receiving this message because you have requested to reset your password\n Here is the link to reset your password http://localhost:4200/changePassword/da?email="+responseData.data[0].email+"&data="+responseData.token,
+        this.httpClient.post<any>('https://dev.cloudmeetin.com/sendResetPasswordEmail/sendResetPasswordEmail',{
+          message: "You are receiving this message because you have requested to reset your password\n Here is the link to reset your password https://dev.cloudmeetin.com/changePassword/da?email="+responseData.data[0].email+"&data="+responseData.token,
           email: responseData.data[0].email
         }).subscribe((responseData)=>{
           /* if(responseData.data.length>0){*/
@@ -317,7 +314,7 @@ export class AuthServiceLocal implements OnInit{
         /* console.log('Response-------->',responseData.data);
          this.router.navigate(['/tryAgain']);
          this.token = responseData.token;*/
-        console.log('Response Message value-------->',"You are receiving this message because you have requested to reset your password\n Here is the link to reset your password http://localhost:4200/changePassword/"+responseData.token);
+        console.log('Response Message value-------->',"You are receiving this message because you have requested to reset your password\n Here is the link to reset your password https://dev.cloudmeetin.com/changePassword/"+responseData.token);
       }else{
         this.messageService.generateErrorMessage("Sorry its an invalid email id plz try again ! ");
         this.authStatusListener.next(false);
@@ -329,7 +326,7 @@ export class AuthServiceLocal implements OnInit{
 
 
   checkTokenData(data:string,email:string){
-    this.httpClient.post<any>('http://localhost:3000/password/checkTokenData',{token:data,email:email}).subscribe((responseData)=>{
+    this.httpClient.post<any>('https://dev.cloudmeetin.com/password/checkTokenData',{token:data,email:email}).subscribe((responseData)=>{
       console.log('Response data ',responseData);
       if(responseData.valid===true){
         console.log('Response data ',responseData);
@@ -344,7 +341,7 @@ export class AuthServiceLocal implements OnInit{
     });
   }
   updatePassword(data:any,email:string){
-    this.httpClient.post<any>('http://localhost:3000/password/updatePassword',{password:data,email:email}).subscribe((responseData)=>{
+    this.httpClient.post<any>('https://dev.cloudmeetin.com/password/updatePassword',{password:data,email:email}).subscribe((responseData)=>{
       if(responseData){
         this.messageService.generateSuccessMessage("Your password updated successfully ! ");
       }else{

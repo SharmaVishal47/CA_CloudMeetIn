@@ -32,15 +32,20 @@ exports.gmailCheckToken = (callback) => {
       }
       //save the new token and expiry_date
       console.log("Token", tokens);
-      fs.writeFile(TOKEN_PATH, JSON.stringify(tokens), (err) => {
-        if (err) {
-          console.log('err', err);
-          callback(err);
-        } else {
-          console.log('Token stored to', TOKEN_PATH);
-          callback(200);
-        }
-      });
+      let checkPoint = typeof (tokens) === 'object' ? true : false;
+
+      if(checkPoint){
+        fs.writeFile(TOKEN_PATH, JSON.stringify(tokens), (err) => {
+          if (err) {
+            console.log('err', err);
+            callback(err);
+          } else {
+            console.log('Token stored to', TOKEN_PATH);
+            callback(200);
+          }
+        });
+      }
+
     });
   });
 };

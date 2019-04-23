@@ -5,6 +5,7 @@ import {MessagedialogComponent} from '../../messagedialog/messagedialog.componen
 import {HttpClient} from '@angular/common/http';
 import {DatePipe} from '@angular/common';
 import {MeetingService} from '../meeting.service';
+import {MessageServiceService} from '../../Auth/message-service.service';
 
 @Component({
   selector: 'app-schedule-date',
@@ -26,6 +27,7 @@ export class ScheduleDateComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private httpClient: HttpClient,
     private dialog: MatDialog,
+    private messageService:MessageServiceService,
     public datepipe: DatePipe
   ) {}
 
@@ -50,9 +52,10 @@ export class ScheduleDateComponent implements OnInit, OnDestroy {
         this.listTimeArray = responseData;
       }, error => {
         console.log('error====', error);
-        const dialogConfig = new MatDialogConfig();
+        this.messageService.generateErrorMessage(error)
+       /* const dialogConfig = new MatDialogConfig();
         dialogConfig.data = error;
-        this.dialog.open(MessagedialogComponent, dialogConfig);
+        this.dialog.open(MessagedialogComponent, dialogConfig);*/
       });
     }
   }

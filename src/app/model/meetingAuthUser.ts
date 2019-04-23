@@ -3,4 +3,6 @@ interface MeetingAuthUser {
   email: string,
   userId: string,
   fullName: string,
+  welcomeMessage: string,
+  profilePic: string,
 }

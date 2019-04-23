@@ -30,6 +30,10 @@ export class CalendarEditComponent implements OnInit {
   ngOnInit() {
     this.email =  this.signUpService.getAuthUserEmail();
     console.log("Email ===========> ", this.email);
+    this.signUpService.getCalendarEventsList(this.email);
+    console.log("Email ===========> ", this.email);
+    this.signUpService.getCalendarOptionList(this.email);
+
 
     this.signUpService.getCalendarOptionListener().subscribe((responseData)=>{
       let calMap = new Map();

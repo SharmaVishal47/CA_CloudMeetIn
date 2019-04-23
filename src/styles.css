@@ -1,4 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; font-style: normal;}
@@ -15,5 +15,74 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; font-style:
   box-shadow: 0 0px 30px rgba(0,0,0,.09)
 }
 
-
+.globalFontNormalContent{
+  font-family: 'Roboto-Medium', sans-serif;
+  font-size: 16px;
+  line-height: normal;
+  margin: 0;
+  padding: 0;
+}
+/*Heading content css */
+.globalFontHeadingContent{
+  font-family: 'Roboto-Medium', sans-serif;
+  font-size: 18px;
+  line-height: normal;
+  color: #707070;
+  margin: 0;
+  padding: 0;
+}
 /*# sourceMappingURL=landing-fc0e373a.chunk.css.map*/
+h1 {
+  display: block;
+  font-size: 2em;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-top: 0.83em;
+  margin-bottom: 0.83em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+h3 {
+  display: block;
+  font-size: 1.17em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+h4 {
+  display: block;
+  font-size: 1em;
+  margin-top: 1.33em;
+  margin-bottom: 1.33em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+h5 {
+  display: block;
+  font-size: .83em;
+  margin-top: 1.67em;
+  margin-bottom: 1.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+h6 {
+  display: block;
+  font-size: .67em;
+  margin-top: 2.33em;
+  margin-bottom: 2.33em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}

@@ -25,8 +25,9 @@ router.post('/createevent', (req, res, next) => {
 });
 
 router.post('/updateSchedulerEmail', (req, res, next) => {
-  let query = "UPDATE `event_table` SET  `schedulerEmail` = '"+req.body.inviteeEmail+"'  WHERE `userId` = '" + req.body.user_id + "'";
-  console.log("-----------Update Query  ", query);
+  let query = "UPDATE `calendlymeeting` SET `schedulerEmail` = '"+req.body.inviteeEmail+"' " +
+    " WHERE `userId` = '" + req.body.user_id + "' AND id = "+req.body.id+"";
+  console.log("-----------Update Query ", query);
   db.query(query, (err, result) => {
     if (err !== null) {
       return res.status(500).send(err);
@@ -174,7 +175,6 @@ router.post('/insertslots', (req, res, next) => {
   });
 });
 
-<<<<<<< HEAD
 router.post('/createeventaftersignup', (req, res, next) => {
   let email =  req.body.email;
   let usernameQuery = "SELECT * FROM `calendly` WHERE email = '" + email + "'";
@@ -191,7 +191,7 @@ router.post('/createeventaftersignup', (req, res, next) => {
           {
             event_id : uuid.v4(),
             userId : userId,
-            name : '15 Minute Meeting',
+            name : '15min',
             location : "null",
             description: "null",
             link: '15min',
@@ -215,7 +215,7 @@ router.post('/createeventaftersignup', (req, res, next) => {
           },{
             event_id : uuid.v4(),
             userId : userId,
-            name : '30 Minute Meeting',
+            name : '30min',
             location : 'null',
             description: 'null',
             link: '30min',
@@ -239,7 +239,7 @@ router.post('/createeventaftersignup', (req, res, next) => {
           },{
             event_id : uuid.v4(),
             userId : userId,
-            name : '60 Minute Meeting',
+            name : '60min',
             location : 'null',
             description: 'null',
             link: '60min',
@@ -289,7 +289,5 @@ router.post('/createeventaftersignup', (req, res, next) => {
     }
   });
 });
-=======
 
->>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
 module.exports = router;

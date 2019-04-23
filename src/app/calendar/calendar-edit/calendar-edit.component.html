@@ -4,49 +4,57 @@
   </div>
 </div>
 <div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
-  <div nz-col nzSpan="14">
-      <nz-card >
-        <div nz-col nzType="flex" nzJustify="center">
-          <h5>Your Google Calendar's connected!</h5>
-          <h6>CloudMeetIn will auto-check calendar for busy times and add new events as they are scheduled.</h6>
-        </div>
-        <hr>
-        <div nz-row>
-          <div nz-col [nzXs]="{ span: 12, offset: 0 }" [nzLg]="{ span: 12, offset: 0}">
-            <h4 style="margin-top: 20px">Here's how CloudMeetIn will work with</h4>
-            <h3 style="margin-top: 20px">{{email}}</h3>
-          </div>
-          <div nz-col [nzXs]="{ span: 12, offset: 0}" [nzLg]="{ span: 12, offset: 0 }">
-            <img src="../../../assets/Reminder.svg" alt="" class="logo-container">
-          </div>
-        </div>
-        <div nz-row style="margin-top: 2%">
-          <div nz-col nzSpan="12">
-            <h3>We’ll check <strong>{{email}} </strong> for conflicts.</h3>
-          </div>
-          <div nz-col nzSpan="6" nzOffset="4">
-            <h3 (click)="openCalendarOption(false)" style="cursor: pointer;color: #00A2FF; float: right">Edit</h3>
-          </div>
-        </div>
-        <hr>
-        <div nz-row>
-          <div nz-col nzSpan="12">
-            <h3>We’ll add events to <strong>{{email}}.</strong></h3>
-          </div>
-          <div nz-col nzSpan="6" nzOffset="4">
-            <h3 (click)="openCalendarEvent(true)" style="cursor: pointer;color: #00A2FF; float: right">Edit</h3>
-          </div>
-        </div>
-      </nz-card>
+  <div nz-col [nzXs]="{ span: 22}" [nzMd]="{ span: 14}" [nzLg]="{ span: 14}">
+    <nz-card >
+      <div nz-col nzType="flex" nzJustify="center">
+        <h5>Your Google Calendar's connected!</h5>
+        <h6>CloudMeetIn will auto-check calendar for busy times and add new events as they are scheduled.</h6>
+      </div>
+      <hr>
       <div nz-row>
-        <div nz-col nzSpan="8">
+        <div nz-col [nzXs]="{ span: 12, offset: 0 }" [nzLg]="{ span: 12, offset: 0}">
+          <h4 style="margin-top: 20px">Here's how CloudMeetIn will work with</h4>
+          <h3 style="margin-top: 20px">{{email}}</h3>
         </div>
-        <div nz-col nzSpan="8" nzOffset="8">
-          <nz-form-control>
-            <button nz-button class="primary"  (click)="updateEventCalendar()" [disabled]="!((checkEvent > 0) && (eventString))">Continue</button>
-          </nz-form-control>
+        <div nz-col [nzXs]="{ span: 12, offset: 0}" [nzLg]="{ span: 12, offset: 0 }">
+          <img src="../../../assets/Reminder.svg" alt="" class="logo-container">
         </div>
       </div>
+      <div nz-row style="margin-top: 2%">
+        <div nz-col nzSpan="12">
+          <h3>We’ll check <strong>{{email}} </strong> for conflicts.</h3>
+        </div>
+        <div nz-col nzSpan="6" nzOffset="4">
+          <h3 (click)="openCalendarOption(false)" style="cursor: pointer;color: #00A2FF; float: right">Edit</h3>
+        </div>
+      </div>
+      <hr>
+      <div nz-row>
+        <div nz-col nzSpan="12">
+          <h3>We’ll add events to <strong>{{email}}.</strong></h3>
+        </div>
+        <div nz-col nzSpan="6" nzOffset="4">
+          <h3 (click)="openCalendarEvent(true)" style="cursor: pointer;color: #00A2FF; float: right">Edit</h3>
+        </div>
+      </div>
+    </nz-card>
+    <div nz-row nzAlign="middle">
+      <div nz-col nzSpan="8">
+      </div>
+      <div nz-col nzSpan="8">
+        <nz-form-control>
+          <button nz-button class="primary" (click)="updateEventCalendar()" [disabled]="!((checkEvent > 0) && (eventString))">Continue</button>
+        </nz-form-control>
+      </div>
+    </div>
+    <!-- <div nz-row>
+
+    <div nz-col nzSpan="8" nzOffset="8">
+    <nz-form-control>
+    <button nz-button class="primary" (click)="updateEventCalendar()" [disabled]="!((checkEvent > 0) && (eventString))">Continue</button>
+    </nz-form-control>
+    </div>
+    </div>-->
   </div>
 </div>
 
@@ -59,9 +67,9 @@
     </div>
   </nz-checkbox-wrapper>
   <!--Show the radio button model-->
-    <div nz-row *ngIf="onCheckBoxModelStatus">
-      <div nz-col nzSpan="14"><label nz-radio nzValue="{{eventString}}" [ngModel]="true">{{eventString}}</label></div>
-    </div>
+  <div nz-row *ngIf="onCheckBoxModelStatus">
+    <div nz-col nzSpan="14"><label nz-radio nzValue="{{eventString}}" [ngModel]="true">{{eventString}}</label></div>
+  </div>
   <ng-template #title>
     <p>Which calendar should we add new events to?</p>
   </ng-template>
@@ -105,4 +113,3 @@
 </div>
 </div>
 </div>-->
-

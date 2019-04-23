@@ -179,9 +179,35 @@ hr.style-one {
 
   width:10px;height:10px;margin-top: auto;margin-bottom: auto;border-radius: 50%;display: inline-block;
 }
-<<<<<<< HEAD
-=======
+
 .button-submit:hover {
   box-shadow: 7px 5px 5px 1px #f3ebeb;
 }
->>>>>>> 99000335af931bb3a175773c259d6b31e2ac1b6f
+
+.card_Width{
+  width:50%;
+  margin: 10px;
+  padding: 10px;
+  font-size:16px;
+}
+.crDate {
+
+  margin-left: 20px;
+}
+@media screen and (min-width: 600px) {
+  .crDate {
+
+    margin-left: 20px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .crDate {
+
+    margin-left: 25%;
+  }
+  .marginTop {
+
+    margin-left:5%;
+  }
+}

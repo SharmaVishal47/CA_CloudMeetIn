@@ -13,8 +13,9 @@
     <nz-tabset>
       <nz-tab nzTitle="Profile" style="color:#FF4165;">
         <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
-          <nz-row nzJustify="center" nzAlign="middle" style="margin-top: 2%; margin-bottom: 2%;">
-            <nz-col nzSpan="10" nzOffset="3" align="start">
+
+          <!--<nz-row nzJustify="center" nzAlign="middle" style="margin-top: 2%; margin-bottom: 2%;">
+            <nz-col [nzXs]="{ span: 20,offset:2}" [nzMd]="{ span: 10, offset:3}" [nzLg]="{ span: 10, offset:3}" align="start">
               <p class="fnt">
               <span>
             Cloudmeetin Branding
@@ -23,13 +24,13 @@
           </span>
               </p>
             </nz-col>
-            <nz-col nzSpan="6" nzOffset="1" align="end" style="margin-right: 5px">
+            <nz-col [nzXs]="{span: 20,offset:2}" [nzMd]="{ span: 6, offset:1}" [nzLg]="{ span: 6, offset:1}"  align="start"   style="margin-right: 5px">
               <nz-switch nzDisabled="false"></nz-switch>
             </nz-col>
-          </nz-row>
+          </nz-row>-->
 
           <nz-row nzJustify="center" nzAlign="middle">
-            <nz-col nzSpan="10" nzOffset="3" align="start">
+            <nz-col [nzXs]="{ span: 20,offset:2}" [nzMd]="{ span: 10, offset:3}" [nzLg]="{ span: 10, offset:3}"  align="start">
 
           <span class="fnt">
             Name
@@ -45,12 +46,12 @@
                 </nz-form-control>
               </nz-form-item>
             </nz-col>
-            <nz-col nzSpan="10" nzOffset="1" align="start">
+            <nz-col [nzXs]="{span: 20,offset:2}" [nzMd]="{ span: 6, offset:1}" [nzLg]="{ span: 6, offset:1}"  align="start">
             <span class="fnt">
            Language
           </span>
               <nz-form-item>
-                <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-form-control>
                   <nz-select style="width: 100%;" formControlName="language">
                     <nz-option nzValue="English" nzLabel="English"></nz-option>
                     <nz-option nzValue="French" nzLabel="French"></nz-option>
@@ -68,14 +69,14 @@
           </nz-row>
 
           <nz-row nzJustify="center" nzAlign="middle">
-            <nz-col nzSpan="10" nzOffset="3" align="start">
+            <nz-col [nzXs]="{ span: 20,offset:2}" [nzMd]="{ span: 10, offset:3}" [nzLg]="{ span: 10, offset:3}" align="start">
             <span class="fnt">
           Date Format
             <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
                theme="outline"></i>
           </span>
               <nz-form-item>
-                <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-form-control [nzSm]="14" [nzXs]="24" >
                   <nz-select style="width: 100%;" formControlName="dateFormat">
                     <nz-option nzValue="DD/MM/YYYY" nzLabel="DD/MM/YYYY"></nz-option>
                     <nz-option nzValue="MM/DD/YYYY" nzLabel="MM/DD/YYYY"></nz-option>
@@ -87,14 +88,14 @@
                 </nz-form-control>
               </nz-form-item>
             </nz-col>
-            <nz-col nzSpan="10" nzOffset="1" align="start">
+            <nz-col [nzXs]="{span: 20,offset:2}" [nzMd]="{ span: 6, offset:1}" [nzLg]="{ span: 6, offset:1}"  align="start">
             <span class="fnt">
           Time Format
             <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
                theme="outline"></i>
           </span>
               <nz-form-item>
-                <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-form-control>
                   <nz-select style="width: 100%;" formControlName="timeFormat">
                     <nz-option nzValue="12h (am/pm)" nzLabel="12h (am/pm)"></nz-option>
                     <nz-option nzValue="24h" nzLabel="24h"></nz-option>
@@ -109,7 +110,7 @@
           </nz-row>
 
           <nz-row nzJustify="center" nzAlign="middle">
-            <nz-col nzSpan="10" nzOffset="3" align="start">
+            <nz-col [nzXs]="{ span: 20,offset:2}" [nzMd]="{ span: 10, offset:3}" [nzLg]="{ span: 10, offset:3}" align="start">
              <span class="fnt">
           Country
             <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
@@ -117,217 +118,8 @@
           </span>
               <nz-form-item>
                 <nz-form-control [nzSm]="14" [nzXs]="24">
-                  <nz-select style="width: 100%;" formControlName="country">
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AL" nzLabel="Albania"></nz-option>
-                    <nz-option nzValue="DZ" nzLabel="Algeria"></nz-option>
-                    <nz-option nzValue="AS" nzLabel="American Samoa"></nz-option>
-                    <nz-option nzValue="AD" nzLabel="Andorra"></nz-option>
-                    <nz-option nzValue="AO" nzLabel="Angola"></nz-option>
-                    <nz-option nzValue="AI" nzLabel="Anguilla"></nz-option>
-                    <nz-option nzValue="AQ" nzLabel="Antarctica"></nz-option>
-                    <nz-option nzValue="AG" nzLabel="Antigua & Barbuda"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
-                    <nz-option nzValue="AF" nzLabel="Afghanistan"></nz-option>
+                  <nz-select  style="width: 100%;" formControlName="country" >
+                    <nz-option *ngFor="let country Of counntryList " nzValue="{{country.code}}" nzLabel="{{country.name}}"></nz-option>
                   </nz-select>
                   <nz-form-explain *ngIf="validateForm.get('country').dirty && validateForm.get('country').errors">
                     Please input your nickname!
@@ -335,7 +127,7 @@
                 </nz-form-control>
               </nz-form-item>
             </nz-col>
-            <nz-col nzSpan="6" nzOffset="1" align="start">
+            <nz-col [nzXs]="{span: 20,offset:2}" [nzMd]="{ span: 6, offset:1}" [nzLg]="{ span: 6, offset:1}"   align="start">
               <span class="fnt">
        Time Zone
             <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
@@ -356,7 +148,7 @@
           </nz-row>
 
           <nz-row nzJustify="center" nzAlign="middle">
-            <nz-col nzSpan="17" nzOffset="3" align="start">
+            <nz-col align="start" [nzXs]="{span: 20,offset:2}" [nzMd]="{ span: 17, offset:3}" [nzLg]="{ span: 17, offset:3}"  >
               <span class="fnt">
           Welcome Message
             <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
@@ -366,16 +158,18 @@
               <textarea rows="3" nz-input formControlName="welcome"></textarea>
             </nz-col>
           </nz-row>
-          <nz-row nzJustify="center" nzAlign="middle" style="margin-top: 2%; margin-bottom: 2%;">
-            <nz-col nzSpan="13" nzOffset="2" align="center">
-              <button nz-button type="submit" class="login-form-button"
-                      style="background-color:#FF4165; color: white; width: 150px">Save Changes
+          <nz-row nzJustify="center" nzAlign="middle" style="margin-top: 2%;">
+            <nz-col  [nzXs]="{ span: 22,offset:1}" [nzMd]="{ span: 5, offset:2}" [nzLg]="{ span: 5, offset:2}"  align="center">
+              <button nz-button type="submit" class="login-form-button smallWidth"
+                      style="background-color:#FF4165; color: white;">Save Changes
               </button> &nbsp;&nbsp;&nbsp;&nbsp;
-              <button nz-button type="reset" style="border-color:#707070; color: #707070; width: 150px"> Cancel</button>
             </nz-col>
-            <nz-col nzSpan="5" align="end">&nbsp;&nbsp;&nbsp;
-              <button nz-button type="button" style="border-color:#707070; color: #707070; width: 150px"
-                      (click)="onDeleteAccount()"> Delete Account
+            <nz-col  [nzXs]="{ span: 22,offset:1}" [nzMd]="{ span:6}" [nzLg]="{ span:6}"  align="center">
+              <button nz-button type="reset"  class="login-form-button smallWidth" style="border-color:#707070; color: #707070;"> Cancel</button>
+            </nz-col>
+            <nz-col [nzXs]="{ span: 22,offset:1}" [nzMd]="{ span:6}" [nzLg]="{ span: 6}" align="center">
+              <button nz-button type="button"  class="login-form-button smallWidth" style="border-color:#707070; color: #707070;"
+                      (click)="onDeleteAccount()" disabled> Delete Account
               </button>
             </nz-col>
           </nz-row>
@@ -392,7 +186,8 @@
           <nz-col nzSpan="10" nzOffset="2">
             <form [formGroup]="profileForm" (ngSubmit)="submitMyProfileForm()">
               <nz-avatar [nzSize]="200" nzIcon="user" [nzSrc]="imagePreview!= null ? imagePreview : imageSource"
-                         (click)="filePicker.click()" style="cursor: pointer"></nz-avatar>
+                         (click)="filePicker.click()" style="cursor: pointer" ></nz-avatar>
+
               <input type="file" name="file" #filePicker formControlName="file" (change)="onImagePicked($event)"
                      class="cdk-visually-hidden">
               <button nz-button class="login-form-button fnt"
@@ -423,7 +218,7 @@
           <nz-row nzJustify="start">
             <nz-col nzSpan="10" nzOffset="1" align="start">
               <button nz-button class="login-form-button fnt"
-                      style="background-color:#FF4165; color: white; width: 180px;height: 40px; margin-left:10%; margin-top:5% ">
+                      style="background-color:#FF4165; color: white; width: 180px;height: 40px; margin-left:10%; margin-top:5% " disabled>
                 Save Changes
               </button>
             </nz-col>
@@ -442,16 +237,16 @@
         <nz-row nzJustify="center" nzAlign="middle">
           <nz-col nzSpan="10" nzOffset="2">
             <b>Email Address</b><br>
-           {{loginEmail}}
+            {{loginEmail}}
           </nz-col>
           <nz-col nzSpan="10" nzOffset="2">
-            <a style="color:#FF4165;cursor:pointer;" (click)="handleChangePassword()">Change email</a>
+            <a style="color:#FF4165;cursor:pointer;" (click)="handleChangePassword()" disabled="true">Change email</a>
           </nz-col>
         </nz-row>
         <nz-row nzJustify="center" nzAlign="middle">
           <nz-col nzSpan="10" nzOffset="2">
             <b>Password</b><br>
-           {{starPass}}
+            {{starPass}}
           </nz-col>
           <nz-col nzSpan="10" nzOffset="2">
             <a style="color:#FF4165;cursor:pointer;" (click)="onDateRange()">Change password</a>
@@ -570,7 +365,7 @@
           <div nz-col nzSpan="4">
             <nz-form-item>
               <nz-form-control>
-                <button nz-button  class="login-button" type="submit" [disabled]="!changeEmailForm.valid" style="float: right; width: 100px; background: #FF4165; color: white" (click)="handleOkChangePassword()">YES</button>
+                <button nz-button  class="login-button" type="button" [disabled]="!changeEmailForm.valid" style="float: right; width: 100px; background: #FF4165; color: white" (click)="handleOkChangePassword()">YES</button>
               </nz-form-control>
             </nz-form-item>
           </div>

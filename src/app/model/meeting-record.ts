@@ -9,4 +9,7 @@ export interface MeetingRecord {
   reschedulerName: string,
   rescheduleReason: string,
   eventId: string,
+  newMeetingId: string,
+  rescheduleRecord: any
+  Meeting_owner: string
 }
