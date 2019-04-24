@@ -402,15 +402,18 @@ export class AccountSettingComponent implements OnInit {
   }
 
   onImagePicked(imageEvent: Event) {
-    this.upload = false;
-    console.log('Upload-->', this.upload);
     if ((imageEvent.target as HTMLInputElement).files && (imageEvent.target as HTMLInputElement).files[0]) {
-      const reader = new FileReader();
-      reader.onload = (event: ProgressEvent) => {
-        this.imagePreview = (<FileReader>event.target).result;
-        this.image = (imageEvent.target as HTMLInputElement).files[0];
-      };
-      reader.readAsDataURL((imageEvent.target as HTMLInputElement).files[0]);
+      if((imageEvent.target as HTMLInputElement).files[0].size < 3145728){
+        this.upload = false;
+        const reader = new FileReader();
+        reader.onload = (event: ProgressEvent) => {
+          this.imagePreview = (<FileReader>event.target).result;
+          this.image = (imageEvent.target as HTMLInputElement).files[0];
+        };
+        reader.readAsDataURL((imageEvent.target as HTMLInputElement).files[0]);
+      }else{
+        this.messageService.generateErrorMessage("Select the file less then 3MB.");
+      }
     }
   }
 

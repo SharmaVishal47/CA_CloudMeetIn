@@ -34,8 +34,8 @@
 
           <span class="fnt">
             Name
-            <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
-               theme="outline"></i>
+            <!--<i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
+               theme="outline"></i>-->
           </span>
               <nz-form-item>
                 <nz-form-control [nzSm]="14" [nzXs]="24">
@@ -72,8 +72,8 @@
             <nz-col [nzXs]="{ span: 20,offset:2}" [nzMd]="{ span: 10, offset:3}" [nzLg]="{ span: 10, offset:3}" align="start">
             <span class="fnt">
           Date Format
-            <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
-               theme="outline"></i>
+            <!--<i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
+               theme="outline"></i>-->
           </span>
               <nz-form-item>
                 <nz-form-control [nzSm]="14" [nzXs]="24" >
@@ -91,8 +91,8 @@
             <nz-col [nzXs]="{span: 20,offset:2}" [nzMd]="{ span: 6, offset:1}" [nzLg]="{ span: 6, offset:1}"  align="start">
             <span class="fnt">
           Time Format
-            <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
-               theme="outline"></i>
+           <!-- <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
+               theme="outline"></i>-->
           </span>
               <nz-form-item>
                 <nz-form-control>
@@ -113,8 +113,8 @@
             <nz-col [nzXs]="{ span: 20,offset:2}" [nzMd]="{ span: 10, offset:3}" [nzLg]="{ span: 10, offset:3}" align="start">
              <span class="fnt">
           Country
-            <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
-               theme="outline"></i>
+            <!--<i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
+               theme="outline"></i>-->
           </span>
               <nz-form-item>
                 <nz-form-control [nzSm]="14" [nzXs]="24">
@@ -130,8 +130,8 @@
             <nz-col [nzXs]="{span: 20,offset:2}" [nzMd]="{ span: 6, offset:1}" [nzLg]="{ span: 6, offset:1}"   align="start">
               <span class="fnt">
        Time Zone
-            <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
-               theme="outline"></i>
+           <!-- <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
+               theme="outline"></i>-->
           </span>
               <!--   <nz-form-item>
                    <nz-form-control [nzSm]="14" [nzXs]="24">
@@ -151,14 +151,14 @@
             <nz-col align="start" [nzXs]="{span: 20,offset:2}" [nzMd]="{ span: 17, offset:3}" [nzLg]="{ span: 17, offset:3}"  >
               <span class="fnt">
           Welcome Message
-            <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
-               theme="outline"></i>
+            <!--<i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
+               theme="outline"></i>-->
           </span>
               <br><br>
               <textarea rows="3" nz-input formControlName="welcome"></textarea>
             </nz-col>
           </nz-row>
-          <nz-row nzJustify="center" nzAlign="middle" style="margin-top: 2%;">
+          <nz-row nzJustify="center" nzAlign="middle" style="margin-top: 2%;margin-bottom: 3%">
             <nz-col  [nzXs]="{ span: 22,offset:1}" [nzMd]="{ span: 5, offset:2}" [nzLg]="{ span: 5, offset:2}"  align="center">
               <button nz-button type="submit" class="login-form-button smallWidth"
                       style="background-color:#FF4165; color: white;">Save Changes
@@ -179,7 +179,7 @@
         <nz-row nzJustify="center" nzAlign="middle">
           <nz-col nzSpan="24" nzOffset="2">
             <h4 class="fnt" style="font-weight: bold;margin-top: 30px;margin-bottom: 30px">Uploaded pictures will
-              display at the top of your Cloudmeetin page. (maximum file size of 5MB)</h4> &nbsp;&nbsp;
+              display at the top of your Cloudmeetin page. (maximum file size of 3MB)</h4> &nbsp;&nbsp;
           </nz-col>
         </nz-row>
         <nz-row nzJustify="center" nzAlign="middle">
@@ -189,7 +189,7 @@
                          (click)="filePicker.click()" style="cursor: pointer" ></nz-avatar>
 
               <input type="file" name="file" #filePicker formControlName="file" (change)="onImagePicked($event)"
-                     class="cdk-visually-hidden">
+                     class="cdk-visually-hidden" accept="image/*">
               <button nz-button class="login-form-button fnt"
                       style="background-color:#FF4165; color: white; width: 180px;height: 40px; margin-left:10%"
                       [disabled]="upload">Upload Picture
@@ -240,7 +240,7 @@
             {{loginEmail}}
           </nz-col>
           <nz-col nzSpan="10" nzOffset="2">
-            <a style="color:#FF4165;cursor:pointer;" (click)="handleChangePassword()" disabled="true">Change email</a>
+            <!--<a style="color:#FF4165;cursor:pointer;" (click)="handleChangePassword()" disabled="true">Change email</a>-->
           </nz-col>
         </nz-row>
         <nz-row nzJustify="center" nzAlign="middle">
@@ -248,7 +248,7 @@
             <b>Password</b><br>
             {{starPass}}
           </nz-col>
-          <nz-col nzSpan="10" nzOffset="2">
+          <nz-col nzSpan="10" nzOffset="2" style="margin-top: 10px">
             <a style="color:#FF4165;cursor:pointer;" (click)="onDateRange()">Change password</a>
           </nz-col>
         </nz-row>
@@ -289,6 +289,9 @@
         </nz-form-item>
         <nz-form-item>
           <nz-form-control [nzSm]="14" [nzXs]="24">
+            <h4 class="fnt" style="float: left">
+              Confirm Password
+            </h4>
             <input nz-input type="password" minlength="8" formControlName="checkPassword" id="checkPassword" />
             <nz-form-explain
               *ngIf="changePasswordForm.get('checkPassword')?.dirty && changePasswordForm.get('checkPassword')?.errors">

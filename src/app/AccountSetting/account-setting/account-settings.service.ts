@@ -50,7 +50,7 @@ export class AccountSettingsService {
     this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/userData/addUserData',data).subscribe((responseData)=>{
       console.log("settingForm responseData====",responseData.data);
       this.router.navigate(["dashboard"]);
-      this.messageService.generateSuccessMessage("settingForm submitted ");
+      this.messageService.generateSuccessMessage("Successfuly submitted the setting form.");
       /*const dialogConfig = new MatDialogConfig();
       dialogConfig.data = 'settingForm submitted';
       let dialogRef = this.dialog.open(MessagedialogComponent, dialogConfig);

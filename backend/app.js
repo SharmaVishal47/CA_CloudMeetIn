@@ -41,6 +41,7 @@ const db = mysql.createConnection({
   database: 'cloudmee_dev_cloudmeetin'
 });
 
+
 db.connect((err) => {
   if (err) {
     throw err;
@@ -56,6 +57,7 @@ app.use('/', function (req, res, next) {
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Max-Age');
   next();
 });
+
 
 
 
