@@ -1,0 +1,12 @@
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Please select the meeting platform."  [nzClosable]="false" [nzFooter]="tplFooter">
+  <nz-radio-group [(ngModel)]="defaultPlatform" (ngModelChange)="OnSelectedPlatform($event)">
+    <label nz-radio [ngStyle]="style" nzValue="GTM">GTM</label>
+    <label nz-radio [ngStyle]="style" nzValue="ZOOM">ZOOM</label>
+  </nz-radio-group>
+</nz-modal>
+
+<ng-template #tplFooter>
+  <button nz-button nzType="primary"  (click)="handleOk()">
+    Submit
+  </button>
+</ng-template>

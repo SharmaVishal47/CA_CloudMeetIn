@@ -1,62 +1,35 @@
-<div nz-row nzType="flex" nzJustify="center" style="margin-top: 10%">
-  <div nz-col >
+<div nz-row nzType="flex" nzJustify="center" style="margin-top: 10%" *ngIf="loginCheck">
+  <div nz-col>
     <img src="./../../assets/cloudemeetin.svg" alt="" width="350px" height="350px" >
   </div>
   <div nz-col align="center">
     <h2 style="margin-bottom:7%">Simple online scheduling for your team</h2>
     <div >
       <p style="margin-bottom:10%"> CloudMeetIn helps you schedule meetings <br>&nbsp;&nbsp;&nbsp;&nbsp; without the back and forth emails.<br> Customer bookings straight into your calendar.</p>
-      <form nz-form [formGroup]="signUp" class="login-form" (ngSubmit)="onSubmit()">
-        <nz-form-item>
-          <nz-form-control>
-            <nz-input-group [nzPrefix]="prefixEmail">
-              <input type="text" nz-input formControlName="email" placeholder="Enter your email" required email>
-            </nz-input-group>
-            <nz-form-explain *ngIf="signUp.get('email').dirty && signUp.get('email').errors">Please enter valid email address</nz-form-explain>
-          </nz-form-control>
-        </nz-form-item>
-        <button nz-button class="login-form-button" style="background-color:#FF4165; color: white;" [disabled]="!signUp.valid">Sign up</button>
-        <p>&nbsp;&nbsp;&nbsp; Get started for free. No credit card required.</p>
-
-      </form>
+      <!--   <form nz-form [formGroup]="signUp" class="login-form" (ngSubmit)="onSubmit()">
+           <nz-form-item>
+             <nz-form-control>
+               <nz-input-group [nzPrefix]="prefixEmail">
+                 <input type="text" nz-input formControlName="email" placeholder="Enter your email" required email>
+               </nz-input-group>
+               <nz-form-explain *ngIf="signUp.get('email').dirty && signUp.get('email').errors">Please enter valid email address</nz-form-explain>
+             </nz-form-control>
+           </nz-form-item>
+           <button nz-button class="login-form-button" style="background-color:#FF4165; color: white;" [disabled]="!signUp.valid">Sign up</button>
+           <p>&nbsp;&nbsp;&nbsp; Get started for free. No credit card required.</p>
+         </form>-->
       <ng-template #prefixEmail><i nz-icon nzType="mail" nzTheme="outline"></i></ng-template>
     </div>
   </div>
-</div>
-
-
-
-
-
-<!--
-<link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
-<div class="container">
-    <div class="row">
-      <div class="col-lg-12" >
-        <div class="col-lg-6 float-left">
-          <h2 class="description">CloudMeetIn helps you schedule meetings without the back-and-forth emails</h2>
-          <div class="card-body">
-            <form [formGroup]="signUp" (ngSubmit)="onSubmit()">
-              <div class="form-group pill-form mvs">
-                <input type="email" [ngClass]="{'has-error': !signUp.get('email').valid && signUp.get('email').touched}"
-                       formControlName="email" class="form-control" id="textName" placeholder="Enter your email" required>
-                <span class="help-block" *ngIf="!signUp.get('email').valid && signUp.get('email').touched">
-            <span class="text-danger" *ngIf="signUp.get('email').errors" required>email address required</span></span>
-                <input type="submit" [disabled]="!signUp.valid" value='Sign Up'/>
-              </div>
-              <br>
-            </form>
-          </div>
-        </div>
-        <div class="col-lg-6 float-right">
-          <img class="image-set" src="https://assets.calendly.com/assets/landing/homepage/hero-829da70d61c3fc165d69de57bdda58ae45b46fd5436ff022e34ffede540b9404.jpg" alt="">
-        </div>
-      </div>
-      <div class="col-lg-8 text-center" style="margin: auto">
-        <p style="color: #656A72; font-size: 13px; margin-top: 50px">“When you are able to shift your inner awareness to how you can serve others, and when you make this the central focus of your life, you will then be in a position to know true miracles in your progress toward prosperity.”</p>
-      </div>
-    </div>
+  <!--<div nz-col>
+    <p>Powered By <img src="https://cloudanalogy.com/wp-content/uploads/2018/12/CA_logo-120-x-80.png" alt="">
   </div>
-
-
 -->
+
+
+</div>
+<nz-spin nzTip="Loading..." [nzSpinning]="isSpinning" [nzSize]="'large'">
+  <div class="container" style="margin-top: 25%">
+  </div>
+</nz-spin>
+

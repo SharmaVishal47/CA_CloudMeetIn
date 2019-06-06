@@ -96,7 +96,7 @@ export class CreateEventComponent implements OnInit,OnDestroy {
   handleOk(): void {
     this.isVisible = false;
     this.datePickerFiled  = new FormArray([]);
-    console.log("handleOk -- > ");
+    // console.log("handleOk -- > ");
   }
 
   handleCancel(): void {
@@ -104,7 +104,7 @@ export class CreateEventComponent implements OnInit,OnDestroy {
     this.isVisible = false;
     this.event_timeZone = false;
     this.datePickerFiled  = new FormArray([]);
-    console.log("handleCancel -- > ");
+    // console.log("handleCancel -- > ");
   }
   getMonthData(date: Date): number | null {
     if (date.getMonth() === 8) {
@@ -125,7 +125,7 @@ export class CreateEventComponent implements OnInit,OnDestroy {
        controlInstance2:`passenger${id}`
      };
      const index = this.controlArray.push(control);
-     console.log(this.controlArray[ this.controlArray.length - 1 ]);
+     // console.log(this.controlArray[ this.controlArray.length - 1 ]);
      this.addAvailabilityForm.addControl(this.controlArray[ index - 1 ].controlInstance, new FormControl(null, Validators.required));
    }
    removeField(i: { id: number, controlInstance: string }, e: MouseEvent): void {
@@ -133,7 +133,7 @@ export class CreateEventComponent implements OnInit,OnDestroy {
      if (this.controlArray.length > 1) {
        const index = this.controlArray.indexOf(i);
        this.controlArray.splice(index, 1);
-       console.log(this.controlArray);
+       // console.log(this.controlArray);
        this.addAvailabilityForm.removeControl(i.controlInstance);
      }
    }*/
@@ -148,28 +148,28 @@ export class CreateEventComponent implements OnInit,OnDestroy {
       this.addAvailabilityForm.controls[ i ].updateValueAndValidity();
     }
     this.eventService.addSlotsInSDate(this.addAvailabilityForm.value, this.editEventId, this.selectedDate).subscribe((response) => {
-      console.log("Response of slots value -- > ", response);
+      // console.log("Response of slots value -- > ", response);
     })
   }
   /*End*/
 
   selectChange(select: Date, selectedDate:Date, dates: string): void {
 
-    console.log("selected Data", select);
-    console.log(`Select value: ${select}`);
-    console.log(`Seleted adates ------------------>>>>:`, dates);
-    console.log("selected Date --------------", selectedDate);
-    console.log("this.editEventId --------------", this.editEventId);
+    // console.log("selected Data", select);
+    // console.log(`Select value: ${select}`);
+    // console.log(`Seleted adates ------------------>>>>:`, dates);
+    // console.log("selected Date --------------", selectedDate);
+    // console.log("this.editEventId --------------", this.editEventId);
     this.selectedDate = selectedDate;
     this.addAvailabilityForm = new FormGroup({
       datePicker : this.datePickerFiled
     });
     this.eventService.getSelectedDateSlot(this.editEventId, selectedDate).subscribe((response) => {
-      console.log("Response from the getselecteddateslot Api --->  ", response);
+      // console.log("Response from the getselecteddateslot Api --->  ", response);
       if(response.data.length > 0) {
          let fromTime  = response.data['0'].startTime.split(',');
          let toTime = response.data['0'].endTime.split(',');
-         console.log("IF Status --> ");
+         // console.log("IF Status --> ");
         for (let i = 0; i < fromTime.length; i++) {
           this.datePickerFiled.push(
             new FormGroup( {
@@ -178,10 +178,10 @@ export class CreateEventComponent implements OnInit,OnDestroy {
             })
           );
         }
-        console.log("Length of date picker filed 1 -- > ", this.datePickerFiled.length);
+        // console.log("Length of date picker filed 1 -- > ", this.datePickerFiled.length);
       } else {
 
-        console.log("ELSE  Status --> ");
+        // console.log("ELSE  Status --> ");
         let startTime = this.eventService.convertTimePickerFormat(this.defaultTimeSlot[0].startTime, selectedDate);
         let endTime = this.eventService.convertTimePickerFormat(this.defaultTimeSlot[0].endTime, selectedDate);
         this.datePickerFiled.push(
@@ -190,7 +190,7 @@ export class CreateEventComponent implements OnInit,OnDestroy {
             'toTime' : new FormControl(endTime, Validators.required)
           })
         );
-        console.log("Length of date picker filed -- > ", this.datePickerFiled.length);
+        // console.log("Length of date picker filed -- > ", this.datePickerFiled.length);
       }
     });
     this.isVisible = true;
@@ -200,24 +200,24 @@ export class CreateEventComponent implements OnInit,OnDestroy {
     this.datePickerFiled  = new FormArray([]);
     this.editEventId  =  this.eventService.returnEventId();
     this.editEventIndex  =  this.eventService.returnEventIndex();
-    console.log("EventId is 11--> ",  this.editEventId, 'and event index is ---> ', this.editEventIndex);
+    // console.log("EventId is 11--> ",  this.editEventId, 'and event index is ---> ', this.editEventIndex);
     this.userId = this.authService.getUserId();
     this.eventService.getAvailabilitySlotTime().subscribe(
       res => {
-        console.log("Response of get Availability time --- > ", res);
+        // console.log("Response of get Availability time --- > ", res);
 
         if(res.data.length > 0) {
-          console.log("New StartTime", this.eventStartTime);
+          // console.log("New StartTime", this.eventStartTime);
           /* this.startTime=  res.data['0'].startTime;
          this.endTime=  res.data['0'].endTime;*/
           this.defaultTimeSlot.push({
             startTime: res.data['0'].startTime,
             endTime: res.data['0'].endTime,
           });
-          console.log("Return", this.eventService.convertTimeInto12(res.data['0'].startTime, res.data['0'].endTime));
+          // console.log("Return", this.eventService.convertTimeInto12(res.data['0'].startTime, res.data['0'].endTime));
           this.listDataMap.push(this.eventService.convertTimeInto12(res.data['0'].startTime, res.data['0'].endTime));
         }
-        console.log("All data -- > ", this.listDataMap);
+        // console.log("All data -- > ", this.listDataMap);
       });
       this.validateForm = new FormGroup({
       eventName: new FormControl(null, [Validators.required]),
@@ -228,7 +228,7 @@ export class CreateEventComponent implements OnInit,OnDestroy {
     });
 
    /*  this.eventService.editEventRecords.subscribe(({event_id, eventIndex})=> {
-       console.log("EventId is --> ", event_id, 'and event index is ---> ', eventIndex)
+       // console.log("EventId is --> ", event_id, 'and event index is ---> ', eventIndex)
      });
 */
 
@@ -268,7 +268,7 @@ export class CreateEventComponent implements OnInit,OnDestroy {
 
     if(this.editEventId) {
       this.eventService.getOneEventRecords(this.editEventId).subscribe((oneEventResponse ) => {
-        console.log("One Event records ==== > ", oneEventResponse.data[0]);
+        // console.log("One Event records ==== > ", oneEventResponse.data[0]);
         this.editMode =  true;
         this.validateForm.patchValue({
           eventName: oneEventResponse.data[0].name,
@@ -298,7 +298,7 @@ export class CreateEventComponent implements OnInit,OnDestroy {
   }
   getEventTypeColor (index: number) {
     this.colorIndex = index;
-    console.log("this.c", this.colorIndex);
+    // console.log("this.c", this.colorIndex);
   }
   submitForm () {
     this.checkActiveCard = false;
@@ -368,7 +368,7 @@ export class CreateEventComponent implements OnInit,OnDestroy {
     this.date_range = true;
   }
   availabilityChange(events: {}) {
-    console.log("Events ----------> ", events);
+    // console.log("Events ----------> ", events);
     switch (events) {
       case 'day' : {
         this.date_range_status = 1;
@@ -384,7 +384,7 @@ export class CreateEventComponent implements OnInit,OnDestroy {
       }
       default: {
         this.date_range_status = 3;
-        console.log("indefinitely");
+        // console.log("indefinitely");
       }
     }
   }
@@ -395,14 +395,14 @@ export class CreateEventComponent implements OnInit,OnDestroy {
   /*Date Range submit functions*/
   submitDateRangeForm() {
     this.date_range = false;
-    console.log("--------->", this.dateRangeForm.value.availability);
+    // console.log("--------->", this.dateRangeForm.value.availability);
     return this.dateRangeForm.value;
   }
 
   submitEventTimeZoneForm() {
     this.event_timeZone = false;
     this.secondCard =  true;
-    console.log("submitEventTimeZoneForm ---- > ", this.eventTimeZoneForm.value.timeZone);
+    // console.log("submitEventTimeZoneForm ---- > ", this.eventTimeZoneForm.value.timeZone);
     if(this.eventTimeZoneForm.value.timeZone == 'Local') {
       this.event_timeZone_Status = 1;
       this._userSelectTimeZone = 'Asia/Kolkata';
@@ -419,20 +419,20 @@ export class CreateEventComponent implements OnInit,OnDestroy {
   }
 
   onEventTime(event_type: string) {
-    console.log("Event Type", event_type);
+    // console.log("Event Type", event_type);
     this.defaultEventType = event_type;
   }
   /* This is Main Submit Function*/
   submitAdvancedForm(checkStatus: any) {
 
-    console.log("Event Type  ---- > ", this.defaultEventType);
-    console.log("default_secret_event  ---- > ", this.default_secret_event);
-    console.log("Value Of Advanced page ---- > ", this.availabilityAdvanceForm.value);
-    console.log("Value of Date Range Form -----> " , this.submitDateRangeForm());
+    // console.log("Event Type  ---- > ", this.defaultEventType);
+    // console.log("default_secret_event  ---- > ", this.default_secret_event);
+    // console.log("Value Of Advanced page ---- > ", this.availabilityAdvanceForm.value);
+    // console.log("Value of Date Range Form -----> " , this.submitDateRangeForm());
     this.user_select_range= this.submitDateRangeForm();
-    console.log("submitEventTimeZoneForm-----1 > " , this.submitEventTimeZoneForm());
-    console.log("User Select Time Zone --- > ", this._userSelectTimeZone);
-    console.log("checkStatus--- > ", checkStatus);
+    // console.log("submitEventTimeZoneForm-----1 > " , this.submitEventTimeZoneForm());
+    // console.log("User Select Time Zone --- > ", this._userSelectTimeZone);
+    // console.log("checkStatus--- > ", checkStatus);
 
     this.eventService.onSaveInDatabase(
       this.defaultEventType,

@@ -41,7 +41,7 @@
 </div>
 <div nz-row style="margin-top:10px " nzType="flex" nzJustify="center">
   <div nz-col nzSpan="15">
-    <label nz-checkbox [(ngModel)]="checked">{{calendar}}</label>
+    <label nz-checkbox [(ngModel)]="checked" disabled></label>&nbsp;&nbsp;{{calendar}}
   </div>
 </div>
 
@@ -56,12 +56,12 @@
 
 <div nz-row style="margin-top:10px " nzType="flex" nzJustify="center">
   <div nz-col nzSpan="15">
-    <nz-select style="width: 40%;" [(ngModel)]="calendar">
+    <nz-select style="width: 40%;" [(ngModel)]="calendar" [nzDisabled]="true">
       <nz-option nzValue="{{calendar}}" nzLabel="{{calendar}}"></nz-option>
     </nz-select>
   </div>
 </div>
-<div nz-row style="margin-top:50px " nzType="flex" nzJustify="center">
+<!--<div nz-row style="margin-top:50px " nzType="flex" nzJustify="center">
   <div nz-col nzSpan="15">
     <b>Sync cancellation</b>
   </div>
@@ -71,7 +71,7 @@
     <label nz-checkbox [(ngModel)]="checked">Deleting or declining an event in your calendar will also cancel it in
       Cloudmeetin.</label>
   </div>
-</div>
+</div>-->
 <div nz-row style="margin-top:50px " nzType="flex" nzJustify="center">
   <div nz-col nzSpan="21" align="center">
     <!--<button nz-button class="login-form-button" style="background-color:#FF4165; color: white; width: 150px">Save

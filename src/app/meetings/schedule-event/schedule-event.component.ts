@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {MatDialog, MatDialogConfig} from '@angular/material';
-import {MessagedialogComponent} from '../../messagedialog/messagedialog.component';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {MatDialog} from '@angular/material';
+import {HttpClient} from '@angular/common/http';
 import {MeetingService} from '../meeting.service';
 import {AuthServiceLocal} from '../../Auth/auth.service';
 import {MessageServiceService} from '../../Auth/message-service.service';
+import {ValidInputDirective} from '../../Directive/valid-input.directive';
+import {NzMessageService} from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-schedule-event',
@@ -14,6 +15,7 @@ import {MessageServiceService} from '../../Auth/message-service.service';
   styleUrls: ['./schedule-event.component.css']
 })
 export class ScheduleEventComponent implements OnInit {
+  weblink;
   isLoadingOne = false;
   name;
   email;
@@ -31,7 +33,7 @@ export class ScheduleEventComponent implements OnInit {
   _dateFormatEnd;
   meetingOptionList = [];
   meetingSelectedOption: string;
-  checkMeetingOption = false;
+  checkMeetingOption = "";
   data;
   meetIngData;
   rescheduleRecords;
@@ -40,31 +42,46 @@ export class ScheduleEventComponent implements OnInit {
   userStartTime;
   userEndTime;
   rescheduleBack;
+  meetingPlatform: string;
 
 
-  constructor( private messageService:MessageServiceService, private authServiceLocal: AuthServiceLocal,private fb: FormBuilder, private meetingService: MeetingService, private router: Router, private httpClient: HttpClient, private dialog: MatDialog) {
+  constructor( private messageService:MessageServiceService,
+               private message: NzMessageService,
+               private authServiceLocal: AuthServiceLocal,private fb: FormBuilder, private meetingService: MeetingService, private router: Router, private httpClient: HttpClient, private dialog: MatDialog) {
   }
 
   ngOnInit() {
     this.meetingUserInfoForm = this.fb.group({
-      fullName: [null, [Validators.required]],
-      email: [null, [Validators.required]],
+      fullName: [null, [Validators.required, ValidInputDirective.input]],
+      email: [null, [Validators.email,Validators.required]],
       phone: [null],
       description:[null],
       reasonOfRescheduling:[null],
+    });
+    this.meetingService.messageOff.subscribe(res=>{
+      this.isLoadingOne = res;
     });
     if(this.authServiceLocal.getIsAuthenticated()){
       this.meetingService.removeHeader(false);
     }else{
       this.meetingService.removeHeader(true);
     }
+
+    this.meetingService.getSelectedMeetingPlatform(localStorage.getItem("userIdMeeting")).subscribe((response) => {
+      console.log("Response of the getSelectedMeetingPlatform", response);
+      if(response.data.length > 0) {
+        this.meetingPlatform = response.data[0].selectedMeetingPlatform;
+      }
+    });
+
     this.rescheduleBack = '/reschedule/'+localStorage.getItem('reschduleMeetingId');
     this.userImagePreview = localStorage.getItem("imagePreview");
+    this.weblink = localStorage.getItem('weblink');
     this.rescheduleRecords = this.meetingService.getRescheduleRecords();
     if(this.rescheduleRecords) {
       this.btnValue = 'Reschedule Event'
     }
-    //this.meetingService.removeHeader(true);
+   /* //this.meetingService.removeHeader(true);
     this.meetingService.checkMeetingPlatform();
     this.meetingService.meetingPlatform.subscribe(res => {
       if (res.data.length > 0) {
@@ -85,17 +102,34 @@ export class ScheduleEventComponent implements OnInit {
         }
       }
     }, error => {
+      // console.log('error====', error);
+      this.messageService.generateErrorMessage(error)
+    });*/
+    //this.meetingService.removeHeader(true);
+    this.meetingService.checkMeetingPlatform();
+    this.meetingService.meetingPlatform.subscribe(res => {
+      if (res.data.length > 0) {
+        if (res.data[0].go2meeting != null && res.data[0].go2meeting != "false") {
+          this.checkMeetingOption = "gtm";
+          /*this.meetingOptionList.push('GoToMeeting');
+          this.meetingSelectedOption = 'GoToMeeting';*/
+        }
+        if (res.data[0].zoom != null && res.data[0].zoom != "false") {
+          this.checkMeetingOption = "zoom";
+          /*this.meetingOptionList.push('Salesforce');
+          this.meetingSelectedOption = 'Salesforce';*/
+        }
+        if (res.data[0].salesforce != null && res.data[0].salesforce != "false") {
+          this.checkMeetingOption = "salesforce";
+          /*this.meetingOptionList.push('Zoom');
+          this.meetingSelectedOption = 'Zoom';*/
+        }
+      }
+    }, error => {
       console.log('error====', error);
       this.messageService.generateErrorMessage(error)
-      /*const dialogConfig = new MatDialogConfig();
-      dialogConfig.data = error;
-      this.dialog.open(MessagedialogComponent, dialogConfig);*/
     });
 
-    /*this.goToMeetingStartDateTime = this.meetingService.meetingStartTime();
-    console.log('S -> ',this.goToMeetingStartDateTime);
-    this._dateFormatEnd = this.meetingService.meetingEndTime(this.goToMeetingStartDateTime);
-    console.log('E--> ',this._dateFormatEnd);*/
 
     this.userName = localStorage.getItem('fullName');
     this.meetingTime = localStorage.getItem('eventType').split('m')[0] + ' Minute Meeting';
@@ -114,38 +148,57 @@ export class ScheduleEventComponent implements OnInit {
         phone: this.rescheduleRecords.schedulerPhone
       });
     }
+    if(this.weblink === null|| this.weblink === undefined || this.weblink === "null" || this.weblink === "" ){
+      this.weblink = "";
+    }
   }
 
-/*
-  selectedPlatform(selectOption: string) {
-    this.meetingSelectedOption = selectOption;
-  }*/
 
   onSubmit() {
-    let curDate = new Date();
-    curDate.setHours(0,0,0);
-    this.isLoadingOne = true;
-    for (const i in this.meetingUserInfoForm.controls) {
-      this.meetingUserInfoForm.controls[i].markAsDirty();
-    }
-    let Meeting_owner = localStorage.getItem('fullName');
-    if(this.authServiceLocal.getIsAuthenticated()){
-      if(this.authServiceLocal.getUserId() == localStorage.getItem("userIdMeeting")){
-        this.data = {
-          userId: localStorage.getItem('userIdMeeting'),
-          timeZone: localStorage.getItem('selectedTimeZone'),
-          eventType: localStorage.getItem('eventType'),
-          starttime: localStorage.getItem('userStartTime'),
-          endtime: localStorage.getItem('userEndTime'),
-          date: localStorage.getItem('selectedDate'),
-          schedulerName: this.meetingUserInfoForm.value.fullName,
-          schedulerEmail: this.meetingUserInfoForm.value.email,
-          schedulerPhone: this.meetingUserInfoForm.value.phone,
-          schedulerDescription: this.meetingUserInfoForm.value.description,
-          reschedulerName: localStorage.getItem('fullName'),
-          Meeting_owner: Meeting_owner,
-          createdDate: curDate
-        };
+    if(this.meetingUserInfoForm.valid) {
+      let curDate = new Date();
+      curDate.setHours(0,0,0);
+      this.isLoadingOne = true;
+      for (const i in this.meetingUserInfoForm.controls) {
+        this.meetingUserInfoForm.controls[i].markAsDirty();
+      }
+      let Meeting_owner = localStorage.getItem('fullName');
+      if(this.authServiceLocal.getIsAuthenticated()){
+        if(this.authServiceLocal.getUserId() == localStorage.getItem("userIdMeeting")){
+          this.data = {
+            userId: localStorage.getItem('userIdMeeting'),
+            timeZone: localStorage.getItem('selectedTimeZone'),
+            eventType: localStorage.getItem('eventType'),
+            starttime: localStorage.getItem('userStartTime'),
+            endtime: localStorage.getItem('userEndTime'),
+            date: localStorage.getItem('selectedDate'),
+            schedulerName: this.meetingUserInfoForm.value.fullName,
+            schedulerEmail: this.meetingUserInfoForm.value.email,
+            schedulerPhone: this.meetingUserInfoForm.value.phone,
+            schedulerDescription: this.meetingUserInfoForm.value.description,
+            reschedulerName: localStorage.getItem('fullName'),
+            Meeting_owner: Meeting_owner,
+            createdDate: curDate,
+            userTimeZone : this.userTimeZone
+          };
+        }else{
+          this.data = {
+            userId: localStorage.getItem('userIdMeeting'),
+            timeZone: localStorage.getItem('selectedTimeZone'),
+            eventType: localStorage.getItem('eventType'),
+            starttime: localStorage.getItem('userStartTime'),
+            endtime: localStorage.getItem('userEndTime'),
+            date: localStorage.getItem('selectedDate'),
+            schedulerName: this.meetingUserInfoForm.value.fullName,
+            schedulerEmail: this.meetingUserInfoForm.value.email,
+            schedulerPhone: this.meetingUserInfoForm.value.phone,
+            schedulerDescription: this.meetingUserInfoForm.value.description,
+            reschedulerName: this.meetingUserInfoForm.value.fullName,
+            Meeting_owner: Meeting_owner,
+            createdDate: curDate,
+            userTimeZone : this.userTimeZone
+          };
+        }
       }else{
         this.data = {
           userId: localStorage.getItem('userIdMeeting'),
@@ -160,52 +213,49 @@ export class ScheduleEventComponent implements OnInit {
           schedulerDescription: this.meetingUserInfoForm.value.description,
           reschedulerName: this.meetingUserInfoForm.value.fullName,
           Meeting_owner: Meeting_owner,
-          createdDate: curDate
+          createdDate: curDate,
+          userTimeZone : this.userTimeZone
         };
       }
-    }else{
-      this.data = {
-        userId: localStorage.getItem('userIdMeeting'),
-        timeZone: localStorage.getItem('selectedTimeZone'),
-        eventType: localStorage.getItem('eventType'),
-        starttime: localStorage.getItem('userStartTime'),
-        endtime: localStorage.getItem('userEndTime'),
-        date: localStorage.getItem('selectedDate'),
-        schedulerName: this.meetingUserInfoForm.value.fullName,
-        schedulerEmail: this.meetingUserInfoForm.value.email,
-        schedulerPhone: this.meetingUserInfoForm.value.phone,
-        schedulerDescription: this.meetingUserInfoForm.value.description,
-        reschedulerName: this.meetingUserInfoForm.value.fullName,
-        Meeting_owner: Meeting_owner,
-        createdDate: curDate
+
+      // console.log("this.userTimeZone======",this.userTimeZone);
+      this.meetIngData = {
+        'subject': this.meetingUserInfoForm.value.fullName,
+        'starttime': new Date(this.userStartTime),
+        'endtime': new Date(this.userEndTime),
+        'passwordrequired': false,
+        'conferencecallinfo': 'hybrid',
+        'timezonekey': localStorage.getItem('selectedTimeZone'),
+        'meetingtype': 'scheduled'
       };
-    }
-
-
-    this.meetIngData = {
-      'subject': this.meetingUserInfoForm.value.fullName,
-      'starttime': new Date(this.userStartTime),
-      'endtime': new Date(this.userEndTime),
-      'passwordrequired': false,
-      'conferencecallinfo': 'hybrid',
-      'timezonekey': localStorage.getItem('selectedTimeZone'),
-      'meetingtype': 'scheduled'
-    };
-    if(this.btnValue == 'Schedule Event') {
-      if (this.checkMeetingOption) {
-        console.log("_------------------data --- >> ", this.data);
-        this.meetingService.getGoToMeeting(this.meetIngData, this.data);
+      if(this.btnValue == 'Schedule Event') {
+        console.log("This is a Meeting platform : ", this.meetingPlatform);
+        if (this.meetingPlatform == "SALESFORCE") {
+          console.log("_------------------salesforce --- >> ");
+        }
+        else if (this.meetingPlatform == "ZOOM") {
+          console.log("_------------------zoom --- >> ");
+          this.meetingService.addMeetingWithZoom(this.meetIngData, this.data);
+        }
+        else if (this.meetingPlatform == "GTM") {
+          console.log("_------------------gtm --- >> ", this.data);
+          this.meetingService.getGoToMeeting(this.meetIngData, this.data);
+        }
+        else {
+          console.log("calendar=================");
+          this.meetingService.addMeetingToDatabase(this.meetIngData, this.data);
+        }
       } else {
-        console.log("call gtm meeting=================");
-        this.meetingService.addMeetingToDatabase(this.meetIngData, this.data);
+        /*this.data['reschedulerName'] = this.userName;*/
+        this.data['rescheduleReason'] = this.meetingUserInfoForm.value.reasonOfRescheduling;
+        this.data['eventId'] = localStorage.getItem("eventId");
+        console.log('data-------------------->>', this.data);
+        console.log('meetIngData-------------------->>', this.meetIngData);
+        this.meetingService.rescheduleMeeting(this.data, this.meetIngData);
       }
     } else {
-      /*this.data['reschedulerName'] = this.userName;*/
-      this.data['rescheduleReason'] = this.meetingUserInfoForm.value.reasonOfRescheduling;
-      this.data['eventId'] = localStorage.getItem("eventId");
-      console.log('data-------------------->>', this.data);
-      console.log('meetIngData-------------------->>', this.meetIngData);
-      this.meetingService.rescheduleMeeting(this.data, this.meetIngData);
+      this.message.create('warning', `Please fill all field`);
     }
+
   }
 }

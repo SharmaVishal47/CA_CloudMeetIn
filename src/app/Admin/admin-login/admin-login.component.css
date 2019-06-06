@@ -1,0 +1,49 @@
+.login-form {
+  max-width: 500px;
+}
+
+.login-form-forgot {
+  float: right;
+  color:#FF4165;
+}
+
+.login-form-button {
+  width: 100%;
+}
+h5{
+  color: #707070;
+  text-align: center;
+  font-size: calc(0.50em + 1vmin);
+}
+.gutter-box {
+  background: #00A0E9;
+  padding: 5px 0;
+}
+a{
+  color:#FF4165;
+  opacity: 100%;
+}
+a:link{
+  color:#FF4165;
+}
+a:hover {
+  color: hotpink;
+  cursor: pointer;
+  text-decoration: underline;
+}
+a:active {
+  color: blue;
+}
+.times{
+  float: right;
+  /* padding: 5px; */
+  /* border: 1px solid green; */
+  display: inline-block;
+  /* padding: 2%; */
+  padding: 0px 11px;
+  background: #fff;
+  border-radius: 4px;
+  pointer-events: all;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  color: green;
+}

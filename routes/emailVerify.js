@@ -31,7 +31,7 @@ router.post('/generateToken',(req,res,next)=>{
     // Store the token to disk for later program executions
     fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
       if (err) console.error(err);
-     // console.log('Token stored to', TOKEN_PATH);
+     // // console.log('Token stored to', TOKEN_PATH);
       const token = fs.readFileSync(TOKEN_PATH);
       let tokenObject = JSON.parse(token);
       let refresh_token = tokenObject.refresh_token;
@@ -42,8 +42,8 @@ router.post('/generateToken',(req,res,next)=>{
 
       let query = "INSERT INTO `calendly` ( email, accessToken, refreshToken, tokenType, scope,expiryDate, token_path) VALUES ('"+req.body.email+"', '" + access_token + "', '" + refresh_token + "', '" + token_type + "', '" + scope + "', '" + expiry_date + "', '" + TOKEN_PATH + "' )";
       db.query(query, (err, result) => {
-       // console.log("result=====",result);
-        // console.log("err=====",err);
+       // // console.log("result=====",result);
+        // // console.log("err=====",err);
         if (err!==null) {
           return res.status(500).send(err);
         }else {
@@ -59,7 +59,7 @@ router.post('/generateToken',(req,res,next)=>{
 router.post('/calendarId',(req,res,next)=>{
 
   let calendarQuery = "SELECT calendarEvent FROM `calendly` WHERE userId = '"+req.body.userId+"'";
-  console.log("calendarQuery===========",calendarQuery);
+  // console.log("calendarQuery===========",calendarQuery);
   db.query(calendarQuery, (err, result) => {
     if (err!==null) {
       return res.status(500).send(err);

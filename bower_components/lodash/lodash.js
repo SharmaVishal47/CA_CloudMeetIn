@@ -5328,10 +5328,10 @@
      * var array = [1];
      * var other = _.concat(array, 2, [3], [[4]]);
      *
-     * console.log(other);
+     * // console.log(other);
      * // => [1, 2, 3, [4]]
      *
-     * console.log(array);
+     * // console.log(array);
      * // => [1]
      */
     var concat = rest(function(array, values) {
@@ -5590,7 +5590,7 @@
      * var array = [1, 2, 3];
      *
      * _.fill(array, 'a');
-     * console.log(array);
+     * // console.log(array);
      * // => ['a', 'a', 'a']
      *
      * _.fill(Array(3), 2);
@@ -6033,7 +6033,7 @@
      * var array = [1, 2, 3, 1, 2, 3];
      *
      * _.pull(array, 2, 3);
-     * console.log(array);
+     * // console.log(array);
      * // => [1, 1]
      */
     var pull = rest(pullAll);
@@ -6054,7 +6054,7 @@
      * var array = [1, 2, 3, 1, 2, 3];
      *
      * _.pullAll(array, [2, 3]);
-     * console.log(array);
+     * // console.log(array);
      * // => [1, 1]
      */
     function pullAll(array, values) {
@@ -6082,7 +6082,7 @@
      * var array = [{ 'x': 1 }, { 'x': 2 }, { 'x': 3 }, { 'x': 1 }];
      *
      * _.pullAllBy(array, [{ 'x': 1 }, { 'x': 3 }], 'x');
-     * console.log(array);
+     * // console.log(array);
      * // => [{ 'x': 2 }]
      */
     function pullAllBy(array, values, iteratee) {
@@ -6109,10 +6109,10 @@
      * var array = [5, 10, 15, 20];
      * var evens = _.pullAt(array, 1, 3);
      *
-     * console.log(array);
+     * // console.log(array);
      * // => [5, 15]
      *
-     * console.log(evens);
+     * // console.log(evens);
      * // => [10, 20]
      */
     var pullAt = rest(function(array, indexes) {
@@ -6143,10 +6143,10 @@
      *   return n % 2 == 0;
      * });
      *
-     * console.log(array);
+     * // console.log(array);
      * // => [1, 3]
      *
-     * console.log(evens);
+     * // console.log(evens);
      * // => [2, 4]
      */
     function remove(array, predicate) {
@@ -6188,7 +6188,7 @@
      * _.reverse(array);
      * // => [3, 2, 1]
      *
-     * console.log(array);
+     * // console.log(array);
      * // => [3, 2, 1]
      */
     function reverse(array) {
@@ -7116,17 +7116,17 @@
      * var array = [1, 2];
      * var wrapped = _(array).push(3);
      *
-     * console.log(array);
+     * // console.log(array);
      * // => [1, 2]
      *
      * wrapped = wrapped.commit();
-     * console.log(array);
+     * // console.log(array);
      * // => [1, 2, 3]
      *
      * wrapped.last();
      * // => 3
      *
-     * console.log(array);
+     * // console.log(array);
      * // => [1, 2, 3]
      */
     function wrapperCommit() {
@@ -7265,7 +7265,7 @@
      * _(array).reverse().value()
      * // => [3, 2, 1]
      *
-     * console.log(array);
+     * // console.log(array);
      * // => [3, 2, 1]
      */
     function wrapperReverse() {
@@ -7493,12 +7493,12 @@
      * @example
      *
      * _([1, 2]).forEach(function(value) {
-     *   console.log(value);
+     *   // console.log(value);
      * });
      * // => logs `1` then `2`
      *
      * _.forEach({ 'a': 1, 'b': 2 }, function(value, key) {
-     *   console.log(key);
+     *   // console.log(key);
      * });
      * // => logs 'a' then 'b' (iteration order is not guaranteed)
      */
@@ -7522,7 +7522,7 @@
      * @example
      *
      * _.forEachRight([1, 2], function(value) {
-     *   console.log(value);
+     *   // console.log(value);
      * });
      * // => logs `2` then `1`
      */
@@ -8110,7 +8110,7 @@
      * @example
      *
      * _.defer(function(stamp) {
-     *   console.log(_.now() - stamp);
+     *   // console.log(_.now() - stamp);
      * }, _.now());
      * // => logs the number of milliseconds it took for the deferred function to be invoked
      */
@@ -8133,7 +8133,7 @@
      * var saves = ['profile', 'settings'];
      *
      * var done = _.after(saves.length, function() {
-     *   console.log('done saving!');
+     *   // console.log('done saving!');
      * });
      *
      * _.forEach(saves, function(type) {
@@ -8573,7 +8573,7 @@
      * @example
      *
      * _.defer(function(text) {
-     *   console.log(text);
+     *   // console.log(text);
      * }, 'deferred');
      * // logs 'deferred' after one or more milliseconds
      */
@@ -8595,7 +8595,7 @@
      * @example
      *
      * _.delay(function(text) {
-     *   console.log(text);
+     *   // console.log(text);
      * }, 1000, 'later');
      * // => logs 'later' after one second
      */
@@ -9092,7 +9092,7 @@
      * var objects = [{ 'a': 1 }, { 'b': 2 }];
      *
      * var shallow = _.clone(objects);
-     * console.log(shallow[0] === objects[0]);
+     * // console.log(shallow[0] === objects[0]);
      * // => true
      */
     function clone(value) {
@@ -9121,11 +9121,11 @@
      *
      * var el = _.cloneWith(document.body, customizer);
      *
-     * console.log(el === document.body);
+     * // console.log(el === document.body);
      * // => false
-     * console.log(el.nodeName);
+     * // console.log(el.nodeName);
      * // => 'BODY'
-     * console.log(el.childNodes.length);
+     * // console.log(el.childNodes.length);
      * // => 0
      */
     function cloneWith(value, customizer) {
@@ -9145,7 +9145,7 @@
      * var objects = [{ 'a': 1 }, { 'b': 2 }];
      *
      * var deep = _.cloneDeep(objects);
-     * console.log(deep[0] === objects[0]);
+     * // console.log(deep[0] === objects[0]);
      * // => false
      */
     function cloneDeep(value) {
@@ -9171,11 +9171,11 @@
      *
      * var el = _.cloneDeepWith(document.body, customizer);
      *
-     * console.log(el === document.body);
+     * // console.log(el === document.body);
      * // => false
-     * console.log(el.nodeName);
+     * // console.log(el.nodeName);
      * // => 'BODY'
-     * console.log(el.childNodes.length);
+     * // console.log(el.childNodes.length);
      * // => 20
      */
     function cloneDeepWith(value, customizer) {
@@ -10697,7 +10697,7 @@
      * Foo.prototype.c = 3;
      *
      * _.forIn(new Foo, function(value, key) {
-     *   console.log(key);
+     *   // console.log(key);
      * });
      * // => logs 'a', 'b', then 'c' (iteration order is not guaranteed)
      */
@@ -10725,7 +10725,7 @@
      * Foo.prototype.c = 3;
      *
      * _.forInRight(new Foo, function(value, key) {
-     *   console.log(key);
+     *   // console.log(key);
      * });
      * // => logs 'c', 'b', then 'a' assuming `_.forIn` logs 'a', 'b', then 'c'
      */
@@ -10755,7 +10755,7 @@
      * Foo.prototype.c = 3;
      *
      * _.forOwn(new Foo, function(value, key) {
-     *   console.log(key);
+     *   // console.log(key);
      * });
      * // => logs 'a' then 'b' (iteration order is not guaranteed)
      */
@@ -10783,7 +10783,7 @@
      * Foo.prototype.c = 3;
      *
      * _.forOwnRight(new Foo, function(value, key) {
-     *   console.log(key);
+     *   // console.log(key);
      * });
      * // => logs 'b' then 'a' assuming `_.forOwn` logs 'a' then 'b'
      */
@@ -11365,11 +11365,11 @@
      * var object = { 'a': [{ 'b': { 'c': 3 } }] };
      *
      * _.set(object, 'a[0].b.c', 4);
-     * console.log(object.a[0].b.c);
+     * // console.log(object.a[0].b.c);
      * // => 4
      *
      * _.set(object, 'x[0].y.z', 5);
-     * console.log(object.x[0].y.z);
+     * // console.log(object.x[0].y.z);
      * // => 5
      */
     function set(object, path, value) {
@@ -11513,13 +11513,13 @@
      * _.unset(object, 'a[0].b.c');
      * // => true
      *
-     * console.log(object);
+     * // console.log(object);
      * // => { 'a': [{ 'b': {} }] };
      *
      * _.unset(object, 'a[0].b.c');
      * // => true
      *
-     * console.log(object);
+     * // console.log(object);
      * // => { 'a': [{ 'b': {} }] };
      */
     function unset(object, path) {
@@ -12829,7 +12829,7 @@
      * var view = {
      *   'label': 'docs',
      *   'onClick': function() {
-     *     console.log('clicked ' + this.label);
+     *     // console.log('clicked ' + this.label);
      *   }
      * };
      *
@@ -13527,10 +13527,10 @@
      * var path = ['a', 'b', 'c'],
      *     newPath = _.toPath(path);
      *
-     * console.log(newPath);
+     * // console.log(newPath);
      * // => ['a', 'b', 'c']
      *
-     * console.log(path === newPath);
+     * // console.log(path === newPath);
      * // => false
      */
     function toPath(value) {

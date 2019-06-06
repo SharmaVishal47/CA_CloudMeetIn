@@ -37,15 +37,15 @@ export class AvailableDateTimeComponent implements OnInit {
       outTime: [ null, [ Validators.required ] ],
       selectedOption: [ null, [ Validators.required ] ],
     });
-    this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/user/getTimeAvailability',{'userId': this.userId}).subscribe(
+    this.httpClient.post<{message: string,data: []}>('/user/getTimeAvailability',{'userId': this.userId}).subscribe(
       res =>{
-        console.log("res===========",res);
+        // console.log("res===========",res);
         this.defaultStartTime = res.data['0'].startTime;
         this.defaultEndTime = res.data['0'].endTime;
         this.availableDays = res.data['0'].availableDays.toString().split(',');
         this.checkTime();
       },err => {
-        console.log("Error=========",err.message);
+        // console.log("Error=========",err.message);
         this.messageService.generateErrorMessage(JSON.stringify(err));
         /*const dialogConfig = new MatDialogConfig();
         dialogConfig.data = err;
@@ -55,18 +55,18 @@ export class AvailableDateTimeComponent implements OnInit {
 
   checkTime(){
     if(this.defaultStartTime < this.defaultEndTime){
-      console.log(' start time--> ', this.defaultStartTime);
-      console.log(' end time--> ',this.defaultEndTime);
+      // console.log(' start time--> ', this.defaultStartTime);
+      // console.log(' end time--> ',this.defaultEndTime);
       this.time = true;
-      console.log('time-->',this.time);
+      // console.log('time-->',this.time);
     }else{ this.time = false;}
   }
 
   updateConfiguration() {
     this.form.value['userId'] = this.userId;
-    console.log("Value=====",this.form.value);
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/user/updateUserConfiguration',this.form.value).subscribe((responseData)=>{
-      console.log("responseData====",responseData);
+    // console.log("Value=====",this.form.value);
+    this.httpClient.post<any>('/user/updateUserConfiguration',this.form.value).subscribe((responseData)=>{
+      // console.log("responseData====",responseData);
       this.router.navigate(["dashboard"]);
     },error => {
       this.messageService.generateErrorMessage(JSON.stringify(error));

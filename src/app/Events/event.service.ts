@@ -28,7 +28,7 @@ export class EventService {
   /* This function used for create a new event*/
   createEvent(creatEventData: any) {
     creatEventData['user_id'] = this.user_id;
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/events/createevent', creatEventData).subscribe(
+    this.httpClient.post<any>('/events/createevent', creatEventData).subscribe(
       res => {
       },
       err => {
@@ -37,7 +37,7 @@ export class EventService {
 
   updateEvent(updateEventData: any, eventId: string) {
     updateEventData['user_id'] = this.user_id;
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/events/updateEvent', {updateEventData: updateEventData, eventId: eventId}).subscribe(
+    this.httpClient.post<any>('/events/updateEvent', {updateEventData: updateEventData, eventId: eventId}).subscribe(
       res => {
       },
       err => {
@@ -46,9 +46,9 @@ export class EventService {
 
   checkMeetingPlatform() {
     if (this.user_id) {
-      this.httpClient.post<any>('https://dev.cloudmeetin.com/user/checkMeetingPlatform', {userId: this.user_id}).subscribe(
+      this.httpClient.post<any>('/user/checkMeetingPlatform', {userId: this.user_id}).subscribe(
         res => {
-          console.log("Respinser ---------- ", res);
+          // console.log("Respinser ---------- ", res);
           this.checkMeetingPlatformAvailability.next(res);
         },
         err => {
@@ -85,7 +85,7 @@ export class EventService {
       }
     }
 
-    console.log("User select range --- > ", user_select_range);
+    // console.log("User select range --- > ", user_select_range);
 
     const newEventModel = new EventModel(
       defaultEventType,
@@ -102,10 +102,10 @@ export class EventService {
       availabilityAdvance.show_availability_buffer_before_event,
       availabilityAdvance.show_availability_buffer_after_event,
       default_secret_event);
-    console.log("Total data --- > ", newEventModel);
+    // console.log("Total data --- > ", newEventModel);
 
     if (checkStatus) {
-      this.httpClient.post<any>('https://dev.cloudmeetin.com/events/advancedfeatureupdate', {
+      this.httpClient.post<any>('/events/advancedfeatureupdate', {
         userId: this.user_id,
         events: newEventModel,
         eventId: eventId
@@ -117,7 +117,7 @@ export class EventService {
         err => {
         });
     } else {
-      this.httpClient.post<any>('https://dev.cloudmeetin.com/events/advancedfeatureupdate', {
+      this.httpClient.post<any>('/events/advancedfeatureupdate', {
         userId: this.user_id,
         events: newEventModel,
         eventId: eventId
@@ -131,9 +131,9 @@ export class EventService {
   }
 
   getUserSelectEvents() {
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/events/getevents', {userId: this.user_id}).subscribe(
+    this.httpClient.post<any>('/events/getevents', {userId: this.user_id}).subscribe(
       res => {
-        console.log("Response --- >  ", res);
+        // console.log("Response --- >  ", res);
         /*if(res.data.length > 0) {
 
         }*/
@@ -149,7 +149,7 @@ export class EventService {
   }
 
   onEditEventMain(event_id: any, eventIndex: number) {
-    console.log("Selected Event Details -->", event_id, 'And index is --> ', eventIndex);
+    // console.log("Selected Event Details -->", event_id, 'And index is --> ', eventIndex);
     this.event_id = event_id;
     this.event_index = eventIndex;
     this.router.navigate(['/newEvent/create']);
@@ -170,18 +170,18 @@ export class EventService {
   }
 
   getOneEventRecords(eventId: string) {
-    return this.httpClient.get<any>('https://dev.cloudmeetin.com/events/' + eventId + '/' + this.user_id)
+    return this.httpClient.get<any>('/events/' + eventId + '/' + this.user_id)
   }
 
   singleEventDelete(eventId: string) {
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/events/delete', {eventId: eventId, userId: this.user_id}).subscribe((response) => {
-      console.log('Successfully Deleted', response);
+    this.httpClient.post<any>('/events/delete', {eventId: eventId, userId: this.user_id}).subscribe((response) => {
+      // console.log('Successfully Deleted', response);
       this.getUserSelectEvents();
     });
   }
 /* This function used getting the event slot from the sign-up table*/
   getAvailabilitySlotTime() {
-    return this.httpClient.post<{ message: string, data: [] }>('https://dev.cloudmeetin.com/user/getTimeAvailability', {'userId': this.user_id})
+    return this.httpClient.post<{ message: string, data: [] }>('/user/getTimeAvailability', {'userId': this.user_id})
   }
 
   convertTimeInto12(startTime: any, endTime: any) {
@@ -205,31 +205,31 @@ export class EventService {
 
   getSelectedDateSlot (eventId: string, selected_date: Date) {
     return this.httpClient.post<{ message: string, data: [] }>(
-      'https://dev.cloudmeetin.com/events/getselecteddateslot', {selected_date: selected_date, eventId : eventId})
+      '/events/getselecteddateslot', {selected_date: selected_date, eventId : eventId})
   }
 
 
   convertTimePickerFormat(time: any, selectedDate: Date) {
-   /* console.log("Time == >", time);
-    console.log("selectedDate == >", selectedDate);*/
+   /* // console.log("Time == >", time);
+    // console.log("selectedDate == >", selectedDate);*/
    return selectedDate.setHours(time.toString().split(':')[0]);
   }
 
 
   addSlotsInSDate(slotsValue: any, eventId: string, selectedDate: Date) {
-    console.log('Submit value of slot type --> ', slotsValue.datePicker);
+    // console.log('Submit value of slot type --> ', slotsValue.datePicker);
     let addFromSlots = [];
     let addToSlots = [];
     for (let i = 0; i < slotsValue.datePicker.length; i++) {
-      console.log("From Time  --- > ", slotsValue.datePicker[i].fromTime);
-      console.log("Type of ", typeof (slotsValue.datePicker[i].fromTime));
+      // console.log("From Time  --- > ", slotsValue.datePicker[i].fromTime);
+      // console.log("Type of ", typeof (slotsValue.datePicker[i].fromTime));
       typeof (slotsValue.datePicker[i].fromTime) ==='number' ? addFromSlots.push(slotsValue.datePicker[i].fromTime) : addFromSlots.push(Date.parse(slotsValue.datePicker[i].fromTime));
       typeof (slotsValue.datePicker[i].toTime) ==='number' ? addToSlots.push(slotsValue.datePicker[i].toTime) : addToSlots.push(Date.parse(slotsValue.datePicker[i].toTime));
-      console.log("to Time  --- > ", slotsValue.datePicker[i].toTime)
+      // console.log("to Time  --- > ", slotsValue.datePicker[i].toTime)
     }
-    console.log('========>>>> From  ',addFromSlots.join(','));
-    console.log('========>>>> To  ',addToSlots.join(','));
-    return this.httpClient.post<{ message: string, data: [] }>('https://dev.cloudmeetin.com/events/insertslots', {
+    // console.log('========>>>> From  ',addFromSlots.join(','));
+    // console.log('========>>>> To  ',addToSlots.join(','));
+    return this.httpClient.post<{ message: string, data: [] }>('/events/insertslots', {
       startTime: addFromSlots.join(','),
       endTime: addToSlots.join(','),
       av_ua: true,

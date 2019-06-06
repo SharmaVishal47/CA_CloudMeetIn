@@ -58,7 +58,7 @@ export class EventsMainPageComponent implements OnInit {
   ngOnInit() {
     this.eventService.getUserSelectEvents();
     this.eventService.userCreateEvents.subscribe((response) => {
-      console.log("Response Data --- > ", response);
+      // console.log("Response Data --- > ", response);
       this.EventTypeSlot = response;
     });
     this.fullName = this.authService.getFullName();
@@ -68,8 +68,8 @@ export class EventsMainPageComponent implements OnInit {
   }
 
   getUserList(){
-    this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/usertable/getuserlist',{'userId': this.userId}).subscribe(res =>{
-      console.log("res getuserlist=========",res);
+    this.httpClient.post<{message: string,data: []}>('/usertable/getuserlist',{'userId': this.userId}).subscribe(res =>{
+      // console.log("res getuserlist=========",res);
       if(res.data.length > 0){
         this.userCheck = true;
         this.getTeamList();
@@ -79,8 +79,8 @@ export class EventsMainPageComponent implements OnInit {
     });
   }
   getTeamList(){
-    this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/team/getteamlist',{'userId': this.userId}).subscribe(res =>{
-      console.log("getteamlist=========",res);
+    this.httpClient.post<{message: string,data: []}>('/team/getteamlist',{'userId': this.userId}).subscribe(res =>{
+      // console.log("getteamlist=========",res);
       if(res.data.length > 0){
         this.teamCheck = true;
       }
@@ -90,7 +90,7 @@ export class EventsMainPageComponent implements OnInit {
   }
 
   log(event: string[]) {
-    console.log(event);
+    // console.log(event);
   }
 
   onEditEvent(event_id: string, index: number) {

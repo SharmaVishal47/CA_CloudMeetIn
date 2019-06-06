@@ -5,7 +5,7 @@
 var env = process.env;
 
 if (env.TRAVIS_SECURE_ENV_VARS == 'false') {
-  console.log('Skipping Sauce Labs jobs; secure environment variables are unavailable');
+  // console.log('Skipping Sauce Labs jobs; secure environment variables are unavailable');
   process.exit(0);
 }
 
@@ -481,7 +481,7 @@ function onJobStatus(error, res, body) {
   }
   else {
     logInline();
-    console.log(label, description, chalk.green('passed'));
+    // console.log(label, description, chalk.green('passed'));
   }
   this.running = false;
   this.emit('complete');
@@ -510,7 +510,7 @@ function onTunnelStart(success) {
     process.exit(2);
   }
   logInline();
-  console.log('Sauce Connect tunnel opened');
+  // console.log('Sauce Connect tunnel opened');
 
   var jobs = this.jobs;
   push.apply(jobs.queue, jobs.all);
@@ -518,7 +518,7 @@ function onTunnelStart(success) {
   this.running = true;
   this.emit('start');
 
-  console.log('Starting jobs...');
+  // console.log('Starting jobs...');
   this.dequeue();
 }
 
@@ -605,7 +605,7 @@ Job.prototype.restart = function(callback) {
       label = options.name + ':';
 
   logInline();
-  console.log('%s %s restart %d of %d', label, description, ++this.attempts, this.retries);
+  // console.log('%s %s restart %d of %d', label, description, ++this.attempts, this.retries);
 
   return this.remove(onGenericRestart);
 };
@@ -767,7 +767,7 @@ Tunnel.prototype.restart = function(callback) {
   this.restarting = true;
 
   logInline();
-  console.log('Tunnel %s: restart %d of %d', this.id, ++this.attempts, this.retries);
+  // console.log('Tunnel %s: restart %d of %d', this.id, ++this.attempts, this.retries);
 
   var jobs = this.jobs,
       active = jobs.active,
@@ -809,7 +809,7 @@ Tunnel.prototype.start = function(callback) {
   this.starting = true;
 
   logInline();
-  console.log('Opening Sauce Connect tunnel...');
+  // console.log('Opening Sauce Connect tunnel...');
 
   var onStart = _.bind(onTunnelStart, this);
   if (this.timeout) {
@@ -852,7 +852,7 @@ Tunnel.prototype.stop = function(callback) {
   this.stopping = true;
 
   logInline();
-  console.log('Shutting down Sauce Connect tunnel...');
+  // console.log('Shutting down Sauce Connect tunnel...');
 
   var jobs = this.jobs,
       active = jobs.active;

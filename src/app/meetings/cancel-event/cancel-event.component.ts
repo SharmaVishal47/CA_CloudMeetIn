@@ -17,6 +17,7 @@ export class CancelEventComponent implements OnInit {
   cancelMeetingResponse;
   cancelData;
   userRecords;
+  checkPoint:boolean = false;
   cancelStatus: boolean = false;
   constructor(
     private fb: FormBuilder,
@@ -27,25 +28,27 @@ export class CancelEventComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.meetingService.removeHeader(true);
     this.cancelForm = this.fb.group({
       reason: [null, [Validators.required]]
     });
     this.route.params.subscribe(params => {
       this.cancelMeetingUniqueId = params['id'];
-      console.log(' cancelMeetingUniqueId--->', this.cancelMeetingUniqueId);
+      // console.log(' cancelMeetingUniqueId--->', this.cancelMeetingUniqueId);
       this.meetingService.setMeetingUID(this.cancelMeetingUniqueId);
       this.meetingService.getMeetingRecords(this.cancelMeetingUniqueId).subscribe((response) => {
-        console.log('cancel meeting records -- > ', response.data[0]);
+        // console.log('cancel meeting records -- > ', response.data[0]);
         if(response.data[0] !== undefined) {
           if(response.data[0].cancel === "true") {
             this.router.navigate(['error']);
 
           } else {
+            this.checkPoint = true;
             this.meetingService.getUserRecords(response.data[0].userId).subscribe((responseUserRecords) => {
-              console.log("responseUserRecords", responseUserRecords.data[0]);
+              // console.log("responseUserRecords", responseUserRecords.data[0]);
               this.userRecords = responseUserRecords.data[0];
               this.cancelMeetingResponse = response.data[0];
-              this.meetingService.removeHeader(true);
+
             });
           }
         } else {
@@ -75,7 +78,9 @@ export class CancelEventComponent implements OnInit {
       tokenPath: this.userRecords.token_path,
       userId: this.cancelMeetingResponse.userId,
       g2mMeetingId: this.cancelMeetingResponse.g2mMeetingId,
-      eventType: this.cancelMeetingResponse.eventType.split('m')[0]
+      zoomMeetingId: this.cancelMeetingResponse.zoomMeetingId,
+      eventType: this.cancelMeetingResponse.eventType.split('m')[0],
+      userTimeZone : this.userRecords.timeZone
     };
     this.meetingService.cancelMeetingScheduleByClient(this.cancelData, this.cancelMeetingUniqueId);
     this.cancelStatus = true;

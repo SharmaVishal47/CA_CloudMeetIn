@@ -37,16 +37,32 @@ import {ForgetPasswordComponent} from './Auth/password/forget-password/forget-pa
 import {TryAgainForgetPasswordComponent} from './Auth/password/try-again-forget-password/try-again-forget-password.component';
 import {ChangeLoginEmailComponent} from './AccountSetting/change-login-email/change-login-email.component';
 import {RescheduleMeetingComponent} from './meetings/reschedule-meeting/reschedule-meeting.component';
-import {RescheduleEventComponent} from './meetings/reschedule-event/reschedule-event.component';
 import {CancelEventComponent} from './meetings/cancel-event/cancel-event.component';
 import {ErrorComponent} from './error/error.component';
+import {CalenderoptionByEmailComponent} from './Auth/calenderoption-by-email/calenderoption-by-email.component';
+import {ConfirmEmailComponent} from './Auth/confirm-email/confirm-email.component';
+import {SignUpByEmailComponent} from './Auth/sign-up-by-email/sign-up-by-email.component';
+import {CalenderoptionComponent} from './Auth/calenderoption/calenderoption.component';
+import {AdminLoginComponent} from './Admin/admin-login/admin-login.component';
+import {AdminDashboardComponent} from './Admin/admin-dashboard/admin-dashboard.component';
+import {AdminGuard} from './Admin/admin.guard';
+import {TermConditionsComponent} from './Home/term-conditions/term-conditions.component';
 
 const appRoutes: Routes = [
   /* Main Components*/
   {path: '', component: HomeComponent},
+  {path: 'admin-login', component: AdminLoginComponent},
+  {path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [AdminGuard]},
+  {path: 'terms-conditions', component: TermConditionsComponent},
   {path: 'changePassword/:data', component: ChangePasswordComponent},
+  {path: 'calenderOption/:data', component: CalenderoptionByEmailComponent},
+  {path: 'verify/:email', component: ConfirmEmailComponent},
+  {path: 'signUpByEmail', component: SignUpByEmailComponent},
   /* {path: 'dashboard/:email', component: DashboardComponent,canActivate: [AuthGuard]},*/
   {path: 'dashboard', component: DashboardComponent,canActivate: [AuthGuard]},
+
+  /*Calender option select page*/
+  {path: 'calender/option', component: CalenderoptionComponent},
 
   {path: 'pofilesettings', component: AccountSettingComponent,canActivate: [AuthGuard]},
   {path: 'availableTime', component: AvailableDateTimeComponent,canActivate: [AuthGuard]},
@@ -54,7 +70,7 @@ const appRoutes: Routes = [
   {path: 'integrations', component: IntegrationsComponent,canActivate: [AuthGuard]},
   {path: 'integrations/gotomeeting/code', component: GTMIntegrationCodeComponent},
   {path: 'integrations/gotomeeting', component: GoTomeetingIntegrationComponent,canActivate: [AuthGuard]},
-  {path: 'integrations/zoommeeting', component: ZoomIntegrationComponent,canActivate: [AuthGuard]},
+  {path: 'integrations/zoommeeting', component: ZoomIntegrationComponent},
   {path: 'eventTeam', component: NewEventTeamComponent},
   {path: 'help', component: HelpComponent, canActivate: [AuthGuard]},
   {path: 'connection', component: CalendarConnectionComponent, canActivate: [AuthGuard]},
@@ -64,14 +80,15 @@ const appRoutes: Routes = [
   {path: 'newEvent', component: NewEventComponent},
   {path: 'newEvent/create', component: CreateEventComponent,canActivate: [AuthGuard]},
   /* {path: 'newEvent/create', component: CreateEventComponent},*/
-  {path: 'login', component: LoginComponent},
+  /* {path: 'login', component: LoginComponent},*/
+  {path: 'login', component: SignupComponent},
   {path: 'mainheader', component: MainHeaderComponent},
   {path: 'forgetPassword', component: ForgetPasswordComponent},
   {path: 'tryAgain/:email', component: TryAgainForgetPasswordComponent},
   {path: 'changeEmail/:data',component: ChangeLoginEmailComponent},
   /* Sign Up settings components routing */
   {path: 'signup', component: SignupComponent},
-  {path: 'signup/:email', component: SignupComponent},
+  /*{path: 'signup/:email', component: SignupComponent},*/
   {path: 'settings', component: SettingsComponent},
   {path: 'calendar', component: CalendarEditComponent},
   {path: 'availability', component: AvailbilityComponent},
@@ -90,7 +107,6 @@ const appRoutes: Routes = [
   {path: 'error', component: ErrorComponent},
 
   {path: 'confirmedMeeting', component: ConfirmedComponent},
-
   {path: ':userId/:selectTime/:schedulingPage', component: ScheduleEventComponent},
   {path: ':userId/:selectTime', component: MettingComponent},
   {path: ':userId', component: SchedulingPageComponent},
@@ -103,7 +119,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes)
   ],
   exports: [RouterModule],
-  providers : [AuthGuard]
+  providers : [AuthGuard, AdminGuard]
 })
 
 export class AppRoutingModule {}

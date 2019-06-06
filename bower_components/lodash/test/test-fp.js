@@ -73,7 +73,7 @@
   /*--------------------------------------------------------------------------*/
 
   if (argv) {
-    console.log('Running lodash/fp tests.');
+    // console.log('Running lodash/fp tests.');
   }
 
   QUnit.module('method arity checks');
@@ -152,7 +152,7 @@
             ) {
           return true;
         }
-        console.log(methodName, result);
+        // console.log(methodName, result);
         return false;
       });
 
@@ -180,7 +180,7 @@
             ) {
           return true;
         }
-        console.log(methodName, result);
+        // console.log(methodName, result);
         return false;
       });
 
@@ -204,7 +204,7 @@
         if (typeof result != 'function') {
           return true;
         }
-        console.log(methodName, result);
+        // console.log(methodName, result);
         return false;
       });
 

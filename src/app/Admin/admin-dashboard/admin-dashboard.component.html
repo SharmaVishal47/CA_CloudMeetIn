@@ -1,0 +1,187 @@
+<nz-spin [nzSpinning]="isSpinning" nzTip="Loading...">
+  <div nz-card-grid [ngStyle]="gridStyle">
+  <nz-dropdown style="padding: 2%;">
+    <a nz-dropdown>{{adminService.adminName}} <i nz-icon type="down"></i> </a>
+    <ul nz-menu nzSelectable>
+      <li nz-menu-item>
+        <a (click)="onLogout()">Logout</a>
+      </li>
+    </ul>
+  </nz-dropdown>
+</div>
+
+
+<div style="padding: 2%; margin-top: 5%; overflow: scroll">
+  <div class="table-operations">
+    <!--<button nz-button (click)="sort('created_date', 'descend')">Sort age</button>
+    <button nz-button (click)="resetFilters()">Clear filters</button>-->
+    <!--<button nz-button (click)="resetSortAndFilters()">Clear filters and sorters</button>-->
+  </div>
+  <nz-table #filterTable [nzData]="listOfDisplayData">
+    <thead>
+    <tr>
+      <th nzCustomFilter>
+        Name
+        <nz-dropdown nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter #dropdown>
+          <i
+            nz-icon
+            nzType="search"
+            class="ant-table-filter-icon"
+            [class.ant-table-filter-open]="dropdown.nzVisible"
+            nz-dropdown
+          ></i>
+          <div class="search-box">
+            <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue" />
+            <button nz-button nzSize="small" nzType="primary" (click)="searchs('name')" class="search-button">
+              Search
+            </button>
+            <button nz-button nzSize="small" (click)="resetSortAndFilters()">Reset</button>
+          </div>
+        </nz-dropdown>
+      </th>
+      <th nzShowSort
+          [(nzSort)]="mapOfSort.no_of_meeting"
+          (nzSortChange)="sort('no_of_meeting', $event)">
+        No. Of Meeting
+      </th>
+      <th
+        nzShowSort
+
+        [(nzSort)]="mapOfSort.created_date"
+        (nzSortChange)="sort('created_date', $event)"
+        [nzFilters]="listOfFilterAddress"
+
+      >
+       Created Date
+      </th>
+      <th
+        nzShowSort
+
+        [(nzSort)]="mapOfSort.last_login"
+        (nzSortChange)="sort('last_login', $event)"
+        [nzFilters]="listOfFilterAddress"
+      >
+        Last Login
+      </th>
+      <th>
+        <!--nzShowSort
+
+        [(nzSort)]="mapOfSort.signup_process"
+        (nzSortChange)="sort('signup_process', $event)"
+        [nzFilters]="listOfFilterAddress"-->
+        Sign up process
+      </th>
+      <th nzCustomFilter>
+        <!--  nzShowSort
+
+   [(nzSort)]="mapOfSort.location"
+   (nzSortChange)="sort('location', $event)"
+   [nzFilters]="listOfFilterAddress"-->
+        Location
+        <nz-dropdown nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter #dropdown>
+          <i
+            nz-icon
+            nzType="search"
+            class="ant-table-filter-icon"
+            [class.ant-table-filter-open]="dropdown.nzVisible"
+            nz-dropdown
+          ></i>
+          <div class="search-box">
+            <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue" />
+            <button nz-button nzSize="small" nzType="primary" (click)="searchs('location')" class="search-button">
+              Search
+            </button>
+            <button nz-button nzSize="small" (click)="resetSortAndFilters()">Reset</button>
+          </div>
+        </nz-dropdown>
+      </th>
+      <th nzCustomFilter>
+        <!-- nzShowSort
+
+        [(nzSort)]="mapOfSort.email_id"
+        (nzSortChange)="sort('email_id', $event)"
+        [nzFilters]="listOfFilterAddress"-->
+        Email Id
+        <nz-dropdown nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter #dropdown>
+          <i
+            nz-icon
+            nzType="search"
+            class="ant-table-filter-icon"
+            [class.ant-table-filter-open]="dropdown.nzVisible"
+            nz-dropdown
+          ></i>
+          <div class="search-box">
+            <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue" />
+            <button nz-button nzSize="small" nzType="primary" (click)="searchs('email_id')" class="search-button">
+              Search
+            </button>
+            <button nz-button nzSize="small" (click)="resetSortAndFilters()">Reset</button>
+          </div>
+        </nz-dropdown>
+      </th>
+      <th nzCustomFilter>
+        <!-- nzShowSort
+
+        [(nzSort)]="mapOfSort.company"
+        (nzSortChange)="sort('company', $event)"
+        [nzFilters]="listOfFilterAddress"-->
+        Company
+        <nz-dropdown nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter #dropdown>
+          <i
+            nz-icon
+            nzType="search"
+            class="ant-table-filter-icon"
+            [class.ant-table-filter-open]="dropdown.nzVisible"
+            nz-dropdown
+          ></i>
+          <div class="search-box">
+            <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue" />
+            <button nz-button nzSize="small" nzType="primary" (click)="searchs('company')" class="search-button">
+              Search
+            </button>
+            <button nz-button nzSize="small" (click)="resetSortAndFilters()">Reset</button>
+          </div>
+        </nz-dropdown>
+      </th>
+      <th nzCustomFilter>
+        <!-- nzShowSort
+        [(nzSort)]="mapOfSort.phone_no"
+        (nzSortChange)="sort('phone_no', $event)"
+        [nzFilters]="listOfFilterAddress"-->
+        Phone No
+        <nz-dropdown nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter #dropdown>
+          <i
+            nz-icon
+            nzType="search"
+            class="ant-table-filter-icon"
+            [class.ant-table-filter-open]="dropdown.nzVisible"
+            nz-dropdown
+          ></i>
+          <div class="search-box">
+            <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue" />
+            <button nz-button nzSize="small" nzType="primary" (click)="searchs('phone_no')" class="search-button">
+              Search
+            </button>
+            <button nz-button nzSize="small" (click)="resetSortAndFilters()">Reset</button>
+          </div>
+        </nz-dropdown>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of filterTable.data">
+      <td>{{ data.name }}</td>
+      <td>{{ data.no_of_meeting }}</td>
+      <td>{{ data.created_date | date}}</td>
+      <td>{{ data.last_login | date:'medium'}}</td>
+      <td>{{ data.signup_process }}</td>
+      <td>{{ data.location }}</td>
+      <td>{{ data.email_id }}</td>
+      <td>{{ data.company }}</td>
+      <td>{{ data.phone_no }}</td>
+    </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+</nz-spin>

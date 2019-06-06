@@ -7,6 +7,7 @@ import {AuthServiceLocal} from '../../Auth/auth.service';
 import {MeetingService} from '../../meetings/meeting.service';
 import {Component} from '@angular/core';
 import {MessageServiceService} from '../../Auth/message-service.service';
+import {IntegrationService} from '../integration.service';
 
 @Component({
   selector: 'app-gtm-integration-code',
@@ -14,8 +15,26 @@ import {MessageServiceService} from '../../Auth/message-service.service';
   styleUrls: ['./gtm-integration-code.component.css']
 })
 export class GTMIntegrationCodeComponent implements OnInit {
+  isVisible = false;
+  style = {
+    display: 'block',
+    height: '30px',
+    lineHeight: '30px'
+  };
+  defaultPlatform = 'GTM';
 
-  constructor(private messageService:MessageServiceService,private httpClient: HttpClient,private route: ActivatedRoute,private dialog: MatDialog,private router: Router,private authService: AuthServiceLocal,private meetingService: MeetingService) { }
+  GTM: string ;
+  ZOOM: string ;
+  constructor(
+    private messageService:MessageServiceService,
+    private httpClient: HttpClient,
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private router: Router,
+    private authService: AuthServiceLocal,
+    private meetingService: MeetingService,
+    private integrationService: IntegrationService
+  ) { }
   paramCode:string;
   ngOnInit() {
     this.meetingService.authStatusListener.next(true);
@@ -52,23 +71,28 @@ export class GTMIntegrationCodeComponent implements OnInit {
             userId: localStorage.getItem('userId'),
             expires_in: expires_in
           };
+
           this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/integration/gotomeetingAdd',body,).subscribe((responseData)=>{
             console.log("integrationForm responseData====",responseData.data);
             this.messageService.generateSuccessMessage("GTM Connected");
-            this.authService.autoAuthenticateUserAfterIntegration("integrations/gotomeeting");
-           /* const dialogConfig = new MatDialogConfig();
-            dialogConfig.data = 'GTM Connected';
-            let dialogRef = this.dialog.open(MessagedialogComponent, dialogConfig);
-            dialogRef.afterClosed().subscribe(value => {
-              this.authService.autoAuthenticateUserAfterIntegration("integrations/gotomeeting");
-            });*/
+            this.integrationService.getMeetingPlatforms(localStorage.getItem('userId')).subscribe( (response) => {
+              console.log("Response of Multiple platform records : ", response);
+              if(response.data.length > 0) {
+                this.GTM = response.data[0].go2meeting;
+                this.ZOOM = response.data[0].zoom;
+                if (this.GTM === 'true' && this.ZOOM === 'true') {
+                  this.isVisible = true;
+                } else {
+                  this.integrationService.AddMeetingPlatforms(localStorage.getItem('userId'), 'GTM').subscribe((response) => {
+                    this.authService.autoAuthenticateUserAfterIntegration("integrations/gotomeeting");
+                  });
+                }
+              }
+            });
 
           },error => {
             console.log("error====",error);
             this.messageService.generateErrorMessage("Something gone wrong,Please try again.")
-           /* const dialogConfig = new MatDialogConfig();
-            dialogConfig.data = "Something gone wrong,Please try again.";
-            this.dialog.open(MessagedialogComponent, dialogConfig);*/
           });
 
         },
@@ -77,6 +101,22 @@ export class GTMIntegrationCodeComponent implements OnInit {
         });
     }else{
       window.location.href = "https://api.getgo.com/oauth/v2/authorize?client_id=2dWCGOZLt9Y28Rmc0xfWNz84kPGkEpfA&response_type=code";
+    }
+  }
+
+  OnSelectedPlatform(meetingPlatForm: string) {
+    this.defaultPlatform =  meetingPlatForm
+  }
+
+  handleOk() {
+    this.isVisible = false;
+    let selectedPlatform =  typeof (this.defaultPlatform) === 'string' &&  this.defaultPlatform !== 'undefined' && this.defaultPlatform.split('').length > 0 ? this.defaultPlatform : 'GTM';
+    console.log("Response -- > ok ", selectedPlatform);
+    if(selectedPlatform) {
+      this.integrationService.AddMeetingPlatforms(localStorage.getItem('userId'), selectedPlatform).subscribe((response) => {
+        console.log("Add Meeting response : ", response);
+        this.authService.autoAuthenticateUserAfterIntegration("integrations/gotomeeting");
+      });
     }
   }
 }

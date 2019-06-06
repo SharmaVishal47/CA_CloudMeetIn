@@ -163,7 +163,7 @@
     };
 
     page.onConsoleMessage = function(message) {
-      console.log(message);
+      // console.log(message);
     };
 
     page.onInitialized = function() {
@@ -179,12 +179,12 @@
 
     page.open(filePath, function(status) {
       if (status != 'success') {
-        console.log('PhantomJS failed to load page: ' + filePath);
+        // console.log('PhantomJS failed to load page: ' + filePath);
         phantom.exit(1);
       }
     });
 
-    console.log('test.js invoked with arguments: ' + JSON.stringify(slice.call(params)));
+    // console.log('test.js invoked with arguments: ' + JSON.stringify(slice.call(params)));
     return;
   }
 
@@ -222,7 +222,7 @@
     try {
       lodashStable = load('../node_modules/lodash/index.js');
     } catch (e) {
-      console.log('Error: The stable lodash dev dependency should be at least a version behind master branch.');
+      // console.log('Error: The stable lodash dev dependency should be at least a version behind master branch.');
       return;
     }
     lodashStable = lodashStable.noConflict();
@@ -637,8 +637,8 @@
   /*--------------------------------------------------------------------------*/
 
   if (params) {
-    console.log('Running lodash tests.');
-    console.log('test.js invoked with arguments: ' + JSON.stringify(slice.call(params)));
+    // console.log('Running lodash tests.');
+    // console.log('test.js invoked with arguments: ' + JSON.stringify(slice.call(params)));
   }
 
   QUnit.module(basename);

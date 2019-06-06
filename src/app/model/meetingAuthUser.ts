@@ -5,4 +5,5 @@ interface MeetingAuthUser {
   fullName: string,
   welcomeMessage: string,
   profilePic: string,
+  imageLink:string
 }

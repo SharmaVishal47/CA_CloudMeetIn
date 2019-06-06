@@ -1,0 +1,92 @@
+
+<div nz-row nzType="flex" nzJustify="center" style="margin-top: 90px">
+  <div nz-col>
+    <img src="../../../assets/Logo_c_new.svg" alt="" width="80px">
+  </div>
+</div>
+<div nz-row nzType="flex" nzJustify="center" style="margin-top:50px ">
+  <div nz-col >
+    <h5 style="margin-bottom:30px ">Log IN </h5>
+    <form nz-form [formGroup]="loginForm" class="login-form" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-control>
+          <input type="text" nzSize="large" nz-input formControlName="emailID" placeholder="Username"  >
+          <nz-form-explain *ngIf="loginForm.get('emailID').dirty && loginForm.get('emailID').errors">
+            Please enter valid email address!
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <input type="password" nzSize="large" nz-input formControlName="password" placeholder="Password">
+          <nz-form-explain *ngIf="loginForm.get('password').dirty && loginForm.get('password').errors">
+            Please enter your password
+          </nz-form-explain>
+          <!--<a href="" style="float: right" routerLink="/forgetPassword">Forgot password ?</a>-->
+        </nz-form-control>
+      </nz-form-item>
+     <!-- <ngx-recaptcha2 #captchaElem
+                      [siteKey]="siteKey"
+                      (reset)="handleReset()"
+                      (expire)="handleExpire()"
+                      (error)="handleError()"
+                      (load)="handleLoad()"
+                      (success)="handleSuccess($event)"
+                      [useGlobalDomain]="false"
+                      [size]="size"
+                      [hl]="lang"
+                      [theme]="theme"
+                      [type]="type"
+                      formControlName="recaptcha">
+      </ngx-recaptcha2>-->
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="captcha" nzRequired>Captcha</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <div nz-row [nzGutter]="8">
+            <div nz-col [nzSpan]="8">
+              <input nz-input formControlName="recaptcha" id="captcha" />
+            </div>
+            <div nz-col [nzSpan]="8">
+              <button nz-button type="button" (click)="getCaptcha()" [disabled]="counter !== 0 && buttonStatus">Get captcha </button>
+
+            </div>
+            <div nz-col [nzSpan]="8">
+              <span  class="times" *ngIf="counter !== 0 && buttonStatus">{{countDown | async | formatTime}}</span>
+            </div>
+
+          </div>
+          <nz-form-explain *ngIf="loginForm.get('recaptcha')?.dirty && loginForm.get('recaptcha')?.errors"
+          >Please input the captcha you got!</nz-form-explain
+          >
+          <nz-form-extra>We must make sure that your are a human.</nz-form-extra>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button class="login-form-button" style="background-color:#FF4165; color: white; margin-top: 5%" [disabled]="!loginForm.valid">Log in</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+
+</div>
+
+<!--
+<form [formGroup]="loginForm">
+  <ngx-recaptcha2 #captchaElem
+                  [siteKey]="siteKey"
+                  (reset)="handleReset()"
+                  (expire)="handleExpire()"
+                  (error)="handleError()"
+                  (load)="handleLoad()"
+                  (success)="handleSuccess($event)"
+                  [useGlobalDomain]="false"
+                  [size]="size"
+                  [hl]="lang"
+                  [theme]="theme"
+                  [type]="type"
+                  formControlName="recaptcha">
+  </ngx-recaptcha2>
+</form>
+-->
+

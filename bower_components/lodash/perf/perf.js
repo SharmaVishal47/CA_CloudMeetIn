@@ -18,7 +18,7 @@
       params = root.arguments,
       system = root.system;
 
-  /** Add `console.log()` support for Rhino and RingoJS. */
+  /** Add `// console.log()` support for Rhino and RingoJS. */
   var console = root.console || (root.console = { 'log': root.print });
 
   /** The file path of the lodash file to test. */
@@ -184,7 +184,7 @@
    * @param {string} text The text to log.
    */
   function log(text) {
-    console.log(text + '');
+    // console.log(text + '');
     if (fbPanel) {
       // Scroll the Firebug Lite panel down.
       fbPanel.scrollTop = fbPanel.scrollHeight;

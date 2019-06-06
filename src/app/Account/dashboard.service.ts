@@ -12,25 +12,25 @@ export class DashboardService {
   updateMeetingEmail(data: any) {
     let user_id = this.authService.getUserId();
     let currentEmail = localStorage.getItem('email');
-    console.log("user_id", user_id);
-    console.log("Meeting new data", data);
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/user/updateEvent', {data: data, email: currentEmail, eventType : data.eventType, inviteeEmail : data.schedulerEmail,
+    // console.log("user_id", user_id);
+    // console.log("Meeting new data", data);
+    this.httpClient.post<any>('/user/updateEvent', {data: data, email: currentEmail, eventType : data.eventType, inviteeEmail : data.schedulerEmail,
     }).subscribe(
       res => {
-        this.httpClient.post<any>('https://dev.cloudmeetin.com/events/updateSchedulerEmail', {
+        this.httpClient.post<any>('/events/updateSchedulerEmail', {
           inviteeEmail : data.schedulerEmail,
           user_id: user_id,
           id: data.id
         }).subscribe(
           res => {
-            console.log("updateSchedulerEmail Successfully=====================",res)
+            // console.log("updateSchedulerEmail Successfully=====================",res)
           },
           err => {
-            console.log(" updateEvent  Error===========",err)
+            // console.log(" updateEvent  Error===========",err)
           });
       },
       err => {
-        console.log(" updateEvent  Error===========",err)
+        // console.log(" updateEvent  Error===========",err)
       });
   }
 }

@@ -8,38 +8,23 @@
     <hr/>
   </nz-col>
 </nz-row>
-<nz-row nzJustify="center" nzAlign="middle">
+<nz-spin nzTip="Uploading..." [nzSpinning]="accountService.isSpinningStatus">
+  <nz-spin nzTip="Loading..." [nzSpinning]="spinLoading">
+    <nz-spin nzTip="Loading..." [nzSpinning]="accountService.isProfileisSpinningStatus">
+      <nz-row nzJustify="center" nzAlign="middle">
   <nz-col nzSpan="20" nzOffset="2">
     <nz-tabset>
       <nz-tab nzTitle="Profile" style="color:#FF4165;">
         <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
-
-          <!--<nz-row nzJustify="center" nzAlign="middle" style="margin-top: 2%; margin-bottom: 2%;">
-            <nz-col [nzXs]="{ span: 20,offset:2}" [nzMd]="{ span: 10, offset:3}" [nzLg]="{ span: 10, offset:3}" align="start">
-              <p class="fnt">
-              <span>
-            Cloudmeetin Branding
-            <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
-               theme="outline"></i>
-          </span>
-              </p>
-            </nz-col>
-            <nz-col [nzXs]="{span: 20,offset:2}" [nzMd]="{ span: 6, offset:1}" [nzLg]="{ span: 6, offset:1}"  align="start"   style="margin-right: 5px">
-              <nz-switch nzDisabled="false"></nz-switch>
-            </nz-col>
-          </nz-row>-->
-
           <nz-row nzJustify="center" nzAlign="middle">
             <nz-col [nzXs]="{ span: 20,offset:2}" [nzMd]="{ span: 10, offset:3}" [nzLg]="{ span: 10, offset:3}"  align="start">
 
           <span class="fnt">
             Name
-            <!--<i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
-               theme="outline"></i>-->
           </span>
               <nz-form-item>
                 <nz-form-control [nzSm]="14" [nzXs]="24">
-                  <input nz-input id="nickname" formControlName="name">
+                  <input nz-input id="nickname" formControlName="name" >
                   <nz-form-explain *ngIf="validateForm.get('name').dirty && validateForm.get('name').errors">Please
                     input your name!
                   </nz-form-explain>
@@ -52,7 +37,7 @@
           </span>
               <nz-form-item>
                 <nz-form-control>
-                  <nz-select style="width: 100%;" formControlName="language">
+                  <nz-select style="width: 100%;" formControlName="language" [nzDisabled]="true">
                     <nz-option nzValue="English" nzLabel="English"></nz-option>
                     <nz-option nzValue="French" nzLabel="French"></nz-option>
                     <nz-option nzValue="Spanish" nzLabel="Spanish"></nz-option>
@@ -72,12 +57,10 @@
             <nz-col [nzXs]="{ span: 20,offset:2}" [nzMd]="{ span: 10, offset:3}" [nzLg]="{ span: 10, offset:3}" align="start">
             <span class="fnt">
           Date Format
-            <!--<i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
-               theme="outline"></i>-->
           </span>
               <nz-form-item>
                 <nz-form-control [nzSm]="14" [nzXs]="24" >
-                  <nz-select style="width: 100%;" formControlName="dateFormat">
+                  <nz-select style="width: 100%;" formControlName="dateFormat" [nzDisabled]="true">
                     <nz-option nzValue="DD/MM/YYYY" nzLabel="DD/MM/YYYY"></nz-option>
                     <nz-option nzValue="MM/DD/YYYY" nzLabel="MM/DD/YYYY"></nz-option>
                   </nz-select>
@@ -91,12 +74,10 @@
             <nz-col [nzXs]="{span: 20,offset:2}" [nzMd]="{ span: 6, offset:1}" [nzLg]="{ span: 6, offset:1}"  align="start">
             <span class="fnt">
           Time Format
-           <!-- <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
-               theme="outline"></i>-->
           </span>
               <nz-form-item>
                 <nz-form-control>
-                  <nz-select style="width: 100%;" formControlName="timeFormat">
+                  <nz-select style="width: 100%;" formControlName="timeFormat" [nzDisabled]="true">
                     <nz-option nzValue="12h (am/pm)" nzLabel="12h (am/pm)"></nz-option>
                     <nz-option nzValue="24h" nzLabel="24h"></nz-option>
                   </nz-select>
@@ -113,12 +94,10 @@
             <nz-col [nzXs]="{ span: 20,offset:2}" [nzMd]="{ span: 10, offset:3}" [nzLg]="{ span: 10, offset:3}" align="start">
              <span class="fnt">
           Country
-            <!--<i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
-               theme="outline"></i>-->
           </span>
               <nz-form-item>
                 <nz-form-control [nzSm]="14" [nzXs]="24">
-                  <nz-select  style="width: 100%;" formControlName="country" >
+                  <nz-select  style="width: 100%;" formControlName="country" [nzDisabled]="true">
                     <nz-option *ngFor="let country Of counntryList " nzValue="{{country.code}}" nzLabel="{{country.name}}"></nz-option>
                   </nz-select>
                   <nz-form-explain *ngIf="validateForm.get('country').dirty && validateForm.get('country').errors">
@@ -130,17 +109,7 @@
             <nz-col [nzXs]="{span: 20,offset:2}" [nzMd]="{ span: 6, offset:1}" [nzLg]="{ span: 6, offset:1}"   align="start">
               <span class="fnt">
        Time Zone
-           <!-- <i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
-               theme="outline"></i>-->
           </span>
-              <!--   <nz-form-item>
-                   <nz-form-control [nzSm]="14" [nzXs]="24">
-                     <nz-select style="width: 100%;">
-                       <nz-option nzValue="english" nzLabel="english"></nz-option>
-                     </nz-select>
-                     <nz-form-explain *ngIf="validateForm.get('nickname').dirty && validateForm.get('nickname').errors">Please input your nickname!</nz-form-explain>
-                   </nz-form-control>
-                 </nz-form-item>-->
               <ng2-timezone-picker width="150px" style="width: 50%;"
                                    [timezone]="timeZone" id="timeZone" (change)="changeTimezone($event)">
               </ng2-timezone-picker>
@@ -148,14 +117,39 @@
           </nz-row>
 
           <nz-row nzJustify="center" nzAlign="middle">
+            <nz-col [nzXs]="{ span: 20,offset:2}" [nzMd]="{ span: 10, offset:3}" [nzLg]="{ span: 10, offset:3}" align="start">
+             <span class="fnt">
+          Meeting Platform
+          </span>
+              <nz-form-item>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                  <nz-select  style="width: 100%;" formControlName="meetingPlatform">
+                    <nz-option *ngFor="let _meetingPlatform of meetingPlatformResponse" nzValue="{{_meetingPlatform}}" nzLabel="{{_meetingPlatform}}"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            <nz-col [nzXs]="{span: 20,offset:2}" [nzMd]="{ span: 6, offset:1}" [nzLg]="{ span: 6, offset:1}"   align="start">
+            </nz-col>
+          </nz-row>
+
+          <nz-row nzJustify="center" nzAlign="middle">
             <nz-col align="start" [nzXs]="{span: 20,offset:2}" [nzMd]="{ span: 17, offset:3}" [nzLg]="{ span: 17, offset:3}"  >
               <span class="fnt">
           Welcome Message
-            <!--<i nz-icon nz-tooltip nzTitle="What do you want other to call you" type="question-circle"
-               theme="outline"></i>-->
           </span>
               <br><br>
-              <textarea rows="3" nz-input formControlName="welcome"></textarea>
+
+              <quill-editor formControlName="welcome"
+
+                            (blur)="onEditorBlured($event)"
+                            (focus)="onEditorFocused($event)"
+                            (ready)="onEditorCreated($event)"
+                            (change)="onContentChanged($event)"
+              >
+
+              </quill-editor>
+
             </nz-col>
           </nz-row>
           <nz-row nzJustify="center" nzAlign="middle" style="margin-top: 2%;margin-bottom: 3%">
@@ -164,18 +158,18 @@
                       style="background-color:#FF4165; color: white;">Save Changes
               </button> &nbsp;&nbsp;&nbsp;&nbsp;
             </nz-col>
-            <nz-col  [nzXs]="{ span: 22,offset:1}" [nzMd]="{ span:6}" [nzLg]="{ span:6}"  align="center">
+           <!-- <nz-col  [nzXs]="{ span: 22,offset:1}" [nzMd]="{ span:6}" [nzLg]="{ span:6}"  align="center">
               <button nz-button type="reset"  class="login-form-button smallWidth" style="border-color:#707070; color: #707070;"> Cancel</button>
             </nz-col>
             <nz-col [nzXs]="{ span: 22,offset:1}" [nzMd]="{ span:6}" [nzLg]="{ span: 6}" align="center">
               <button nz-button type="button"  class="login-form-button smallWidth" style="border-color:#707070; color: #707070;"
                       (click)="onDeleteAccount()" disabled> Delete Account
               </button>
-            </nz-col>
+            </nz-col>-->
           </nz-row>
         </form>
       </nz-tab>
-      <nz-tab nzTitle="Picture" style="background-color:#FF4165;">
+    <!--  <nz-tab nzTitle="Picture" style="background-color:#FF4165;">
         <nz-row nzJustify="center" nzAlign="middle">
           <nz-col nzSpan="24" nzOffset="2">
             <h4 class="fnt" style="font-weight: bold;margin-top: 30px;margin-bottom: 30px">Uploaded pictures will
@@ -197,6 +191,92 @@
             </form>
           </nz-col>
         </nz-row>
+      </nz-tab>-->
+     <!-- <nz-tab nzTitle="Picture" style="background-color:#FF4165;">
+        <nz-row nzJustify="center" nzAlign="middle">
+          <nz-col nzSpan="24" nzOffset="2">
+            <h4 class="fnt" style="font-weight: bold;margin-top: 30px;margin-bottom: 30px">Uploaded pictures will
+              display at the top of your Cloudmeetin page. (maximum file size of 3MB)</h4> &nbsp;&nbsp;
+          </nz-col>
+        </nz-row>
+        <nz-row nzJustify="center" nzAlign="middle">
+          <nz-col nzSpan="10" nzOffset="2">
+            &lt;!&ndash; <input type="file" (change)="fileChangeEvent($event)" />&ndash;&gt;
+            <form [formGroup]="profileForm" (ngSubmit)="submitMyProfileForm()">
+              <nz-avatar [nzSize]="200" nzIcon="user" [nzSrc]="imagePreview!= null ? imagePreview : imageSource"
+                         (click)="filePicker.click()" style="cursor: pointer" ></nz-avatar>
+              <button nz-button class="login-form-button fnt"
+                      style="background-color:#FF4165; color: white; width: 180px;height: 40px; margin-left:10%"
+                      [disabled]="upload">Upload Picture
+              </button><br><br>
+              <input *ngIf="viewCroper" nz-input formControlName="webLink" placeholder="Enter your website here  it will redirect you to on your image click"/>
+              <p *ngIf="height">Height: {{height}}</p>
+              <p *ngIf="width">Width: {{width}}</p>
+              <input type="file" name="file" #filePicker formControlName="file" (change)="onImagePicked($event)"
+                     class="cdk-visually-hidden" accept="image/*">
+            </form>
+          </nz-col>
+        </nz-row>
+        <nz-row nzJustify="center" nzAlign="middle">
+          <nz-col nzSpan="10" nzOffset="2">
+            <image-cropper
+              *ngIf="viewCroper"
+              [imageChangedEvent]="imageChangedEvent"
+              [maintainAspectRatio]="true"
+              [aspectRatio]="4 / 3"
+              [resizeToWidth]="128"
+              format="png"
+              (imageCropped)="imageCropped($event)"
+              (imageLoaded)="imageLoaded()"
+              (cropperReady)="cropperReady()"
+              (loadImageFailed)="loadImageFailed()"
+            ></image-cropper>
+          </nz-col>
+        </nz-row>
+      </nz-tab>-->
+      <nz-tab nzTitle="Picture" style="background-color:#FF4165;">
+        <nz-row nzJustify="center" nzAlign="middle">
+          <nz-col nzSpan="24" nzOffset="1">
+            <h4 class="fnt" style="font-weight: bold;margin-top: 30px;margin-bottom: 30px">Uploaded pictures will
+              display at the top of your Cloudmeetin page. (maximum file size of 3MB)</h4> &nbsp;&nbsp;
+          </nz-col>
+        </nz-row>
+        <nz-row nzJustify="center" nzAlign="middle">
+          <nz-col [nzXs]="{ span: 22,offset:1}" [nzMd]="{ span: 11}" [nzLg]="{ span: 11}" >
+            <!-- <input type="file" (change)="fileChangeEvent($event)" />-->
+            <form [formGroup]="profileForm" (ngSubmit)="submitMyProfileForm()">
+              <!--<nz-avatar [nzSize]="200" nzIcon="user" [nzSrc]="imagePreview!= null ? imagePreview : imageSource"
+                         (click)="filePicker.click()" style="cursor: pointer" ></nz-avatar>-->
+              <img [src]="imagePreview!= null ? imagePreview : imageSource" alt="profile" height="200" width="200" style="cursor: pointer;border-radius: 50%" (click)="filePicker.click()"/>
+              <br><br>
+              <input *ngIf="viewCroper" style="width: 70%" nz-input formControlName="webLink" placeholder="Enter your website here  it will redirect you to on your image click"/>
+              <!--<p ngIf="height">Dimension -  {{height}}  {{width}}</p>-->
+              <input type="file" name="file" #filePicker formControlName="file" (change)="onImagePicked($event)"
+                     class="cdk-visually-hidden" accept="image/*"><br> <br>
+              <button nz-button class="login-form-button fnt"
+                      style="background-color:#FF4165; color: white; width:70%; height: 40px;"
+                      [disabled]="upload">Save profile data
+              </button>
+            </form>
+          </nz-col>
+          <nz-col [nzXs]="{ span: 22,offset:1}" [nzMd]="{ span: 11}" [nzLg]="{ span: 11}" >
+            <image-cropper
+              *ngIf="viewCroper"
+              [imageChangedEvent]="imageChangedEvent"
+              [maintainAspectRatio]="true"
+              [aspectRatio]="1 / 1"
+              [resizeToWidth]="128"
+              imageQuality="99"
+              format="jpeg"
+              alignImage="center"
+              roundCropper="border-radius:100%"
+              (imageCropped)="imageCropped($event)"
+              (imageLoaded)="imageLoaded()"
+              (cropperReady)="cropperReady()"
+              (loadImageFailed)="loadImageFailed()"
+            ></image-cropper>
+          </nz-col>
+        </nz-row>
       </nz-tab>
       <nz-tab nzTitle="My link">
         <nz-row nzJustify="center" nzAlign="middle">
@@ -209,13 +289,13 @@
           <nz-row nzJustify="center" nzAlign="middle">
             <nz-col nzSpan="10" nzOffset="2">
               <div style="margin-bottom: 16px;">
-                <nz-input-group nzAddOnBefore="Cloudmeetin.com/">
-                  <input type="text" nz-input class="form-control" formControlName="userID" id="userID">
+                <nz-input-group nzAddOnBefore="Cloudmeetin.com/" >
+                  <input type="text" nz-input class="form-control" formControlName="userID" id="userID" disabled>
                 </nz-input-group>
               </div>
             </nz-col>
           </nz-row>
-          <nz-row nzJustify="start">
+          <nz-row nzJustify="start" *ngIf="linkButtonStatus">
             <nz-col nzSpan="10" nzOffset="1" align="start">
               <button nz-button class="login-form-button fnt"
                       style="background-color:#FF4165; color: white; width: 180px;height: 40px; margin-left:10%; margin-top:5% " disabled>
@@ -226,10 +306,8 @@
         </form>
       </nz-tab>
       <nz-tab nzTitle="Login">
-
         <nz-row nzJustify="center" nzAlign="middle">
           <nz-col nzSpan="10" nzOffset="2">
-
             <h4 class="fnt" style="font-weight: bold;margin-top: 30px;margin-bottom: 30px">You log in with an email
               address and password.</h4>
           </nz-col>
@@ -244,19 +322,21 @@
           </nz-col>
         </nz-row>
         <nz-row nzJustify="center" nzAlign="middle">
-          <nz-col nzSpan="10" nzOffset="2">
+         <!-- <nz-col nzSpan="10" nzOffset="2">
             <b>Password</b><br>
             {{starPass}}
           </nz-col>
           <nz-col nzSpan="10" nzOffset="2" style="margin-top: 10px">
             <a style="color:#FF4165;cursor:pointer;" (click)="onDateRange()">Change password</a>
-          </nz-col>
+          </nz-col>-->
         </nz-row>
       </nz-tab>
     </nz-tabset>
   </nz-col>
 </nz-row>
-
+    </nz-spin>
+  </nz-spin>
+</nz-spin>
 
 <nz-modal [(nzVisible)]="date_range" [nzWidth]="600" [nzClosable]="false" [nzTitle]="changePassword"
           (nzOnCancel)="handleCancel()"
