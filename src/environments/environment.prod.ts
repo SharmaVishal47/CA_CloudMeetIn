@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://cloudmeetin.com'
+  apiUrl: 'https://dev.cloudmeetin.com'
 };

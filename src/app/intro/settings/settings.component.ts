@@ -44,7 +44,7 @@ export class SettingsComponent implements OnInit ,OnDestroy{
           this.isSpinning = false;
         }
       }else{
-        this.routgger.navigate(['error']);
+        this.router.navigate(['error']);
       }
       this.isSpinning = false;
     },error1 => {

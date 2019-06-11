@@ -287,6 +287,33 @@ export class DashboardComponent implements OnInit {
     this.filterByActive();
   }
 
+  filterByDay(){
+    if(this.checkOptionsOnMeeting[0].checked == true) {
+      console.log("All meeting ");
+      this.resetFilter();
+    }
+    if(this.checkOptionsOnMeeting[1].checked == true) {
+      console.log("Past meeting ");
+      let pastDate  =  new Date();
+      this.dateFrom = new Date(pastDate.getFullYear(),pastDate.getMonth(),pastDate.getDate()-60);
+      this.dateFrom.setHours(0,0,0);
+      let pastTo = new Date();
+      this.dateTo = new Date(pastTo.getFullYear(),pastTo.getMonth(),pastTo.getDate()-1);
+      this.dateTo.setHours(23,59,59);
+      this.filterByActive();
+
+    }
+    if(this.checkOptionsOnMeeting[2].checked == true){
+      console.log("Future  meeting ");
+      this.dateFrom = new Date();
+      this.dateFrom.setHours(0,0,0);
+      let today = new Date();
+      this.dateTo = new Date(today.getFullYear(),today.getMonth(),today.getDate()+60);
+      this.dateTo.setHours(23,59,59);
+      this.filterByActive();
+    }
+  }
+
   filterByActive() {
     this.showReset = true;
     console.log("Date From : ", this.dateFrom);
@@ -305,8 +332,8 @@ export class DashboardComponent implements OnInit {
                   dateFrom.setHours(0,0,0,0);
 
                   let dateTo = new Date(this.dateTo.toString());
-                  dateTo.setHours(0,0,0,0);
-
+                   dateTo.setHours(0,0,0,0);
+                  console.log("To Date Time : ", dateTo);
                   if(key >= Date.parse(dateFrom.toString()) && key <= Date.parse(dateTo.toString())){
                     myArrayMeeting.push(val[i]);
                   }
@@ -539,31 +566,7 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  filterByDay(){
-    if(this.checkOptionsOnMeeting[0].checked == true) {
-      console.log("All meeting ")
-      this.resetFilter();
-    }
-    if(this.checkOptionsOnMeeting[1].checked == true) {
-      console.log("Past meeting ");
-      let pastDate  =  new Date();
-      this.dateFrom = new Date(pastDate.getFullYear(),pastDate.getMonth(),pastDate.getDate()-60);
-      this.dateFrom.setHours(0,0,0);
-      this.dateTo = new Date();
-      this.dateTo.setHours(23,59,59);
-      this.filterByActive();
 
-    }
-    if(this.checkOptionsOnMeeting[2].checked == true){
-      console.log("Future  meeting ");
-      this.dateFrom = new Date();
-      this.dateFrom.setHours(0,0,0);
-      let today = new Date();
-      this.dateTo = new Date(today.getFullYear(),today.getMonth(),today.getDate()+60);
-      this.dateTo.setHours(23,59,59);
-      this.filterByActive();
-    }
-  }
   getUserList(){
     this.httpClient.post<{message: string,data: []}>(API_URL+'/usertable/getuserlist',{'userId': this.authService.getUserId()}).subscribe(res =>{
       // console.log("res getuserlist=========",res);
