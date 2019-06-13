@@ -8,6 +8,11 @@ import {AuthService} from 'angular-6-social-login';
 import * as moment from 'moment-timezone';
 import {NzMessageService} from 'ng-zorro-antd';
 import {MessageServiceService} from '../Auth/message-service.service';
+import {environment} from '../../environments/environment';
+import {forEach} from '@angular/router/src/utils/collection';
+
+const API_URL = environment.apiUrl;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -76,7 +81,7 @@ export class MeetingService {
 // This method used to get authicated user Details for meeting schudule
   authUserRecord(data: { userId: string }) {
     this.httpClient.post<{ message: string, data: MeetingAuthUser[] }>
-    ('/user/checkuser', data).subscribe((responseData) => {
+    (API_URL + '/user/checkuser', data).subscribe((responseData) => {
       this._meetingAuthUser = responseData.data;
       this._meetingAuthUserRecord.next([...this._meetingAuthUser]);
     });
@@ -122,7 +127,7 @@ export class MeetingService {
 
   //  This method used to get the available meeting day from database
   getMeetingAvailableDay(userId: string) {
-    this.httpClient.post<any>('/user/getAvailableDays', {userId: userId}).subscribe(res => {
+    this.httpClient.post<any>(API_URL + '/user/getAvailableDays', {userId: userId}).subscribe(res => {
       this.meetingAvailableDay.next(res);
     });
   }
@@ -198,7 +203,7 @@ export class MeetingService {
   userSelectTimePeriod(userEmail: string | boolean, expectedDate: any, timeZone: string) {
     this.expectedDate = expectedDate;
     this.timeZone = timeZone;
-    this.httpClient.post<any>('/user/gettime', {email: userEmail})
+    this.httpClient.post<any>(API_URL + '/user/gettime', {email: userEmail})
       .subscribe((responseData) => {
         // this.getTimePeriod.next(responseData);
         this.httpClient.post<any>('/filter/meetingTime', {
@@ -265,6 +270,7 @@ export class MeetingService {
                   if (this.listTimeArray.indexOf(splitMeetingList[i]) > -1) {
                     this.listTimeArray.splice(this.listTimeArray.indexOf(meetingTimeList), splitMeetingList.length);
                     localStorage.setItem('UpdateQuery', String(true));
+
                     localStorage.setItem('meetingTimeList', meetingTimeList);
                   }
                 }
@@ -1424,24 +1430,17 @@ export class MeetingService {
 
   getCalendarEventSlot(eventType: number,dateValue: string,timeZone: string) {
     this.timeZoneForConvert = timeZone;
-    // console.log("eventType===========", eventType);
-    // console.log("dateValue============", dateValue);
     this.userSlotArray = [];
     this.jsonSlotArrayTemp = [];
     this.selectDate = new Date(dateValue);
-   /* let startTime = this.setHours(6, 0);
-    let endTime = this.setHours(24,0);*/
-    // console.log("startTime", startTime);
-    // console.log("endTime", endTime);
-    // console.log("selectDate====",this.selectDate);
-    /*userSlotArray.push({startTime: startTime, endTime: endTime});*/
     let count = 0;
     if(this.getUserEmail())  {
-      this.httpClient.post<any>('/user/gettime', {email: this.getUserEmail()}).subscribe((responseData) => {
+      this.httpClient.post<any>(API_URL + '/user/gettime', {email: this.getUserEmail()}).subscribe((responseData) => {
+        // console.log("responseData : ", responseData);
         let startTime = responseData.data[0].startTime.split(':');
         let endTime = responseData.data[0].endTime.split(':');
-        // console.log("startTime-- > ", startTime);
-        // console.log("endTime-- > ", endTime);
+         //console.log("startTime-- > ", startTime);
+         //console.log("endTime-- > ", endTime);
         for(let i = +startTime[0]; i<endTime[0]; i++) {
           if(eventType == 60) {
             count % 2 == 0 ? this.userSlotArray.push({startTime: this.setHours(i, 0), endTime: this.setHours(i, 60)}) : this.userSlotArray.push({startTime: this.setHours(i-1, 60), endTime: this.setHours(i, 60)})
@@ -1469,22 +1468,106 @@ export class MeetingService {
           count++;
         }
 
-        // console.log("userSlotArray==== ", this.userSlotArray);
+        console.log("userSlotArray==== ", this.userSlotArray);
         let email = this.getUserEmail();
+        let calendarJson  = [];
         // console.log("email=============",email);
         if(email != null && email != undefined){
           this.jsonSlotArray = [];
           if(this.userSlotArray != null){
-            for(let i =0 ; i< this.userSlotArray.length;i++) {
-              if(this.userSlotArray[i].startTime != null && this.userSlotArray[i].startTime != undefined && this.userSlotArray[i].endTime != null && this.userSlotArray[i].endTime != undefined ){
-                this.httpClient.post<any>('/user/getcalendareventslot',
+                this.httpClient.post<any>(API_URL + '/user/getcalendareventslot',
                   {
                     email: email,
-                    timeMax: new Date(this.userSlotArray[i].endTime),
-                    timeMin: new Date(this.userSlotArray[i].startTime)
+                    timeMax: new Date(this.userSlotArray[this.userSlotArray.length-1].endTime),
+                    timeMin: new Date(this.userSlotArray[0].startTime)
                   }).subscribe((response) => {
-                  if(response != null && response != undefined){
-                    // console.log("Calendar Response -- >", response);
+                  console.log("Calendar Response -- >", response);
+                  if(response.length == 0) {
+                    this.availabileSlot.next(this.userSlotArray);
+                  } else {
+                    console.log("Log# 4 : ");
+                    response.map((obj, index) => {
+                      // console.log("Log 4 : ", obj.recurrence);
+                      if(obj.hasOwnProperty("recurrence")) {
+                        let startTime = obj.start.dateTime;
+                        let endTime = obj.end.dateTime;
+                        let tempStartTime:Date = new Date(startTime);
+                        let tempEndTime:Date = new Date(endTime);
+                        tempStartTime.setFullYear(1900 + this.selectDate.getYear(),this.selectDate.getMonth(),this.selectDate.getDate());
+                        tempEndTime.setFullYear(1900 + this.selectDate.getYear(),this.selectDate.getMonth(),this.selectDate.getDate());
+                        // console.log("log 3: ", tempStartTime +' '+  tempEndTime);
+                        calendarJson.push({
+                          startTime: Date.parse(tempStartTime.toString()),
+                          endTime: Date.parse(tempEndTime.toString())
+                        });
+                      } else {
+                        calendarJson.push({
+                          startTime: Date.parse(obj.start.dateTime),
+                          endTime: Date.parse(obj.end.dateTime)
+                        });
+                        if(obj.hasOwnProperty("attendees")) {
+                          for(let k =0; k< obj.attendees.length ; k++) {
+                            let checkPoint = typeof (obj.attendees[k].organizer) === 'boolean' && obj.attendees[k].organizer !== 'undefined' && obj.attendees[k].organizer === true;
+                            if(checkPoint) {
+                              if(obj.attendees[k].responseStatus == "declined") {
+                                console.log("Log # ",calendarJson.splice(index, 1));
+                              }
+                            }
+                          }
+                        }
+                      }
+                    });
+                    calendarJson.sort(function(a, b) {
+                      return a.startTime - b.startTime;
+                    });
+
+                    calendarJson.forEach(item =>{
+                      console.log("Booked item ===="+"Start time ==="+new Date(item.startTime)+"  end time======="+new Date(item.endTime));
+                    });
+
+
+
+                    for(let i=0;i<calendarJson.length;i++){
+                      let last_index_startTime;
+                      let last_index_endTime;
+                      for(let j=0;j<this.userSlotArray.length;j++){
+                        if(this.userSlotArray[j].startTime<=calendarJson[i].startTime){
+                          last_index_startTime = j;
+                        }
+                      }
+                      for(let j=0;j<this.userSlotArray.length;j++){
+                        if(this.userSlotArray[j].startTime<=calendarJson[i].endTime){
+                          if(this.userSlotArray[j].startTime == calendarJson[i].endTime){
+                            last_index_endTime = j;
+                          }else{
+                            last_index_endTime = j+1;
+                          }
+                        }
+                      }
+                      if(last_index_startTime && last_index_endTime){
+                        this.userSlotArray.splice(last_index_startTime,(last_index_endTime-last_index_startTime));
+                      }
+                    }
+                    console.log("Slot Array : ", this.userSlotArray);
+                    for(let i =0 ; i< this.userSlotArray.length; i++) {
+                      this.jsonSlotArray.push({startTime: moment(this.userSlotArray[i].startTime).tz(timeZone).format() , endTime: moment(this.userSlotArray[i].endTime).tz(timeZone).format()})
+                    }
+                    this.availabileSlot.next(this.userSlotArray);
+                  }
+
+
+                 /* this.userSlotArray.forEach((item, index)=>{
+                    console.log("Available item after filter ===="+"Start time ==="+new Date(item.startTime)+"  end time======="+new Date(item.endTime));
+                    this.jsonSlotArray.push({
+                      startTime: item.startTime,
+                      endTime : item.endTime
+                    });
+
+                  });*/
+
+
+                 /* if(response != null && response != undefined){
+                   // console.log("Calendar Response -- >", response);
                     if(response.length > 0) {
                       let flagValue = true;
                       for(let i=0;i<response.length;i++){
@@ -1526,12 +1609,12 @@ export class MeetingService {
                     // console.log("this.jsonSlotArrayTemp.length=====",this.jsonSlotArrayTemp.length);
                     // console.log("this.jsonSlotArray.length=====",this.jsonSlotArray.length);
                     if(this.jsonSlotArrayTemp.length > 0 && this.jsonSlotArray.length >= this.jsonSlotArrayTemp.length){
+                      console.log("this.jsonSlotArrayTemp.length=====",this.jsonSlotArray);
                       this.availabileSlot.next(this.jsonSlotArray);
                     }
-                  }
+                  }*/
+
                 });
-              }
-            }
           }
         }
       });
@@ -1596,7 +1679,7 @@ export class MeetingService {
   }
   getUserRecords(userId: any) {
     if(userId) {
-      return this.httpClient.post<any>('/user/checkuser', {userId: userId});
+      return this.httpClient.post<any>(API_URL + '/user/checkuser', {userId: userId});
     } else {
       this.showDialog("Invalid Id")
     }

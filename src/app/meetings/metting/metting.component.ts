@@ -14,6 +14,8 @@ import {NzModalRef, NzModalService} from 'ng-zorro-antd';
 import {NgxUiLoaderService} from 'ngx-ui-loader';
 import {NgxUiLoaderDemoService} from '../ngx-ui-loader-demo.service';
 import {MessageServiceService} from '../../Auth/message-service.service';
+import {environment} from '../../../environments/environment';
+const API_URL = environment.apiUrl;
 
 @Component({
   selector: 'app-metting',
@@ -99,7 +101,7 @@ export class MettingComponent<D> implements OnInit {
       }
 
       if(this.checkEventValue){
-        this.httpClient.post<{message: string,data: []}>('/user/checkuser',{userId: this.userIdByUrl}).subscribe((responseData)=>{
+        this.httpClient.post<{message: string,data: []}>(API_URL + '/user/checkuser',{userId: this.userIdByUrl}).subscribe((responseData)=>{
           if(responseData.data.length > 0 ){
             localStorage.setItem("description",responseData.data['0'].welcomeMessage);
             localStorage.setItem("imagePreview",responseData.data['0'].profilePic);
@@ -134,38 +136,41 @@ export class MettingComponent<D> implements OnInit {
 
 
     const newSubs1 = this.meetingService.availabileSlot.subscribe((availableSlot)=> {
-      console.log("Getting Available slot===========",availableSlot);
+      console.log("Getting Available slot===========", availableSlot);
       if(availableSlot != null){
-
         this.availableSlot = [];
         this.availableSlotTemp = [];
 
         this.availableSlot = availableSlot;
         this.availableSlotTemp = availableSlot;
-
+        console.log(":=========== ", this.availableSlot);
         let tempSlot = this.availableSlotTemp;
+        console.log("Log 2 : ", tempSlot);
 
         let systemCurrentTime = new Date();
         let userTimeZoneTime = moment(systemCurrentTime).tz(this.userTimeZone).format();
-        //console.log("userTimeZoneTime=========",userTimeZoneTime);
+        console.log("userTimeZoneTime=========",userTimeZoneTime);
         let currentTime = new Date(userTimeZoneTime);
         currentTime.setHours(currentTime.getHours()+4);
-        //console.log("currentTime client=========",currentTime);
+        console.log("currentTime client=========",currentTime);
         let userTimeAddFour = moment(currentTime).tz(this.userTimeZone).format();
-        //console.log("userTimeAddFour=========",userTimeAddFour);
+        console.log("userTimeAddFour=========",userTimeAddFour);
 
         /* let userCurrentTime = new Date(currentTime).toLocaleString('en-US', {timeZone: this.userTimeZone});
          console.log("userCurrentTime================",userCurrentTime);*/
 
-        let slotForFilter = tempSlot.filter(item => Date.parse(item.startTime) >= Date.parse(userTimeAddFour));
+        let slotForFilter = tempSlot.filter(item => item.startTime >= Date.parse(userTimeAddFour));
+
+        console.log("Log 1 : ", slotForFilter);
         tempSlot = slotForFilter;
-        //console.log("slotForFilter================",tempSlot);
+        console.log("slotForFilter================",tempSlot);
         tempSlot.sort((a,b) => Date.parse(a.startTime) - Date.parse(b.startTime));
         this.userTimeSlot = tempSlot;
 
-        //console.log("Main availableSlot1===================",this.availableSlotTemp);
+        console.log("Main availableSlot1===================",this.availableSlotTemp);
         console.log("before convert availableSlot1===================",this.userTimeSlot);
-        /*console.log("filter availableSlot===================",tempSlot);*/
+        console.log("filter availableSlot===================",tempSlot);
+
         this.availableSlot = [];
         tempSlot.forEach(item => {
           let dateStart = new Date(new Date(item.startTime)).toLocaleString('en-US', {timeZone: this.selectedTimeZone});
@@ -206,6 +211,7 @@ export class MettingComponent<D> implements OnInit {
         this.timeZone = timeZone;
       }
     });
+
     this.subscriptions.push(newSubs1);
 
     this.route.queryParams
@@ -320,7 +326,7 @@ export class MettingComponent<D> implements OnInit {
     currentTime.setHours(currentTime.getHours()+4);
     //console.log("currentTime client=========",currentTime);
     let userTimeAddFour = moment(currentTime).tz(this.userTimeZone).format();
-    let slotForFilter = tempSlot.filter(item => Date.parse(item.startTime) >= Date.parse(userTimeAddFour));
+    let slotForFilter = tempSlot.filter(item => item.startTime >= Date.parse(userTimeAddFour));
     // console.log("slotForFilter===================",slotForFilter);
     tempSlot = slotForFilter;
     tempSlot.sort((a,b) => Date.parse(a.startTime) - Date.parse(b.startTime));

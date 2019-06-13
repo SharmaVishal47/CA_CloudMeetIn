@@ -58,7 +58,6 @@ export class HeaderComponent implements OnInit,OnDestroy {
       this._link = encodeURIComponent(CryptoJS.AES.encrypt(validEmailId, 'sfdc31011992', ''));
       this.userId = this.authService.getUserId();
       this.url = 'https://cloudmeetin.com/'+this.userId;
-
       this.userImagePreview = this.authService.getprofilePic();
       // console.log("this.userImagePreview----",this.userImagePreview);
       if(this.userImagePreview === null|| this.userImagePreview === undefined || this.userImagePreview === "null" || this.userImagePreview === ""){
@@ -68,7 +67,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
     });
 
     this.userId = this.authService.getUserId();
-    this.url = 'https://cloudmeetin.com/'+this.userId;
+    this.url =  'https://cloudmeetin.com/'+this.userId;
     this.emailId = this.authService.getUserEmaild();
     /*this._link = this.emailId;*/
     // console.log("Type Of : ", typeof (this.emailId ) === 'string' && this.emailId.trim().length > 0 ? this.emailId : localStorage.getItem('email'));

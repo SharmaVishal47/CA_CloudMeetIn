@@ -36,7 +36,7 @@
           </li>-->
           <li class="nav-item paddingLeft " style="display: flex ;">
             <img src={{userImagePreview}} class="avatar" *ngIf="isAuthenticated" alt="cim" >
-            <a class="nav-link" [routerLinkActive]="['change-background']" *ngIf="isAuthenticated" [matMenuTriggerFor]="menu" style="cursor: pointer">cloudmeetin.com/{{userId}}&nbsp;&#x25BC;<span class="sr-only">(current)</span></a>
+            <a class="nav-link" [routerLinkActive]="['change-background']" *ngIf="isAuthenticated" [matMenuTriggerFor]="menu" style="cursor: pointer; min-width: 200px;">{{authService.getFullName()}}&nbsp;&#x25BC;<span class="sr-only">(current)</span></a>
             <mat-menu #menu="matMenu">
               <p mat-menu-item style="margin: 0;line-height: 30px;height: 30px; padding: 0px 40px 0px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}" (click)="openDialog()">Copy Your Link</p>
               <p mat-menu-item style="margin: 0;line-height: 30px;height: 30px;padding: 0px 40px 0px 15px; color: #707070; font-family: 'Roboto-Light', sans-serif;" [routerLinkActive]="['change-background-one']" [routerLinkActiveOptions]="{exact:true}" routerLink="/connection">Calendar Connection</p>

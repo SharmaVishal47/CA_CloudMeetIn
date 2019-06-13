@@ -4,7 +4,8 @@ import {HttpClient} from '@angular/common/http';
 import {FormBuilder} from '@angular/forms';
 import {MeetingService} from '../meeting.service';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-
+import {environment} from '../../../environments/environment';
+const API_URL = environment.apiUrl;
 
 @Component({
   selector: 'app-scheduling-page',
