@@ -40,7 +40,7 @@ export class ScheduleDateComponent implements OnInit, OnDestroy {
     });
 
     let returnRecords = this.meetingService.getSelectedDateAndTimeZone();
-    // console.log("Return Records Date and TimeZone", returnRecords);
+    // // console.log("Return Records Date and TimeZone", returnRecords);
     this.expectedTimeZone = this.timeZone = returnRecords.timezone;
     this.expectedDate = returnRecords.selectedDate;
     let userEmail = returnRecords.userEmail;
@@ -48,10 +48,10 @@ export class ScheduleDateComponent implements OnInit, OnDestroy {
       this.meetingService.userSelectTimePeriod(userEmail, this.expectedDate, this.timeZone);
       this.meetingService.getTimePeriod.subscribe((responseData) =>{
         this.meetingService.deleteListTimeArray();
-        console.log('responseData====', responseData);
+        // console.log('responseData====', responseData);
         this.listTimeArray = responseData;
       }, error => {
-        console.log('error====', error);
+        // console.log('error====', error);
         this.messageService.generateErrorMessage(error)
        /* const dialogConfig = new MatDialogConfig();
         dialogConfig.data = error;
@@ -69,7 +69,7 @@ export class ScheduleDateComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.meetingService.deleteListTimeArray();
-    console.log("Call on destroy");
+    // console.log("Call on destroy");
   }
 
 }

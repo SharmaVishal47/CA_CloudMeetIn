@@ -12,11 +12,11 @@ export class HeaderserviceService {
 
   getTokenExpiry(){
     let authData = this.authService.getAuthData();
-    console.log("AuthData====",authData);
+    // console.log("AuthData====",authData);
     if(authData){
       const now =new Date();
       const expiresIn =  Date.parse(authData.expirationDate) - now.getTime();
-      console.log("expires=====",expiresIn);
+      // console.log("expires=====",expiresIn);
       if(expiresIn > 0){
         this.authStatusListener.next(true);
       }else{

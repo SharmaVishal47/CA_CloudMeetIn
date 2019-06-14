@@ -23,8 +23,8 @@ export class ChangePasswordComponent implements OnInit {
 
       this.queryData = params['data'];
       this.email = params['email'];
-      console.log(' QueryParams--->',this.queryData);
-      console.log(' QueryParams email--->',this.email);
+      // console.log(' QueryParams--->',this.queryData);
+      // console.log(' QueryParams email--->',this.email);
 
     });
    this.authService.checkTokenData(this.queryData,this.email);
@@ -35,7 +35,7 @@ export class ChangePasswordComponent implements OnInit {
       this.changPasswordForm.controls[ i ].updateValueAndValidity();
     }
     this.router.navigate(['/login']);
-    console.log('Datas--------->', this.changPasswordForm.value.password);
+    // console.log('Datas--------->', this.changPasswordForm.value.password);
     this.authService.updatePassword(this.changPasswordForm.value.password,this.email);
 
   }

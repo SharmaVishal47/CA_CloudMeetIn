@@ -455,10 +455,10 @@ and/or values.
 var array = [1];
 var other = _.concat(array, 2, [3], [[4]]);
 
-console.log(other);
+// console.log(other);
 // => [1, 2, 3, [4]]
 
-console.log(array);
+// console.log(array);
 // => [1]
 ```
 * * *
@@ -723,7 +723,7 @@ including, `end`.
 var array = [1, 2, 3];
 
 _.fill(array, 'a');
-console.log(array);
+// console.log(array);
 // => ['a', 'a', 'a']
 
 _.fill(Array(3), 2);
@@ -1177,7 +1177,7 @@ for equality comparisons.
 var array = [1, 2, 3, 1, 2, 3];
 
 _.pull(array, 2, 3);
-console.log(array);
+// console.log(array);
 // => [1, 1]
 ```
 * * *
@@ -1206,7 +1206,7 @@ This method is like `_.pull` except that it accepts an array of values to remove
 var array = [1, 2, 3, 1, 2, 3];
 
 _.pullAll(array, [2, 3]);
-console.log(array);
+// console.log(array);
 // => [1, 1]
 ```
 * * *
@@ -1238,7 +1238,7 @@ by which uniqueness is computed. The iteratee is invoked with one argument: (val
 var array = [{ 'x': 1 }, { 'x': 2 }, { 'x': 3 }, { 'x': 1 }];
 
 _.pullAllBy(array, [{ 'x': 1 }, { 'x': 3 }], 'x');
-console.log(array);
+// console.log(array);
 // => [{ 'x': 2 }]
 ```
 * * *
@@ -1268,10 +1268,10 @@ array of removed elements.
 var array = [5, 10, 15, 20];
 var evens = _.pullAt(array, 1, 3);
 
-console.log(array);
+// console.log(array);
 // => [5, 15]
 
-console.log(evens);
+// console.log(evens);
 // => [10, 20]
 ```
 * * *
@@ -1304,10 +1304,10 @@ var evens = _.remove(array, function(n) {
   return n % 2 == 0;
 });
 
-console.log(array);
+// console.log(array);
 // => [1, 3]
 
-console.log(evens);
+// console.log(evens);
 // => [2, 4]
 ```
 * * *
@@ -1336,7 +1336,7 @@ var array = [1, 2, 3];
 _.reverse(array);
 // => [3, 2, 1]
 
-console.log(array);
+// console.log(array);
 // => [3, 2, 1]
 ```
 * * *
@@ -2356,12 +2356,12 @@ for object iteration.
 #### Example
 ```js
 _([1, 2]).forEach(function(value) {
-  console.log(value);
+  // console.log(value);
 });
 // => logs `1` then `2`
 
 _.forEach({ 'a': 1, 'b': 2 }, function(value, key) {
-  console.log(key);
+  // console.log(key);
 });
 // => logs 'a' then 'b' (iteration order is not guaranteed)
 ```
@@ -2390,7 +2390,7 @@ This method is like `_.forEach` except that it iterates over elements of
 #### Example
 ```js
 _.forEachRight([1, 2], function(value) {
-  console.log(value);
+  // console.log(value);
 });
 // => logs `2` then `1`
 ```
@@ -2981,7 +2981,7 @@ the Unix epoch (1 January 1970 00:00:00 UTC).
 #### Example
 ```js
 _.defer(function(stamp) {
-  console.log(_.now() - stamp);
+  // console.log(_.now() - stamp);
 }, _.now());
 // => logs the number of milliseconds it took for the deferred function to be invoked
 ```
@@ -3015,7 +3015,7 @@ The opposite of `_.before`; this method creates a function that invokes
 var saves = ['profile', 'settings'];
 
 var done = _.after(saves.length, function() {
-  console.log('done saving!');
+  // console.log('done saving!');
 });
 
 _.forEach(saves, function(type) {
@@ -3349,7 +3349,7 @@ additional arguments are provided to `func` when it's invoked.
 #### Example
 ```js
 _.defer(function(text) {
-  console.log(text);
+  // console.log(text);
 }, 'deferred');
 // logs 'deferred' after one or more milliseconds
 ```
@@ -3376,7 +3376,7 @@ provided to `func` when it's invoked.
 #### Example
 ```js
 _.delay(function(text) {
-  console.log(text);
+  // console.log(text);
 }, 1000, 'later');
 // => logs 'later' after one second
 ```
@@ -3878,7 +3878,7 @@ as error objects, functions, DOM nodes, and WeakMaps.
 var objects = [{ 'a': 1 }, { 'b': 2 }];
 
 var shallow = _.clone(objects);
-console.log(shallow[0] === objects[0]);
+// console.log(shallow[0] === objects[0]);
 // => true
 ```
 * * *
@@ -3903,7 +3903,7 @@ This method is like `_.clone` except that it recursively clones `value`.
 var objects = [{ 'a': 1 }, { 'b': 2 }];
 
 var deep = _.cloneDeep(objects);
-console.log(deep[0] === objects[0]);
+// console.log(deep[0] === objects[0]);
 // => false
 ```
 * * *
@@ -3934,11 +3934,11 @@ function customizer(value) {
 
 var el = _.cloneDeepWith(document.body, customizer);
 
-console.log(el === document.body);
+// console.log(el === document.body);
 // => false
-console.log(el.nodeName);
+// console.log(el.nodeName);
 // => 'BODY'
-console.log(el.childNodes.length);
+// console.log(el.childNodes.length);
 // => 20
 ```
 * * *
@@ -3972,11 +3972,11 @@ function customizer(value) {
 
 var el = _.cloneWith(document.body, customizer);
 
-console.log(el === document.body);
+// console.log(el === document.body);
 // => false
-console.log(el.nodeName);
+// console.log(el.nodeName);
 // => 'BODY'
-console.log(el.childNodes.length);
+// console.log(el.childNodes.length);
 // => 0
 ```
 * * *
@@ -6148,7 +6148,7 @@ function Foo() {
 Foo.prototype.c = 3;
 
 _.forIn(new Foo, function(value, key) {
-  console.log(key);
+  // console.log(key);
 });
 // => logs 'a', 'b', then 'c' (iteration order is not guaranteed)
 ```
@@ -6181,7 +6181,7 @@ function Foo() {
 Foo.prototype.c = 3;
 
 _.forInRight(new Foo, function(value, key) {
-  console.log(key);
+  // console.log(key);
 });
 // => logs 'c', 'b', then 'a' assuming `_.forIn` logs 'a', 'b', then 'c'
 ```
@@ -6216,7 +6216,7 @@ function Foo() {
 Foo.prototype.c = 3;
 
 _.forOwn(new Foo, function(value, key) {
-  console.log(key);
+  // console.log(key);
 });
 // => logs 'a' then 'b' (iteration order is not guaranteed)
 ```
@@ -6249,7 +6249,7 @@ function Foo() {
 Foo.prototype.c = 3;
 
 _.forOwnRight(new Foo, function(value, key) {
-  console.log(key);
+  // console.log(key);
 });
 // => logs 'b' then 'a' assuming `_.forOwn` logs 'a' then 'b'
 ```
@@ -6853,11 +6853,11 @@ are created for all other missing properties. Use `_.setWith` to customize
 var object = { 'a': [{ 'b': { 'c': 3 } }] };
 
 _.set(object, 'a[0].b.c', 4);
-console.log(object.a[0].b.c);
+// console.log(object.a[0].b.c);
 // => 4
 
 _.set(object, 'x[0].y.z', 5);
-console.log(object.x[0].y.z);
+// console.log(object.x[0].y.z);
 // => 5
 ```
 * * *
@@ -7007,13 +7007,13 @@ var object = { 'a': [{ 'b': { 'c': 7 } }] };
 _.unset(object, 'a[0].b.c');
 // => true
 
-console.log(object);
+// console.log(object);
 // => { 'a': [{ 'b': {} }] };
 
 _.unset(object, 'a[0].b.c');
 // => true
 
-console.log(object);
+// console.log(object);
 // => { 'a': [{ 'b': {} }] };
 ```
 * * *
@@ -7417,17 +7417,17 @@ Executes the chained sequence and returns the wrapped result.
 var array = [1, 2];
 var wrapped = _(array).push(3);
 
-console.log(array);
+// console.log(array);
 // => [1, 2]
 
 wrapped = wrapped.commit();
-console.log(array);
+// console.log(array);
 // => [1, 2, 3]
 
 wrapped.last();
 // => 3
 
-console.log(array);
+// console.log(array);
 // => [1, 2, 3]
 ```
 * * *
@@ -7540,7 +7540,7 @@ var array = [1, 2, 3];
 _(array).reverse().value()
 // => [3, 2, 1]
 
-console.log(array);
+// console.log(array);
 // => [3, 2, 1]
 ```
 * * *
@@ -8576,7 +8576,7 @@ method.
 var view = {
   'label': 'docs',
   'onClick': function() {
-    console.log('clicked ' + this.label);
+    // console.log('clicked ' + this.label);
   }
 };
 
@@ -9366,10 +9366,10 @@ _.toPath('a[0].b.c');
 var path = ['a', 'b', 'c'],
     newPath = _.toPath(path);
 
-console.log(newPath);
+// console.log(newPath);
 // => ['a', 'b', 'c']
 
-console.log(path === newPath);
+// console.log(path === newPath);
 // => false
 ```
 * * *

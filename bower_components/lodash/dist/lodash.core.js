@@ -1438,10 +1438,10 @@
    * var array = [1];
    * var other = _.concat(array, 2, [3], [[4]]);
    *
-   * console.log(other);
+   * // console.log(other);
    * // => [1, 2, 3, [4]]
    *
-   * console.log(array);
+   * // console.log(array);
    * // => [1]
    */
   var concat = rest(function(array, values) {
@@ -1858,12 +1858,12 @@
    * @example
    *
    * _([1, 2]).forEach(function(value) {
-   *   console.log(value);
+   *   // console.log(value);
    * });
    * // => logs `1` then `2`
    *
    * _.forEach({ 'a': 1, 'b': 2 }, function(value, key) {
-   *   console.log(key);
+   *   // console.log(key);
    * });
    * // => logs 'a' then 'b' (iteration order is not guaranteed)
    */
@@ -2110,7 +2110,7 @@
    * @example
    *
    * _.defer(function(stamp) {
-   *   console.log(_.now() - stamp);
+   *   // console.log(_.now() - stamp);
    * }, _.now());
    * // => logs the number of milliseconds it took for the deferred function to be invoked
    */
@@ -2203,7 +2203,7 @@
    * @example
    *
    * _.defer(function(text) {
-   *   console.log(text);
+   *   // console.log(text);
    * }, 'deferred');
    * // logs 'deferred' after one or more milliseconds
    */
@@ -2225,7 +2225,7 @@
    * @example
    *
    * _.delay(function(text) {
-   *   console.log(text);
+   *   // console.log(text);
    * }, 1000, 'later');
    * // => logs 'later' after one second
    */
@@ -2351,7 +2351,7 @@
    * var objects = [{ 'a': 1 }, { 'b': 2 }];
    *
    * var shallow = _.clone(objects);
-   * console.log(shallow[0] === objects[0]);
+   * // console.log(shallow[0] === objects[0]);
    * // => true
    */
   function clone(value) {

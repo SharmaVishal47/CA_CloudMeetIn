@@ -21,21 +21,21 @@ const TOKEN_PATH = 'gmail-credentials.json';
 cron.schedule('*/40 * * * *', () => {
   gmailMiddleware.gmailCheckToken((status) => {
     if(status === 200) {
-      console.log("Refresh the gmail token");
+      // console.log("Refresh the gmail token");
     }
   });
 });
 
 router.post('/sendemail',(req,res,next)=>{
-  console.log("Body of email --- >", req.body);
-  console.log("Get the ", localStorage.getItem('rescheduleRecord'));
+  // console.log("Body of email --- >", req.body);
+  // console.log("Get the ", localStorage.getItem('rescheduleRecord'));
   _email = req.body.email;
   adminName = req.body.userName;
   eventType = req.body.eventType.split('m')[0];
   _meetingData =  req.body.meetingData;
   _clientEmail = req.body.clientEmail;
   fs.readFile('credentials.json', (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err);
+    if (err) return // console.log('Error loading client secret file:', err);
     authorize(JSON.parse(content), sendMessage);
     res.status(200).json(
       {
@@ -62,7 +62,7 @@ function getNewToken(oAuth2Client, callback) {
     access_type: 'offline',
     scope: scopes,
   });
-  console.log('Authorize this app by visiting this url:', authUrl);
+  // console.log('Authorize this app by visiting this url:', authUrl);
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -74,7 +74,7 @@ function getNewToken(oAuth2Client, callback) {
       oAuth2Client.setCredentials(token);
       fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
         if (err) return console.error(err);
-        // console.log('Token stored to', TOKEN_PATH);
+        // // console.log('Token stored to', TOKEN_PATH);
       });
       callback(oAuth2Client);
     });
@@ -95,7 +95,7 @@ function makeBody(to, from, cc,subject, message) {
       '    </div>'
   } else {
 
-    console.log("type of  -- > ", typeof (message.rescheduleRecord));
+    // console.log("type of  -- > ", typeof (message.rescheduleRecord));
    let reschedule  =  typeof (message.rescheduleRecord) === 'object' && message.rescheduleRecord !== 'undefined' ? true : false;
    if(reschedule) {
      message.rescheduleRecord.g2mMeetingUrl  = typeof (message.rescheduleRecord.g2mMeetingUrl) === 'string' && message.rescheduleRecord.g2mMeetingUrl !== 'undefined' ? 'GoToMeeting Meeting url  ' +'<br>' +message.rescheduleRecord.g2mMeetingUrl :  ' ';
@@ -168,10 +168,10 @@ function makeBody(to, from, cc,subject, message) {
 }
 
 function sendMessage(auth) {
-  // console.log(_email, _meetingData);
+  // // console.log(_email, _meetingData);
   const gmail = google.gmail({version: 'v1', auth});
   const raw = makeBody(_email, 'sumit.kumar@cloudanalogy.com', _clientEmail,_meetingData.subject, _meetingData,);
-  //console.log("Send Email Content  :  == > > > ",raw);
+  //// console.log("Send Email Content  :  == > > > ",raw);
   gmail.users.messages.send({
     auth: auth,
     userId: 'me',

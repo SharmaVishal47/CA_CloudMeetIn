@@ -24,31 +24,31 @@ export class CalendarConnectionComponent implements OnInit {
   switchValue: false;
   constructor(private messageService: MessageServiceService,private route: ActivatedRoute, private dialog: MatDialog,private httpClient: HttpClient,private authService:AuthServiceLocal,private router:Router, private signUpService: SignUpService) {
     this.userId = this.authService.getUid();
-    console.log('UserId ', this.userId);
+    // console.log('UserId ', this.userId);
   }
 
   ngOnInit() {
     /* this.signUpService.getCalendarEventsListener().subscribe((responseData)=>{
     this.calendarId = responseData.record[0].id;
-    console.log("Response id====",this.calendarId);
+    // console.log("Response id====",this.calendarId);
 
     });
     this._emailID = localStorage.getItem('emailId');
     this.email = localStorage.getItem('emailId');
     this.signUpService.getCalendarEventsList(this._emailID);
     this.param1 = this.route.snapshot.queryParamMap.get('code');
-    console.log('Query Param ', this.param1);
+    // console.log('Query Param ', this.param1);
     this.signUpService.updateToken(this.param1,this._emailID,this.userId,this.calendarId);
     this.signUpService.getGenerateTokenListener().subscribe((responseData)=>{
-    console.log("responseData token ---- ",responseData);
+    // console.log("responseData token ---- ",responseData);
     //this.OnCreateAccount();
     });*/
-    this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/googleCalendar/calendarId',{'userId': this.userId}).subscribe(
+    this.httpClient.post<{message: string,data: []}>('/googleCalendar/calendarId',{'userId': this.userId}).subscribe(
       res =>{
-        console.log('Response---> ',res);
+        // console.log('Response---> ',res);
         this.calendar = res.data['0'].calendarEvent
       },err => {
-        console.log("Error=========",err.message);
+        // console.log("Error=========",err.message);
         this.messageService.generateErrorMessage(JSON.stringify(err));
        /* const dialogConfig = new MatDialogConfig();
         dialogConfig.data = err;

@@ -1,14 +1,23 @@
-<div class="container">
-  <div class="row">
+<div class="container" *ngIf="checkPoint">
+  <div class="row" >
     <div class="col-lg-10" style="margin: auto;">
       <div *ngIf="!findId">
         <h1>Invalid Meeting URL</h1>
       </div>
       <div *ngIf="findId">
         <div class="row" align="center">
+
           <div class="col-lg-12" style="margin-top:50px;" align="center">
-            <nz-avatar [nzSize]="100" nzIcon="user" nzSrc={{userImagePreview}}></nz-avatar>
+            <div *ngIf="weblink">
+              <a href="{{weblink}}" onclick="window.open(this.href, 'windowName', 'width=1000, height=700, left=24, top=24, scrollbars, resizable'); return false;">
+                <nz-avatar [nzSize]="100" nzIcon="user" style="cursor: pointer" nzSrc={{userImagePreview}}></nz-avatar></a>
+
+            </div>
+            <div *ngIf="!weblink">
+              <nz-avatar [nzSize]="100" nzIcon="user" nzSrc={{userImagePreview}}></nz-avatar>
+            </div>
           </div>
+
         </div>
         <nz-row nzJustify="center" nzAlign="middle">
           <nz-col nzSpan="20" nzOffset="2" style="margin-top:10px;">
@@ -17,8 +26,9 @@
         </nz-row>
         <nz-row nzJustify="center" nzAlign="middle">
           <nz-col nzSpan="20" nzOffset="2" style="margin-top: 10px;">
-            <p align="center">{{description}}
-            </p>
+         <!--   <p align="center">{{description}}
+            </p>-->
+            <div align="center" [innerHtml]="description"></div>
           </nz-col>
         </nz-row>
         <nz-row nzJustify="center" nzAlign="middle">
@@ -43,7 +53,6 @@
             </div>
           </div>
         </nz-card>
-
 
         <nz-card style="width:100%;margin-bottom:2%; display: inline-block;padding: 0; cursor: pointer" align="start" (click)="setEvent('30min')" >
           <div class="container" style="padding-top: 0; margin-top: 0;" >
@@ -74,101 +83,13 @@
             </div>
           </div>
         </nz-card>
-        <!-- <nz-row nzJustify="center" nzAlign="middle">
-        <nz-col nzSpan="20" nzOffset="2" style="margin-top: 20px;">
-        <nz-card style="width:100%; display: inline-block; cursor: pointer" align="start" (click)="setEvent('15min')" >
-        <nz-row>
-        <nz-col nzSpan="1">
-        <svg width="40" height="40">
-        <circle cx="15" cy="15" r="13" fill="#dfc12d"></circle>
-        </svg>
-        </nz-col>
-        <nz-col nzSpan="4"><p style="margin-top: 5px"> {{meeting_time15}}</p></nz-col>
-        <nz-col nzSpan="2" nzOffset="17" align="end"><p style="margin-top: 5px"></p><i nz-icon type="right" theme="outline"></i></nz-col>
-        </nz-row>
-        </nz-card>
-        </nz-col>
-        </nz-row>-->
-        <!-- <nz-row nzJustify="center" nzAlign="middle">
-        <nz-col nzSpan="20" nzOffset="2" style="margin-top: 20px;">
-        <nz-card style="width:100%; display: inline-block; cursor: pointer" align="start" (click)="setEvent('30min')">
-        <nz-row>
-        <nz-col nzSpan="1">
-        <svg width="40" height="40">
-        <circle cx="15" cy="15" r="13" fill="blue"></circle>
-        </svg>
-        </nz-col>
-        <nz-col nzSpan="4"><p style="margin-top: 5px"> {{meeting_time30}}</p></nz-col>
-        <nz-col nzSpan="2" nzOffset="17" align="end"><p style="margin-top: 5px"></p><i nz-icon type="right" theme="outline"></i></nz-col>
-        </nz-row>
-        </nz-card>
-        </nz-col>
-        </nz-row>-->
-        <!-- <nz-row nzJustify="center" nzAlign="middle">
-        <nz-col nzSpan="20" nzOffset="2" style="margin-top: 20px;">
-        <nz-card style="width:100%; display: inline-block; cursor: pointer" align="start" (click)="setEvent('60min')">
-        <nz-row>
-        <nz-col nzSpan="1">
-        <svg width="40" height="40">
-        <circle cx="15" cy="15" r="13" fill="#EE5353"></circle>
-        </svg>
-        </nz-col>
-        <nz-col nzSpan="4"><p style="margin-top: 5px"> {{meeting_time60}}</p></nz-col>
-        <nz-col nzSpan="2" nzOffset="17" align="end"><p style="margin-top: 5px"></p><i nz-icon type="right" theme="outline"></i></nz-col>
-        </nz-row>
-        </nz-card>
-        </nz-col>
-        </nz-row>-->
       </div>
     </div>
   </div>
 </div>
-<!--
-<div class="container" *ngIf="!findId">
-<h1>Invalid Meeting URL</h1>
-</div>
-<div class="container" *ngIf="findId">
-<div class="row">
-<div class="col-lg-12">
-<div class="col-lg-8">
-<div class="mid-horizontal">
-<div class="col-lg-8">
-<p>{{Meeting_owner}}</p>
-<p>{{headingTitle}}</p>
-</div>
-</div>
-</div>
-<div class="col-lg-7" style="margin-top: 55px">
-<mat-card class="col-lg-7 mr-4" style="cursor: pointer;" routerLink="/" (click)="setEvent('15min')">
-<svg width="40" height="40">
-<circle cx="15" cy="15" r="13" fill="#dfc12d"></circle>
-</svg>
-<p>
-{{meeting_time15}}
-</p>
-</mat-card>
-<mat-card class="col-lg-7 mr-4" style="cursor: pointer;" (click)="setEvent('30min')">
-<svg width="40" height="40">
-<circle cx="15" cy="15" r="13" fill="blue"></circle>
-</svg>
-<p>
-{{meeting_time30}}
-</p>
-</mat-card>
-</div>
-<div class="col-lg-7" style="margin-top: 55px">
-<mat-card class="col-lg-7" style="cursor: pointer;" (click)="setEvent('60min')">
-<svg width="40" height="40">
-<circle cx="15" cy="15" r="13" fill="#EE5353"></circle>
-</svg>
-<p>
-{{meeting_time60}}
-</p>
-</mat-card>
-<div class="col-lg-7">
-</div>
-</div>
-</div>
-</div>
-</div>
--->
+<nz-spin nzTip="Loading..." [nzSpinning]="isSpinning" [nzSize]="'large'" style="margin-top: 25%">
+  <div class="container">
+
+  </div>
+</nz-spin>
+

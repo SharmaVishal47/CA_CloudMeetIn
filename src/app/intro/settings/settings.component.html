@@ -1,105 +1,50 @@
+<nz-spin nzTip="Loading..." [nzSpinning]="isSpinning" [nzSize]="'large'">
+  <div nz-row nzType="flex" nzJustify="center" style="margin-top: 50px">
 
-<div nz-row nzType="flex" nzJustify="center" style="margin-top: 50px">
-  <div nz-col>
-    <img src="../../../assets/Logo_c_new.svg" alt="" width="80px">
+    <div nz-col>
+      <img src="../../../assets/Logo_c_new.svg" alt="" width="80px">
+    </div>
   </div>
-</div>
-<div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
-  <div nz-col [nzXs]="{ span: 22}" [nzMd]="{ span: 14}" [nzLg]="{ span: 14}">
-    <form nz-form [formGroup]="form" class="login-form" (ngSubmit)="onSubmit()">
-      <nz-card >
-        <div nz-col nzType="flex" nzJustify="center">
-          <h5>Welcome to CloudMeetIn</h5>
-          <h6>We take the work out of connecting with others so you can accomplish more.</h6>
-        </div>
-        <hr>
+  <div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
+    <div nz-col [nzXs]="{ span: 22}" [nzMd]="{ span: 14}" [nzLg]="{ span: 14}">
+      <form nz-form [formGroup]="form" class="login-form" (ngSubmit)="onSubmit()">
+        <nz-card >
+          <div nz-col nzType="flex" nzJustify="center">
+            <h5>Welcome to CloudMeetIn</h5>
+            <h6>We take the work out of connecting with others so you can accomplish more.</h6>
+          </div>
+          <hr>
+          <div nz-row>
+            <div nz-col [nzXs]="{ span: 12, offset: 0 }" [nzLg]="{ span: 12, offset: 0}">
+              <h4 style="margin-top: 20px">Create your CloudMeetIn URL</h4>
+              <h3 style="margin-top: 20px">Your custom booking URL to share with your customers.</h3>
+            </div>
+            <div nz-col [nzXs]="{ span: 12, offset: 0}" [nzLg]="{ span: 12, offset: 0 }">
+              <img src="../../../assets/Reminder.svg" alt="" class="logo-container">
+            </div>
+          </div>
+          <nz-form-item style="margin-top: 30px;margin-bottom: -15px">
+            <nz-form-control>
+              <nz-input-group nzAddOnBefore="CloudMeetIn.com/">
+                <input type="text" nz-input formControlName="userId" (keypress)="omit_special_char($event)" (change)="getUser($event)" id="userName" placeholder="Username">
+              </nz-input-group>
+              <label *ngIf="!validUserId" style="color: red">Username already exists</label>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-card>
         <div nz-row>
-          <div nz-col [nzXs]="{ span: 12, offset: 0 }" [nzLg]="{ span: 12, offset: 0}">
-            <h4 style="margin-top: 20px">Create your CloudMeetIn URL</h4>
-            <h3 style="margin-top: 20px">Your custom booking URL to share with your customers.</h3>
+          <div nz-col nzSpan="8">
+            <h4 style="margin-top: 15px">Time Zone</h4>
+            <ng2-timezone-picker [timezone]="timeZone" (change)="changeTimezone($event)" style="width: 15px"></ng2-timezone-picker>
           </div>
-          <div nz-col [nzXs]="{ span: 12, offset: 0}" [nzLg]="{ span: 12, offset: 0 }">
-            <img src="../../../assets/Reminder.svg" alt="" class="logo-container">
+          <div nz-col nzSpan="8" nzOffset="8">
+            <nz-form-control>
+              <button nz-button class="primary" [disabled]="!form.valid" >Continue</button>
+            </nz-form-control>
           </div>
         </div>
-        <nz-form-item style="margin-top: 30px;margin-bottom: -15px">
-          <nz-form-control>
-            <nz-input-group nzAddOnBefore="CloudMeetIn.com/">
-              <input type="text" nz-input formControlName="userId" (change)="getUser($event)" id="userName" placeholder="User Name">
-            </nz-input-group>
-            <label *ngIf="!validUserId" style="color: red">Username already exists</label>
-          </nz-form-control>
-        </nz-form-item>
-      </nz-card>
-      <div nz-row>
-        <div nz-col nzSpan="8">
-          <h4 style="margin-top: 15px">Time Zone</h4>
-          <ng2-timezone-picker [timezone]="timeZone" (change)="changeTimezone($event)" style="width: 15px"></ng2-timezone-picker>
-        </div>
-        <div nz-col nzSpan="8" nzOffset="8">
-          <nz-form-control>
-            <button nz-button class="primary" [disabled]="!form.valid" >Continue</button>
-          </nz-form-control>
-        </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
+</nz-spin>
 
-<!--
-<div class="container top-margin">
-<div class="row">
-<div class="col-lg-8" style="margin: auto">
-<mat-card class="example-card">
-<div class="col-lg-8">
-<mat-card-header>
-<div mat-card-avatar class="example-header-image"></div>
-<mat-card-title class="heading">Welcome to CloudMeetIn!</mat-card-title>
-<br>
-<mat-card-subtitle>We take the work out of connecting with others so you can accomplish more.</mat-card-subtitle>
-<div class="col-lg-3">
-<img mat-card-image src="https://cdn4.iconfinder.com/data/icons/real-estate-set-1-2/64/real-estate_1-20-512.png" alt="Photo of a Shiba Inu" width="20">
-</div>
-</mat-card-header>
-</div>
-<br>
-<mat-card-content>
-<h6>Create your CloudMeetIn URL</h6>
-<p>
-Choose a URL that describes you or your business in a concise way. Make it short and easy to remember so you can share links with ease.
-</p>
-</mat-card-content>
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-<div style="margin-left: 10px;margin-right: 10px;">
-<div class="form-group row" style=" border: 2px solid grey;">
-<p class="control-label col-sm-2 col-md-2" style="text-align: center;margin: auto">CloudMeetIn.com/</p>
-<div class="col-sm-10 col-md-10">
-<input type="text" formControlName="userId" (change)="getUser($event)" class="form-control" id="userName" placeholder="User Name" style=" border: none;">
-</div>
-</div>
-<label *ngIf="!validUserId" style="color: red">Username already exists</label>
-<br/>
-<br/>
-</div>
-<h6>Time Zone</h6>
-&lt;!&ndash; <select style="width: auto;height: auto" formControlName="timeZone" [value]='46'>
-<option value="46">Select TimeZone</option>
-<option value="India , Sri Lanka Time (3:50pm)">Asia/Kolkata</option>
-<option value="saab">Pacific/Pago_Pago</option>
-<option value="mercedes">America/Adak</option>
-<option value="audi">America/Vancouver</option>
-</select>&ndash;&gt;
-<ng2-timezone-picker
-[timezone]="timeZone" (change)="changeTimezone($event)">
-</ng2-timezone-picker>
-<br/>
-<mat-card-actions style="justify-content: flex-end;display: flex;">
-&lt;!&ndash;<button mat-button >Cancel</button>&ndash;&gt;
-<button mat-button class="btn btn-primary" [disabled]="!form.valid">Continue</button>
-</mat-card-actions>
-</form>
-</mat-card>
-</div>
-</div>
-</div>
--->

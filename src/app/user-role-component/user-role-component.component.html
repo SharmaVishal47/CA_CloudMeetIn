@@ -1,74 +1,36 @@
 
-
-
-<div nz-row nzType="flex" nzJustify="center" style="margin-top: 5%">
-  <div nz-col>
-    <img src="./../../assets/Logo_c_new.svg" alt="" width="80px">
+<nz-spin nzTip="Loading..." [nzSpinning]="isSpinning" [nzSize]="'large'">
+  <div nz-row nzType="flex" nzJustify="center" style="margin-top: 5%">
+    <div nz-col>
+      <img src="./../../assets/Logo_c_new.svg" alt="" width="80px">
+    </div>
   </div>
-</div>
-<div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
-  <div nz-col [nzXs]="{ span: 22}" [nzMd]="{ span: 14}" [nzLg]="{ span: 14}">
-    <form nz-form [formGroup]="calendarForm" class="login-form" (ngSubmit)="updateRole()">
-      <nz-card id="caCard">
-        <div nz-col nzType="flex" align="center">
-          <h5>Personalize your experience</h5>
-          <h6>Tell us about role at work this will help us to provide <br> a tailored support experience.</h6>
-        </div>
-        <hr>
-        <div nz-row nzType="flex" nzJustify="start">
-          <div nz-col [nzXs]="{ span: 22, offset: 1}" [nzLg]="{ span: 22, offset: 1 }">
-            <b>What is your role at work ?</b>
-            <nz-select style="width: 100%;" formControlName="role" nzPlaceHolder="Choose your role..." nzAllowClear >
-              <nz-option *ngFor="let o of data" [nzValue]="o" [nzLabel]="o"></nz-option>
-            </nz-select>
+  <div nz-row nzType="flex" nzJustify="center" style="margin-top:30px;margin-bottom: 30px ">
+    <div nz-col [nzXs]="{ span: 22}" [nzMd]="{ span: 14}" [nzLg]="{ span: 14}">
+      <form nz-form [formGroup]="calendarForm" class="login-form" (ngSubmit)="updateRole()">
+        <nz-card id="caCard">
+          <div nz-col nzType="flex" align="center">
+            <h5>Personalize your experience</h5>
+            <h6>Tell us about role at work this will help us to provide <br> a tailored support experience.</h6>
           </div>
+          <hr>
+          <div nz-row nzType="flex" nzJustify="start">
+            <div nz-col [nzXs]="{ span: 22, offset: 1}" [nzLg]="{ span: 22, offset: 1 }">
+              <b>What is your role at work ?</b>
+              <nz-select style="width: 100%;" formControlName="role" nzPlaceHolder="Choose your role..." nzAllowClear >
+                <nz-option *ngFor="let o of data" [nzValue]="o" [nzLabel]="o"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+
+        </nz-card>
+        <div nz-col nzSpan="8" nzOffset="8">
+          <nz-form-control>
+            <button nz-button class="primary" type="submit" [disabled]="!calendarForm.valid" >Finish</button>
+          </nz-form-control>
         </div>
-
-      </nz-card>
-      <div nz-col nzSpan="8" nzOffset="8">
-        <nz-form-control>
-          <button nz-button class="primary" type="submit" [disabled]="!calendarForm.valid" >Finish</button>
-        </nz-form-control>
-      </div>
-    </form>
+      </form>
+    </div>
+    <div></div>
   </div>
-  <div></div>
-</div>
-
-
-
-
-
-
-<!--
-<div class="container">
-<div class="row">
-<div class="col-lg-8" style="margin: auto">
-<mat-card class="example-card">
-<mat-card-header class="card" style="background: #4d9bdd">
-<div mat-card-avatar class="example-header-image"></div>
-<mat-card-title style="color: white">Personalize your experience</mat-card-title>
-<br>
-<mat-card-subtitle style="font-size: 16px;color: white">Tell us about your role at work. This will help us to provide a tailored experinece.</mat-card-subtitle>
-<div class="col-lg-3">
-<img mat-card-image src="https://www.icone-png.com/png/19/18890.png" alt="Photo of a Shiba Inu" width="20">
-</div>
-</mat-card-header>
-<br>
-<form [formGroup]="calendarForm">
-<div class="container">
-<h6>What is your day-to-day role at work? </h6>
-<p *ngFor="let item of data">
-<input type="radio" name="role" value="{{item}}" (click)="checkAnswer(item)" formControlName="role"/>{{item}}<br />
-</p>
-<br/>
-</div>
-<mat-card-actions>
-<button class="btn btn-primary" mat-button (click)="updateRole()" [disabled]="calendarForm.invalid">Continue</button>
-</mat-card-actions>
-</form>
-</mat-card>
-</div>
-</div>
-</div>
--->
+</nz-spin>

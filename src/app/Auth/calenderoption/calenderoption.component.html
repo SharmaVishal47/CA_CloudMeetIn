@@ -1,0 +1,68 @@
+<div class="container" *ngIf="!showForm">
+  <div class="row"  style=" margin-top:2%;width: 90%; "><h3 style="margin-left:8%; margin-bottom: 2%;" >Calendar connection</h3></div></div>
+
+<div class="container" *ngIf="showForm">
+  <div class="row"  style=" margin-top:2%;width: 90%; "><h3 style="margin-left:8%; margin-bottom: 2%;" >User Information</h3></div></div>
+<hr/>
+<div class="container" *ngIf="!showForm">
+  <div class="row" style="margin-top: 3%; margin-left: 3%;">
+    <div class="col-lg-2">
+      <img class="img-circle" src="https://i.stack.imgur.com/22WR2.png" height="100" width="100" style="padding:20px; background-color:#f5f9fb " />
+    </div>
+    <div class="col-lg-8">
+      <h6>Google Calendar</h6>
+      <p>Allows CloudMeetIn to check Google calendar for conflicts and add events to it.</p>
+      <b>Please click on 'Connect' button and select the registered email for calendar</b>
+    </div>
+    <div class="col-lg-2">
+      <button mat-stroked-button color="primary" style="background-color: #00A2FF; color: white; border-radius: 0;width: 130px;height: 45px; " (click)="changeCalendar()">Connect &nbsp; &nbsp; &nbsp; &nbsp; <mat-icon>keyboard_arrow_right</mat-icon></button>
+    </div>
+  </div>
+</div>
+<div class="container" *ngIf="showForm">
+
+  <form nz-form [formGroup]="userForm" (ngSubmit)="submituserExternalForm()" style="alignment: center; margin: auto">
+
+    <nz-form-item>
+      <nz-form-label [nzSm]="{span: 6,offset:2}" [nzXs]="24" nzFor="phoneNumber" nzRequired>Phone Number</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" [nzValidateStatus]="userForm.controls['phoneNumber']">
+        <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
+          <ng-template #addOnBeforeTemplate>
+            <nz-select  formControlName="phoneNumberPrefix" style="width: 90px;">
+              <nz-option *ngFor="let country Of countries" nzLabel="{{country.code}}" nzValue="{{country.code}}"></nz-option>
+            </nz-select>
+          </ng-template>
+          <input formControlName="phoneNumber" id="'phoneNumber'" nz-input />
+        </nz-input-group>
+        <nz-form-explain *ngIf="userForm.get('phoneNumber')?.dirty && userForm.get('phoneNumber')?.errors"
+        >Please input your phone number!</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="{span: 6,offset:2}" [nzXs]="24" nzFor="designation" nzRequired>Designation</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <input nz-input id="designation" formControlName="designation" placeholder="designation" />
+        <nz-form-explain *ngIf="userForm.get('designation')?.dirty && userForm.get('designation')?.errors"
+        >Please input designation!</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="{span: 6,offset:2}" [nzXs]="24" nzFor="company" nzRequired>Company</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <input nz-input id="company" formControlName="company" placeholder="company" />
+        <nz-form-explain *ngIf="userForm.get('company')?.dirty && userForm.get('company')?.errors"
+        >Please input company!</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item nz-row style="margin-bottom:8px;">
+      <nz-form-control [nzSpan]="24" align="center">
+        <button nz-button class="login-form-button" style="background-color:#FF4165; color: white" [disabled]="!userForm.valid">Submit</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+
+</div>
+

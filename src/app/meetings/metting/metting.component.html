@@ -1,25 +1,3 @@
-<!--<ngx-ui-loader
-  [fgsColor]="demoService.config.fgsColor"
-  [fgsPosition]="demoService.config.fgsPosition"
-  [fgsSize]="demoService.config.fgsSize"
-  [fgsType]="demoService.config.fgsType"
-  [bgsColor]="demoService.config.bgsColor"
-  [bgsOpacity]="demoService.config.bgsOpacity"
-  [bgsPosition]="demoService.config.bgsPosition"
-  [bgsSize]="demoService.config.bgsSize"
-  [bgsType]="demoService.config.bgsType"
-  [logoPosition]="demoService.config.logoPosition"
-  [logoSize]="demoService.config.logoSize"
-  [logoUrl]="demoService.config.logoUrl"
-  [overlayColor]="demoService.config.overlayColor"
-  [pbColor]="demoService.config.pbColor"
-  [pbDirection]="demoService.config.pbDirection"
-  [pbThickness]="demoService.config.pbThickness"
-  [hasProgressBar]="demoService.config.hasProgressBar"
-  [text]="demoService.config.text"
-  [textColor]="demoService.config.textColor"
-  [textPosition]="demoService.config.textPosition"
-  [loaderId]="'loader-01'"></ngx-ui-loader>-->
 
 <nz-spin nzTip="Loading..." [nzSpinning]="isSpinning" [nzSize]="'large'">
 <div class="container" >
@@ -62,7 +40,7 @@
                       [nzFooter]="footer">
               <ng-template #footer >
               </ng-template>
-              <p style="font-family: Roboto-Medium;color: #707070;font-size: medium;margin-top: 3%" >You're are about to confirm your booking at {{selectedTimeSlot.startTime| date:'h:mm a'}}. Are you Sure? </p>
+              <p style="font-family: Roboto-Medium;color: #707070;font-size: medium;margin-top: 3%" >You are about to confirm your booking at {{selectedTimeSlot.startTime| date:'h:mm a'}}. Are you Sure? </p>
               <div nz-row style="margin-top: 10%">
                 <div nz-col nzSpan="12" style="width: 40%;margin-bottom: -5%;">
                   <nz-form-item>

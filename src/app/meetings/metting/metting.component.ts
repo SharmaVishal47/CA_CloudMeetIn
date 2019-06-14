@@ -58,7 +58,19 @@ export class MettingComponent<D> implements OnInit {
   userIdByUrl;
   checkEventValue = false;
 
-  constructor(private messageService:MessageServiceService,private ngxLoader: NgxUiLoaderService,public demoService: NgxUiLoaderDemoService,private modalService: NzModalService,private _dateAdapter: DateAdapter<D>,private meetingService: MeetingService, private router: Router, private route: ActivatedRoute, private httpClient: HttpClient, private dialog: MatDialog,private authService: AuthServiceLocal) {
+  constructor(
+    private messageService:MessageServiceService,
+    private ngxLoader: NgxUiLoaderService,
+    public demoService: NgxUiLoaderDemoService,
+    private modalService: NzModalService,
+    private _dateAdapter: DateAdapter<D>,
+    private meetingService: MeetingService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private httpClient: HttpClient,
+    private dialog: MatDialog,
+    private authService: AuthServiceLocal
+  ) {
   }
 
   ngOnInit() {
@@ -87,7 +99,7 @@ export class MettingComponent<D> implements OnInit {
       }
 
       if(this.checkEventValue){
-        this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/user/checkuser',{userId: this.userIdByUrl}).subscribe((responseData)=>{
+        this.httpClient.post<{message: string,data: []}>('/user/checkuser',{userId: this.userIdByUrl}).subscribe((responseData)=>{
           if(responseData.data.length > 0 ){
             localStorage.setItem("description",responseData.data['0'].welcomeMessage);
             localStorage.setItem("imagePreview",responseData.data['0'].profilePic);
@@ -95,6 +107,7 @@ export class MettingComponent<D> implements OnInit {
             localStorage.setItem("email",responseData.data['0'].email);
             localStorage.setItem("userIdMeeting",responseData.data['0'].userId);
             localStorage.setItem("fullName",responseData.data['0'].fullName);
+            localStorage.setItem("weblink",responseData.data['0'].imageLink);
             this.afterUserCheck();
           }else{
 
@@ -121,7 +134,7 @@ export class MettingComponent<D> implements OnInit {
 
 
     const newSubs1 = this.meetingService.availabileSlot.subscribe((availableSlot)=> {
-      console.log("Getting Available slot===========",availableSlot);
+      // console.log("Getting Available slot===========",availableSlot);
       if(availableSlot != null){
 
         this.availableSlot = [];
@@ -151,7 +164,7 @@ export class MettingComponent<D> implements OnInit {
         this.userTimeSlot = tempSlot;
 
         //console.log("Main availableSlot1===================",this.availableSlotTemp);
-        console.log("before convert availableSlot1===================",this.userTimeSlot);
+        // console.log("before convert availableSlot1===================",this.userTimeSlot);
         /*console.log("filter availableSlot===================",tempSlot);*/
         this.availableSlot = [];
         tempSlot.forEach(item => {
@@ -164,7 +177,7 @@ export class MettingComponent<D> implements OnInit {
           this.availableSlot.push(data);
         });
 
-        console.log("Show Slot==========", this.availableSlot);
+        // console.log("Show Slot==========", this.availableSlot);
 
         if(this.availableSlot.length == 0){
           let curdate = new Date(this.selected.toString());
@@ -186,7 +199,7 @@ export class MettingComponent<D> implements OnInit {
         this. isSpinning = false;
       }
       let timeZone = moment.tz.guess();
-      console.log("timeZoneOffset======",timeZone);
+      // console.log("timeZoneOffset======",timeZone);
       if(timeZone == "Asia/Calcutta"){
         this.timeZone = "Asia/Kolkata";
       }else{
@@ -198,13 +211,13 @@ export class MettingComponent<D> implements OnInit {
     this.route.queryParams
       .filter(params => params.eid)
       .subscribe(params => {
-        console.log(params);
+        // console.log(params);
         this.eventId = params.eid;
         if(this.eventId) {
           this.checkReschedule = true;
           this.select_day = 'Select a Day to Reschedule';
         }
-        console.log('Get event id from url -->', this.eventId);
+       // console.log('Get event id from url -->', this.eventId);
       });
 
     this.Meeting_owner = typeof (localStorage.getItem('fullName')) === 'string' && localStorage.getItem('fullName').split('').length > 0
@@ -212,7 +225,7 @@ export class MettingComponent<D> implements OnInit {
 
     this.meetingService.getMeetingAvailableDay(this.userId);
     const newSubs3 = this.meetingService.meetingAvailableDay.subscribe((res: any) => {
-      console.log(res.data);
+      // console.log(res.data);
       if (res.data.length > 0) {
         this.timeZone = res.data[0].timeZone;
         this.selectedTimeZone = res.data[0].timeZone;
@@ -226,12 +239,12 @@ export class MettingComponent<D> implements OnInit {
             let weekDay = todayDate.getDay().toString();
 
             if(this.availableDays.indexOf(weekDay)>-1){
-              console.log("weekDay if=============",weekDay);
+              // console.log("weekDay if=============",weekDay);
               this.ngxLoader.startLoader('loader-01');
               this. isSpinning =true;
               this.meetingService.getCalendarEventSlot(this.meetingType,this.selected.toString(),this.userTimeZone);
             }else{
-              console.log("weekDay else=============",weekDay);
+              // console.log("weekDay else=============",weekDay);
               let curdate = new Date();
               beginning: while(true) {
                 curdate.setDate(curdate.getDate() + 1);
@@ -270,7 +283,7 @@ export class MettingComponent<D> implements OnInit {
         }
       }
     }, error => {
-      console.log('error====', error);
+     //  console.log('error====', error);
       this.messageService.generateErrorMessage(error);
     });
     this.subscriptions.push(newSubs3);
@@ -278,7 +291,7 @@ export class MettingComponent<D> implements OnInit {
   }
 
   select(value: D) {
-    console.log("DAte=====",value);
+    // console.log("DAte=====",value);
     this.selected = value;
     this.ngxLoader.startLoader('loader-01');
     this. isSpinning = true;
@@ -289,8 +302,8 @@ export class MettingComponent<D> implements OnInit {
   onCardClick(selectedTimeSlot: any,index: number){
     this.selectedTimeSlot = selectedTimeSlot;
     this.selectedCardIndex = index;
-    console.log("user time=====",this.userTimeSlot[index]);
-    console.log("selected time time=====",selectedTimeSlot);
+    /*console.log("user time=====",this.userTimeSlot[index]);
+    console.log("selected time time=====",selectedTimeSlot);*/
     this.checkUTC= moment(selectedTimeSlot.startTime).tz(this.selectedTimeZone ).format();
     this.confirmBoxSlot =  true;
   }
@@ -298,7 +311,7 @@ export class MettingComponent<D> implements OnInit {
   changeTimezone(timezone) {
     this.selectedTimeZone = timezone;
     let tempSlot = this.availableSlotTemp;
-    console.log("Permanent Slot=======",tempSlot);
+    // console.log("Permanent Slot=======",tempSlot);
 
     let systemCurrentTime = new Date();
     let userTimeZoneTime = moment(systemCurrentTime).tz(this.userTimeZone).format();
@@ -308,14 +321,14 @@ export class MettingComponent<D> implements OnInit {
     //console.log("currentTime client=========",currentTime);
     let userTimeAddFour = moment(currentTime).tz(this.userTimeZone).format();
     let slotForFilter = tempSlot.filter(item => Date.parse(item.startTime) >= Date.parse(userTimeAddFour));
-    console.log("slotForFilter===================",slotForFilter);
+    // console.log("slotForFilter===================",slotForFilter);
     tempSlot = slotForFilter;
     tempSlot.sort((a,b) => Date.parse(a.startTime) - Date.parse(b.startTime));
 
     this.userTimeSlot = tempSlot;
 
-    console.log("before timeZone availableSlot===================",this.availableSlotTemp);
-    console.log("before userTimeSlot availableSlot===================",this.userTimeSlot);
+   /* console.log("before timeZone availableSlot===================",this.availableSlotTemp);
+    console.log("before userTimeSlot availableSlot===================",this.userTimeSlot);*/
     /*console.log("filter availableSlot===================",tempSlot);*/
     this.availableSlot = [];
     tempSlot.forEach(item => {
@@ -330,7 +343,7 @@ export class MettingComponent<D> implements OnInit {
       }
     });
 
-    console.log("after timeZone availableSlot===================",this.availableSlot);
+   // console.log("after timeZone availableSlot===================",this.availableSlot);
 
   }
 
@@ -346,7 +359,7 @@ export class MettingComponent<D> implements OnInit {
   }
 
   confirmMeeting() {
-    console.log("Selected=============",this.selectedTimeSlot);
+    // console.log("Selected=============",this.selectedTimeSlot);
     let date = new Date(this.selected.toString());
     date.setHours(0,0,0);
     localStorage.setItem('selectedDate', date.toString());

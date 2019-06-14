@@ -32,7 +32,7 @@ import { slideInLeft} from 'ng-animate';
   ],
 })
 export class DashboardComponent implements OnInit {
-  allowClear = false;
+
   /* Dialog Functionality*/
   allChecked = true;
   indeterminate = false;
@@ -81,6 +81,13 @@ export class DashboardComponent implements OnInit {
   validateDatePicker: FormGroup;
   eventListTypeCheck = false;
   isSpinning = true;
+  allCheckedMeeting =  true;
+  indeterminaMeeting = false;
+  checkOptionsOnMeeting = [
+    { label: 'All  Meeting', value: 'active', checked: false },
+    { label: 'Past Meeting ', value: 'cancel', checked: false },
+    { label: 'Future Meeting ', value: 'cancel', checked: true }
+  ];
   constructor(
     private authService: AuthServiceLocal,
     private router:Router,
@@ -99,9 +106,9 @@ export class DashboardComponent implements OnInit {
     });
     this.meetingService.removeHeader(false);
     this.userId = this.authService.getUserId();
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/events/getevents', {userId :this.authService.getUserId()}).subscribe(
+    this.httpClient.post<any>('/events/getevents', {userId :this.authService.getUserId()}).subscribe(
       response => {
-        console.log("Response Event Data --- > ", response);
+        // console.log("Response Event Data --- > ", response);
         if(response.data.length > 0){
           this.eventListTypeCheck = true;
           this.EventTypeSlotDashboard = response.data;
@@ -133,8 +140,8 @@ export class DashboardComponent implements OnInit {
       CancelledEvent: new FormControl(null, [Validators.required])
     });
     this.fullName= this.authService.getFullName();
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/meeting/getMeetingRecord',{userId: this.authService.getUserId()}).subscribe((responseData)=>{
-      console.log("responseData====",responseData);
+    this.httpClient.post<any>('/meeting/getMeetingRecord',{userId: this.authService.getUserId()}).subscribe((responseData)=>{
+      // console.log("responseData====",responseData);
       this.isSpinning = false;
       this.responseData = responseData.data;
       this.lengthOfEvent = this.responseData.length;
@@ -144,11 +151,13 @@ export class DashboardComponent implements OnInit {
 
         let set = new Set();
         for(let i=0;i<this.responseData.length;i++){
-          set.add(this.responseData[i].meetingDate);
+          let date = new Date(this.responseData[i].meetingDate);
+          date.setHours(0,0,0,0);
+          set.add(date);
         }
 
         set.forEach(value => {
-          console.log("value===",value);
+          // console.log("value===",value);
         });
 
         type Product = any;
@@ -157,7 +166,9 @@ export class DashboardComponent implements OnInit {
         for(let item of Array.from(set)){
           let myArrayMeeting = [];
           for(let i=0;i<this.responseData.length;i++){
-            if(item === this.responseData[i].meetingDate){
+            let date = new Date(this.responseData[i].meetingDate);
+            date.setHours(0,0,0,0);
+            if(Date.parse(item) === Date.parse(date.toString())){
               if(i == 0){
                 this.responseData[i]["activeStatus"] = true;
               }else{
@@ -178,6 +189,14 @@ export class DashboardComponent implements OnInit {
           }
         });
         this.displaySize = this.totalSize;
+        if(this.checkOptionsOnMeeting[2].checked == true) {
+          this.dateFrom = new Date();
+          this.dateFrom.setHours(0,0,0);
+          let today = new Date();
+          this.dateTo = new Date(today.getFullYear(),today.getMonth(),today.getDate()+60);
+          this.dateTo.setHours(23,59,59);
+          this.filterByActive();
+        }
       }else{
         this.recordExists = false;
       }
@@ -205,16 +224,18 @@ export class DashboardComponent implements OnInit {
     this.showReset = false;
     this.allCheckedEvent = true;
     this.indeterminateEvent = false;
+    this.indeterminaMeeting = false;
     this.checkOptionsOneEvent = [
       { label: 'Active Events', value: 'active', checked: true },
       { label: 'Canceled Event ', value: 'cancel', checked: true }
     ];
     this.allChecked = true;
+    this.allCheckedMeeting =  true;
     this.indeterminate = false;
     this.checkOptionsOne = [];
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/events/getevents', {userId :this.authService.getUserId()}).subscribe(
+    this.httpClient.post<any>('/events/getevents', {userId :this.authService.getUserId()}).subscribe(
       response => {
-        console.log("Response Event Data --- > ", response);
+        // console.log("Response Event Data --- > ", response);
         if(response.data.length > 0){
           this.eventListTypeCheck = true;
           this.EventTypeSlotDashboard = response.data;
@@ -232,7 +253,6 @@ export class DashboardComponent implements OnInit {
             this.EventTypeSlotDashboardForShow = response.data;
             this.EventTypeSlotDashboardForShow.splice(3);
           }
-
         }
       },
       err => {
@@ -241,33 +261,51 @@ export class DashboardComponent implements OnInit {
   }
 
   onChange(result: Date[]): void {
+    // console.log("start Date===",result);
     if(result != null){
-      console.log("start Date===",result);
-      this.dateFrom = new Date(result[ 0 ]);
-      this.dateFrom.setHours(0,0,0);
+      if(result.length>0){
+        this.dateFrom = new Date(result[ 0 ]);
+        this.dateFrom.setHours(0,0,0);
 
-      this.dateTo = new Date(result[ 1 ]);
-      this.dateTo.setHours(23,59,59);
+        this.dateTo = new Date(result[ 1 ]);
+        this.dateTo.setHours(23,59,59);
 
-      this.filterByActive();
+        this.filterByActive();
+      }else{
+        this.resetFilter();
+      }
     }
-
-    /*this.meetingListMapSorted = new Map<any, any>();
-    this.meetingListMap.forEach((val, key) => {
-    if(key >= Date.parse(this.dateFrom.toString()) && key <= Date.parse(this.dateTo.toString())){
-    this.meetingListMapSorted.set(key,this.meetingListMap.get(key));
-    }
-    });
-    this.displaySize = 0;
-    this.meetingListMapSorted.forEach((val, key) => {
-    for(let i=0;i<this.meetingListMapSorted.get(key).length;i++){
-    this.displaySize = this.displaySize+1;
-    }
-    });*/
   }
 
   filterByEvent() {
     this.filterByActive();
+  }
+
+  filterByDay(){
+    if(this.checkOptionsOnMeeting[0].checked == true) {
+      console.log("All meeting ");
+      this.resetFilter();
+    }
+    if(this.checkOptionsOnMeeting[1].checked == true) {
+      console.log("Past meeting ");
+      let pastDate  =  new Date();
+      this.dateFrom = new Date(pastDate.getFullYear(),pastDate.getMonth(),pastDate.getDate()-60);
+      this.dateFrom.setHours(0,0,0);
+      let pastTo = new Date();
+      this.dateTo = new Date(pastTo.getFullYear(),pastTo.getMonth(),pastTo.getDate()-1);
+      this.dateTo.setHours(23,59,59);
+      this.filterByActive();
+
+    }
+    if(this.checkOptionsOnMeeting[2].checked == true){
+      console.log("Future  meeting ");
+      this.dateFrom = new Date();
+      this.dateFrom.setHours(0,0,0);
+      let today = new Date();
+      this.dateTo = new Date(today.getFullYear(),today.getMonth(),today.getDate()+60);
+      this.dateTo.setHours(23,59,59);
+      this.filterByActive();
+    }
   }
 
   filterByActive() {
@@ -282,7 +320,13 @@ export class DashboardComponent implements OnInit {
             for(let i=0;i< val.length;i++){
               for(let j=0;j<this.checkOptionsOne.length;j++){
                 if(this.checkOptionsOne[j].label === val[i].eventType && this.checkOptionsOne[j].checked){
-                  if(key >= Date.parse(this.dateFrom.toString()) && key <= Date.parse(this.dateTo.toString())){
+                  let dateFrom = new Date(this.dateFrom.toString());
+                  dateFrom.setHours(0,0,0,0);
+
+                  let dateTo = new Date(this.dateTo.toString());
+                  dateTo.setHours(0,0,0,0);
+
+                  if(key >= Date.parse(dateFrom.toString()) && key <= Date.parse(dateTo.toString())){
                     myArrayMeeting.push(val[i]);
                   }
                 }
@@ -321,7 +365,6 @@ export class DashboardComponent implements OnInit {
             }
           });
         }
-
         if(this.checkOptionsOneEvent[0].checked){
           this.meetingListMap.forEach((val, key) => {
             let myArrayMeeting = [];
@@ -342,7 +385,6 @@ export class DashboardComponent implements OnInit {
             }
           });
         }
-
         this.displaySize = 0;
         this.meetingListMapSorted.forEach((val, key) => {
           for(let i=0;i<this.meetingListMapSorted.get(key).length;i++){
@@ -363,7 +405,7 @@ export class DashboardComponent implements OnInit {
           return;
         }
         if(this.checkOptionsOneEvent[0].checked){
-//active events
+          //active events
           this.meetingListMap.forEach((val, key) => {
             let myArrayMeeting = [];
             for(let i=0;i<this.meetingListMap.get(key).length;i++){
@@ -377,7 +419,7 @@ export class DashboardComponent implements OnInit {
           });
         }
         if(this.checkOptionsOneEvent[1].checked){
-//cancel events
+          //cancel events
           this.meetingListMap.forEach((val, key) => {
             let myArrayMeeting = [];
             for(let i=0;i<this.meetingListMap.get(key).length;i++){
@@ -397,9 +439,6 @@ export class DashboardComponent implements OnInit {
           }
         });
       }
-
-
-
     }else{
       if(this.checkOptionsOne.length>0){
         this.meetingListMapSorted = new Map<any, any>();
@@ -444,7 +483,6 @@ export class DashboardComponent implements OnInit {
             }
           });
         }
-
         if(this.checkOptionsOneEvent[0].checked){
           this.meetingListMap.forEach((val, key) => {
             let myArrayMeeting = [];
@@ -469,7 +507,6 @@ export class DashboardComponent implements OnInit {
             this.displaySize = this.displaySize+1;
           }
         });
-
       }else{
         this.meetingListMapSorted = new Map<any, any>();
         if(this.checkOptionsOneEvent[0].checked && this.checkOptionsOneEvent[1].checked){
@@ -483,7 +520,7 @@ export class DashboardComponent implements OnInit {
           return;
         }
         if(this.checkOptionsOneEvent[0].checked){
-//active events
+        //active events
           this.meetingListMap.forEach((val, key) => {
             let myArrayMeeting = [];
             for(let i=0;i<this.meetingListMap.get(key).length;i++){
@@ -497,7 +534,7 @@ export class DashboardComponent implements OnInit {
           });
         }
         if(this.checkOptionsOneEvent[1].checked){
-//cancel events
+        //cancel events
           this.meetingListMap.forEach((val, key) => {
             let myArrayMeeting = [];
             for(let i=0;i<this.meetingListMap.get(key).length;i++){
@@ -521,8 +558,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getUserList(){
-    this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/usertable/getuserlist',{'userId': this.authService.getUserId()}).subscribe(res =>{
-      console.log("res getuserlist=========",res);
+    this.httpClient.post<{message: string,data: []}>('/usertable/getuserlist',{'userId': this.authService.getUserId()}).subscribe(res =>{
+      // console.log("res getuserlist=========",res);
       if(res.data.length > 0){
         this.userCheck = true;
       }
@@ -531,13 +568,13 @@ export class DashboardComponent implements OnInit {
     });
   }
   getTeamList(){
-    this.httpClient.post<{message: string,data: []}>('https://dev.cloudmeetin.com/team/getteamlist',{'userId': this.authService.getUserId()}).subscribe(res =>{
-      console.log("getteamlist=========",res);
+    this.httpClient.post<{message: string,data: []}>('/team/getteamlist',{'userId': this.authService.getUserId()}).subscribe(res =>{
+      // console.log("getteamlist=========",res);
       if(res.data.length > 0){
         this.teamCheck = true;
       }
     },err => {
-      console.log("getteamlist err=========",err);
+      // console.log("getteamlist err=========",err);
     });
   }
 
@@ -545,23 +582,19 @@ export class DashboardComponent implements OnInit {
     this.indexSelect = selectIndex + 1;
   }
   onCancelMeeting(meetingDetail: any,key: string,index: any) {
-    console.log("Event Id---",meetingDetail);
+    // console.log("Event Id---",meetingDetail);
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = meetingDetail;
     let dialogRef = this.dialog.open(DialogcancelmessageComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(value => {
       if(value !== undefined){
         if(value !== "false"){
-          /*this.cancelMessage = value;
-          meetingDetail["cancelMessage"] = value;
-          meetingDetail["cancelBy"] = this.authService.getUserId();
-          this.meetingService.cancelMeetingSchedule(meetingDetail);
-          this.afterCancelMeeting(key,index,meetingDetail);*/
           this.cancelMessage = value;
           meetingDetail["cancelMessage"] = value;
           /*meetingDetail["cancelBy"] = this.authService.getUserId();*/
           meetingDetail["cancelBy"] = this.authService.getFullName();
           meetingDetail['invitee'] = meetingDetail.schedulerName;
+          meetingDetail['userName'] = this.authService.getFullName();
           meetingDetail.eventType = meetingDetail.eventType.split('m')[0];
           this.meetingService.cancelMeetingSchedule(meetingDetail);
           this.afterCancelMeeting(key,index,meetingDetail);
@@ -577,13 +610,11 @@ export class DashboardComponent implements OnInit {
   }
 
   onRescheduleMeeting(data: any) {
-    //localStorage.setItem('rescheduleRecord', JSON.stringify(data));
-    //this.meetingService.saveRescheduleRecord(data.eventType, data.schedulerEmail, this.authService.getUserId(), this.authService.getFullName(), data.eventID);
     this.router.navigate(['reschedule/'+data.meetingId]);
   }
 
   submit() {
-    console.log("Return check box value", this.eventForm.value);
+    // console.log("Return check box value", this.eventForm.value);
     if(this.eventForm.value.allEvent) {
       this.allEvent = 'true';
     } else {
@@ -592,13 +623,13 @@ export class DashboardComponent implements OnInit {
   }
 
   editEvent(id: string,index: number) {
-    console.log("Id===",id);
-    console.log("index===",index);
+    // console.log("Id===",id);
+    // console.log("index===",index);
     this.eventService.onEditEventMain(id, index);
   }
 
   copyEvent(event_link: string) {
-    this.copyLink = 'https://dev.cloudmeetin.com/'+this.userId+"/"+event_link;
+    this.copyLink = '/'+this.userId+"/"+event_link;
     let selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
     selBox.style.left = '0';
@@ -614,7 +645,7 @@ export class DashboardComponent implements OnInit {
   }
 
   emailEvent(event_link: string) {
-    console.log("emailEvent===",event_link);
+    // console.log("emailEvent===",event_link);
   }
 
 
@@ -684,9 +715,6 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-
-  /*end*/
-
   visibleContent(keyValue: string,index: number) {
     if(this.meetingListMapSorted.get(keyValue)[index]["cancel"] !== "true"){
       this.meetingListMapSorted.get(keyValue)[index].showCard = false;
@@ -702,6 +730,35 @@ export class DashboardComponent implements OnInit {
     this.meetingListMapSorted.get(keyValue)[index].schedulerEmail = this.updateEmail.value.email;
     this.dashboardService.updateMeetingEmail(data);
   }
+  updateAllCheckedMeeting(): void {
+    this.indeterminaMeeting = false;
+    if (this.allCheckedMeeting) {
+      this.checkOptionsOnMeeting = this.checkOptionsOnMeeting.map(item => {
+        return {
+          ...item,
+          checked: true
+        };
+      });
+    } else {
+      this.checkOptionsOnMeeting = this.checkOptionsOnMeeting.map(item => {
+        return {
+          ...item,
+          checked: false
+        };
+      });
+    }
+  }
 
+  updateSingleCheckedMeeting() {
+    if (this.checkOptionsOnMeeting.every(item => item.checked === false)) {
+      this.allCheckedMeeting = false;
+      this.indeterminaMeeting = false;
+    } else if (this.checkOptionsOnMeeting.every(item => item.checked === true)) {
+      this.allCheckedMeeting = true;
+      this.indeterminaMeeting = false;
+    } else {
+      this.indeterminaMeeting = true;
+    }
+  }
 
 }

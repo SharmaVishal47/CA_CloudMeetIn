@@ -27,7 +27,7 @@ export class ForgetPasswordComponent implements OnInit {
       this.loginForm.controls[ i ].updateValueAndValidity();
     }
 
-    console.log('Datas--------->', this.loginForm.value);
+    // console.log('Datas--------->', this.loginForm.value);
     this.authService.validateUser(this.loginForm.value);
 
   }

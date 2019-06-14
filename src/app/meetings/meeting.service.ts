@@ -2,11 +2,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {Subject} from 'rxjs';
-import {MatDialog, MatDialogConfig} from '@angular/material';
-import {MessagedialogComponent} from '../messagedialog/messagedialog.component';
+import {MatDialog} from '@angular/material';
 import {DatePipe, formatDate} from '@angular/common';
 import {AuthService} from 'angular-6-social-login';
-import {MeetingRecord} from '../model/meeting-record';
 import * as moment from 'moment-timezone';
 import {NzMessageService} from 'ng-zorro-antd';
 import {MessageServiceService} from '../Auth/message-service.service';
@@ -14,8 +12,8 @@ import {MessageServiceService} from '../Auth/message-service.service';
   providedIn: 'root'
 })
 export class MeetingService {
+  timeZoneForConvert;
   meetingUID;
-
   access_token;
   expires_in;
   organizer_key;
@@ -28,6 +26,7 @@ export class MeetingService {
   authStatusListener = new Subject<boolean>();
   meetingPlatform = new Subject<any>();
   inetgrationGTMDetail = new Subject<any>();
+  messageOff = new Subject<any>();
   expectedDay: string;
   expectedDate;
   timeArray = [];
@@ -37,7 +36,6 @@ export class MeetingService {
   goToMeetingStartDateTime;
   goToMeetingEndDateTime;
   _dateFormatEnd;
-
   gtm_access_token: string;
   gtm_expires_in: string;
   gtm_organizer_key: string;
@@ -65,12 +63,12 @@ export class MeetingService {
   }
   /* Get go to meeting details from database*/
   gotoMeetingDetail(){
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/integration/getgotomeeting', {userId: localStorage.getItem('userId')}).subscribe(
+    this.httpClient.post<any>('/integration/getgotomeeting', {userId: localStorage.getItem('userId')}).subscribe(
       res => {
         this.inetgrationGTMDetail.next(res);
       },
       err => {
-        console.log('AccessToken Error=========', err.message);
+        // console.log('AccessToken Error=========', err.message);
         this.showDialog(err.message);
       });
   }
@@ -78,14 +76,14 @@ export class MeetingService {
 // This method used to get authicated user Details for meeting schudule
   authUserRecord(data: { userId: string }) {
     this.httpClient.post<{ message: string, data: MeetingAuthUser[] }>
-    ('https://dev.cloudmeetin.com/user/checkuser', data).subscribe((responseData) => {
+    ('/user/checkuser', data).subscribe((responseData) => {
       this._meetingAuthUser = responseData.data;
       this._meetingAuthUserRecord.next([...this._meetingAuthUser]);
     });
   }
 
   removeHeader(check: boolean) {
-    console.log("Check ===>>", check);
+    // console.log("Check ===>>", check);
     this.isAuthicated = check;
     this.authStatusListener.next(this.isAuthicated);
   }
@@ -124,7 +122,7 @@ export class MeetingService {
 
   //  This method used to get the available meeting day from database
   getMeetingAvailableDay(userId: string) {
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/user/getAvailableDays', {userId: userId}).subscribe(res => {
+    this.httpClient.post<any>('/user/getAvailableDays', {userId: userId}).subscribe(res => {
       this.meetingAvailableDay.next(res);
     });
   }
@@ -142,7 +140,7 @@ export class MeetingService {
   }
 
   deleteListTimeArray() {
-    console.log("finally call");
+    // console.log("finally call");
     this.listTimeArray = [];
     this.timeArray = [];
     this.userSlotArray= [];
@@ -200,19 +198,19 @@ export class MeetingService {
   userSelectTimePeriod(userEmail: string | boolean, expectedDate: any, timeZone: string) {
     this.expectedDate = expectedDate;
     this.timeZone = timeZone;
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/user/gettime', {email: userEmail})
+    this.httpClient.post<any>('/user/gettime', {email: userEmail})
       .subscribe((responseData) => {
         // this.getTimePeriod.next(responseData);
-        this.httpClient.post<any>('https://dev.cloudmeetin.com/filter/meetingTime', {
+        this.httpClient.post<any>('/filter/meetingTime', {
           userId: this.getUserId(),
           meetingDate: this.expectedDate
         }).subscribe((responseDataByUserID) => {
-          console.log('responseDataByUserId --  >  > > ', responseDataByUserID.data);
+          // console.log('responseDataByUserId --  >  > > ', responseDataByUserID.data);
           if (responseDataByUserID.data.length > 0) {
             let userId = responseDataByUserID.data[0].userId;
             let meetingDate = responseDataByUserID.data[0].meetingDate;
             let meetingTimeList = responseDataByUserID.data[0].meetingTimeList;
-            console.log('userId', userId + 'meetinDate ', meetingDate + 'meetingTimeList', meetingTimeList);
+            // console.log('userId', userId + 'meetinDate ', meetingDate + 'meetingTimeList', meetingTimeList);
             let startTime = responseData.data[0].startTime.split(':');
             let endTime = responseData.data[0].endTime.split(':');
             let userEventType = typeof localStorage.getItem('eventType') === 'string' && localStorage.getItem('eventType').split('').length > 0
@@ -256,13 +254,13 @@ export class MeetingService {
               let time = this.datepipe.transform(this.expectedDate, 'yyyy-MM-dd') + ' ' + item;
               let convertedTime = new Date(new Date(time)).toLocaleString('en-US', {timeZone: this.timeZone});
               let hours = new Date(convertedTime).toLocaleTimeString().split(':');
-              console.log('hours====', hours[0].length, typeof hours[0]);
+              // console.log('hours====', hours[0].length, typeof hours[0]);
               let returnValue = typeof hours[0] === 'string' && hours[0].length == 1 ? '0' + new Date(convertedTime).toLocaleTimeString() : new Date(convertedTime).toLocaleTimeString();
-              console.log('MeetingDate ---->>', meetingDate);
+              // console.log('MeetingDate ---->>', meetingDate);
               if (meetingDate === this.expectedDate) {
                 this.listTimeArray.push(returnValue);
                 let splitMeetingList = meetingTimeList.split(',');
-                console.log(splitMeetingList);
+                // console.log(splitMeetingList);
                 for (let i = 0; i < splitMeetingList.length; i++) {
                   if (this.listTimeArray.indexOf(splitMeetingList[i]) > -1) {
                     this.listTimeArray.splice(this.listTimeArray.indexOf(meetingTimeList), splitMeetingList.length);
@@ -276,7 +274,7 @@ export class MeetingService {
 
             }
           } else {
-            console.log('Else Part ------------>>>');
+            // console.log('Else Part ------------>>>');
             let startTime = responseData.data[0].startTime.split(':');
             let endTime = responseData.data[0].endTime.split(':');
             let userEventType = typeof localStorage.getItem('eventType') === 'string' && localStorage.getItem('eventType').split('').length > 0
@@ -319,15 +317,15 @@ export class MeetingService {
               let time = this.datepipe.transform(this.expectedDate, 'yyyy-MM-dd') + ' ' + item;
               let convertedTime = new Date(new Date(time)).toLocaleString('en-US', {timeZone: this.timeZone});
               let hours = new Date(convertedTime).toLocaleTimeString().split(':');
-              console.log('hours====', hours[0].length, typeof hours[0]);
+              // console.log('hours====', hours[0].length, typeof hours[0]);
               let returnValue = typeof hours[0] === 'string' && hours[0].length == 1 ? '0' + new Date(convertedTime).toLocaleTimeString() : new Date(convertedTime).toLocaleTimeString();
               this.listTimeArray.push(returnValue);
             }
           }
-          console.log("This List time Array", this.listTimeArray);
+          // console.log("This List time Array", this.listTimeArray);
           this.getTimePeriod.next(this.listTimeArray);
         }, error => {
-          console.log('error====', error);
+          // console.log('error====', error);
           this.messageService.generateErrorMessage(error);
           /*const dialogConfig = new MatDialogConfig();
           dialogConfig.data = error;
@@ -335,7 +333,7 @@ export class MeetingService {
         });
 
       }, error => {
-        console.log('error====', error);
+        // console.log('error====', error);
         this.messageService.generateErrorMessage(error);
       /*  const dialogConfig = new MatDialogConfig();
         dialogConfig.data = error;
@@ -344,12 +342,12 @@ export class MeetingService {
   }
 
   checkMeetingPlatform() {
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/user/checkMeetingPlatform', {userId: localStorage.getItem("userIdMeeting")}).subscribe(
+    this.httpClient.post<any>('/user/checkMeetingPlatform', {userId: localStorage.getItem("userIdMeeting")}).subscribe(
       res => {
         this.meetingPlatform.next(res);
       }, error => {
-        console.log("error====", error);
-        this.messageService.generateErrorMessage(error);
+        // console.log("error====", error);
+        this.messageService.generateErrorMessage("Something went gone wrong.");
         /*const dialogConfig = new MatDialogConfig();
         dialogConfig.data = error;
         this.dialog.open(MessagedialogComponent, dialogConfig);*/
@@ -386,7 +384,7 @@ export class MeetingService {
   meetingTimeFormat(_startTime, _endTime, timeZone, callback) {
       /*let selectedDate = localStorage.getItem('selectedDate').split(' ')[2];
     if(_startTime && _endTime && timeZone) {
-      console.log("StartTime is ", _startTime, ' endTime is ', _endTime, ' and Time Zone is ', timeZone);
+      // console.log("StartTime is ", _startTime, ' endTime is ', _endTime, ' and Time Zone is ', timeZone);
       let newDate = new Date(_startTime);
       let hours =  newDate.getHours(); // => 9
       let minutes  = newDate.getMinutes(); // =>  30
@@ -427,7 +425,7 @@ export class MeetingService {
       let _timeDiff = moment(_endTime).tz(timeZone).format().split('T') [0].split('-');
 
       let dateDiff = parseInt(_timeDiff[2])- parseInt(_firstTime[2]);
-      console.log("parseInt(selectedDate) + dateDiff",parseInt(selectedDate) + dateDiff);
+      // console.log("parseInt(selectedDate) + dateDiff",parseInt(selectedDate) + dateDiff);
       let changeDate = parseInt(selectedDate) + dateDiff;
       let mainTimeDiff = changeDate.toString().length == 1 ? '0'+changeDate.toString(): changeDate.toString();
 
@@ -457,10 +455,10 @@ export class MeetingService {
           mainEndTime = endTime + 'T' + endHours + ':' + endMinutes + ':'+ '00' +'-' +endTimeOffSet;
         }
       }*/
-      // console.log('Time --- ', moment(_startTime).tz(timeZone).utc().format(), moment(_endTime).tz(timeZone).format());
-      console.log("======================================================================");
-      console.log("startTime", _startTime ,  "endTime", _endTime);
-     /* console.log('mainStartTime --- ', mainStartTime,' mainEndTime ', mainEndTime);*/
+      // // console.log('Time --- ', moment(_startTime).tz(timeZone).utc().format(), moment(_endTime).tz(timeZone).format());
+      // console.log("======================================================================");
+      // console.log("startTime", _startTime ,  "endTime", _endTime);
+     /* // console.log('mainStartTime --- ', mainStartTime,' mainEndTime ', mainEndTime);*/
       callback(true,_startTime, _endTime);
      // callback(false, null, null)
     /*} else {
@@ -473,7 +471,7 @@ export class MeetingService {
     this.data = data;
     this.httpClient.post<any>('/integration/getgotomeeting', {userId: localStorage.getItem('userId')}).subscribe(
       res => {
-        console.log('gtm detail=======', res);
+        // console.log('gtm detail=======', res);
         if (res.data.length > 0) {
           let client_id_client_secret64 = res.data[0].clientId_client_secret_64;
           let httpHeaders = new HttpHeaders({
@@ -486,7 +484,7 @@ export class MeetingService {
           this.httpClient.post<any>('https://api.getgo.com/oauth/v2/token?grant_type=password&username=' + res.data[0].emailId + '&password=' + res.data[0].password + '', {}, optionsHeader).subscribe(
             res => {
               this.gtm_access_token = res.access_token;
-              console.log('this.access_token===', this.gtm_access_token);
+              // console.log('this.access_token===', this.gtm_access_token);
               this.gtm_expires_in = res.expires_in;
               this.gtm_organizer_key = res.organizer_key;
               this.gtm_refresh_token = res.refresh_token;
@@ -504,10 +502,10 @@ export class MeetingService {
                   if(status && returnStartTime && returnEndTime) {
                     this.meetIngData.starttime = returnStartTime;
                     this.meetIngData.endtime = returnEndTime;
-                    console.log("Meeting Data -------------> ", this.meetIngData);
+                    // console.log("Meeting Data -------------> ", this.meetIngData);
                     this.httpClient.post<any>('https://api.getgo.com/G2M/rest/meetings', this.meetIngData, options).subscribe(
                       res => {
-                        console.log('MeetingResponse=========', res);
+                        // console.log('MeetingResponse=========', res);
 
                         this.data['g2mMeetingId'] = res[0].meetingid;
                         this.data['g2mMeetingUrl'] = res[0].joinURL;
@@ -519,14 +517,14 @@ export class MeetingService {
                         this.addMeetingToDatabaseWithGTM(this.meetIngData, this.data);
                       },
                       err => {
-                        console.log('Meeting Error=========', err.message);
+                        // console.log('Meeting Error=========', err.message);
                         this.showDialog(err.message);
                       });
                   }
                 });
             },
             err => {
-              console.log('AccessToken Error=========', err.message);
+              // console.log('AccessToken Error=========', err.message);
               this.showDialog(err.message);
             });
         }
@@ -536,9 +534,9 @@ export class MeetingService {
   getGoToMeeting(meetIngData: any, data: any) {
     this.meetIngData = meetIngData;
     this.data = data;
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/meeting/getAccessToken', {userId: data.userId}).subscribe(
+    this.httpClient.post<any>('/meeting/getAccessToken', {userId: data.userId}).subscribe(
       res => {
-        console.log('gtm accessToken=======', res);
+        // console.log('gtm accessToken=======', res);
         this.gtm_access_token = res.data;
         let httpHeaders = new HttpHeaders({
           'Content-Type': 'application/json',
@@ -553,26 +551,29 @@ export class MeetingService {
             if(status && returnStartTime && returnEndTime) {
               this.meetIngData.starttime = returnStartTime;
               this.meetIngData.endtime = returnEndTime;
-              console.log("Meeting Data -------------> ", this.meetIngData);
-              this.httpClient.post<any>('https://api.getgo.com/G2M/rest/meetings', this.meetIngData, options).subscribe(
+              // console.log("Meeting Data -------------> ", this.meetIngData);
+              this.httpClient.post<any>('/meeting/gtm-meetingschedule', {meetingData : this.meetIngData, access_token: this.gtm_access_token}).subscribe(
                 res => {
-                  console.log('MeetingResponse=========', res);
-
+                  // console.log('MeetingResponse=========', res);
                   this.data['g2mMeetingId'] = res[0].meetingid;
                   this.data['g2mMeetingUrl'] = res[0].joinURL;
                   this.data['g2mMeetingCallNo'] = res[0].conferenceCallInfo;
-
                   this.meetIngData['g2mMeetingId'] = res[0].meetingid;
                   this.meetIngData['g2mMeetingUrl'] = res[0].joinURL;
                   this.meetIngData['g2mMeetingCallNo'] = res[0].conferenceCallInfo;
                   this.addMeetingToDatabaseWithGTM(this.meetIngData, this.data);
                 },
                 err => {
-                  console.log('Meeting Error=========', err.message);
-                  this.showDialog(err.message);
+                  console.log('Meeting Error=========', err);
+                  this.messageOff.next(false);
+                  this.showDialog("GTM Expired");
                 });
-            }
+              }
           });
+      },error => {
+        // console.log('Meeting Error=========', error.message);
+        this.messageOff.next(false);
+        this.showDialog("Something went gone wrong.");
       });
   }
 
@@ -581,8 +582,8 @@ export class MeetingService {
     let timeZone = localStorage.getItem('selectedTimeZone');
     this.meetIngData = meetIngData;
     this.data = data;
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/meeting/addMeeting', this.data).subscribe((responseData) => {
-      console.log('addMeeting====', responseData.data.insertId);
+    this.httpClient.post<any>('/meeting/addMeeting', this.data).subscribe((responseData) => {
+      // console.log('addMeeting====', responseData.data.insertId);
       let insertId = responseData.data.insertId;
       let currentEmail = localStorage.getItem('email');
 
@@ -591,7 +592,7 @@ export class MeetingService {
         if(status && returnStartTime && returnEndTime) {
           /*this.meetIngData.starttime = returnStartTime;
           this.meetIngData.endtime = returnEndTime;*/
-          this.httpClient.post<any>('https://dev.cloudmeetin.com/user/insertevent', {
+          this.httpClient.post<any>('/user/insertevent', {
             data: data,
             meetIngData: this.meetIngData,
             email: currentEmail,
@@ -600,65 +601,77 @@ export class MeetingService {
             userName : userName,
             timeZone : timeZone
           }).subscribe((responseData) => {
-            console.log('Google Calendar integration======', responseData.message);
-            console.log('Google Calendar integration======', responseData.data.id);
+            // console.log('Google Calendar integration======', responseData.message);
+            // console.log('Google Calendar integration======', responseData.data.id);
             this.insertEventIdInDatabase(responseData.data.id, insertId, (cb_one) => {
               if(cb_one == 200) {
+                this.meetIngData['userTimeZone'] = this.data.userTimeZone;
+                this.meetIngData['g2mMeetingId'] = responseData.data.conferenceId;
+                this.meetIngData['g2mMeetingUrl'] = responseData.data.hangoutLink;
+                this.meetIngData['g2mMeetingCallNo'] = ' ';
                 this.sendMeetingNotification(this.meetIngData, this.data.schedulerEmail, currentEmail, data.eventType, userName, (cb_two) => {
                   if(cb_two == 200) {
                     if (localStorage.getItem('UpdateQuery') === 'true') {
                       // if user select same date then run the update api
-                      console.log('Update =====================================================');
+                      // console.log('Update =====================================================');
                       let oldMeetingList = localStorage.getItem('meetingTimeList').toString();
                       let updateMeetingList = oldMeetingList.concat(',' + this.data.starttime);
                       this.appendMeetingTime(this.data, updateMeetingList, (cb_th) => {
                         if(cb_th == 200) {
                           this.meetingsConfirmation();
                         } else {
-                          this.showDialog(cb_th);
+                          this.messageOff.next(false);
+                          this.showDialog("Something went gone wrong.");
                         }
                       });
                     } else {
-                      console.log('Insert =====================================================');
+                      // console.log('Insert =====================================================');
                       // if user select date as a first time
                       this.insertMeetingTime(this.data ,(cb)=>{
                         if(cb == 200) {
                           this.meetingsConfirmation();
                         } else {
-                          this.showDialog(cb);
+                          this.messageOff.next(false);
+                          this.showDialog("Something went gone wrong.");
                         }
                       });
                     }
                   } else {
-                    this.showDialog(cb_two);
+                    this.messageOff.next(false);
+                    this.showDialog("Something went gone wrong.");
                   }
                 });
               } else {
-                this.showDialog(cb_one);
+                this.messageOff.next(false);
+                this.showDialog("Something went gone wrong.");
               }
             });
           }, error => {
-            console.log('error CAL ====', error);
-            this.showDialog(error);
+            // console.log('error CAL ====', error);
+            this.messageOff.next(false);
+            this.showDialog("Something went gone wrong.");
           });
         } else {
-          this.showDialog("TimeZone Error") ;
+          this.messageOff.next(false);
+          this.showDialog("Something went gone wrong.");
         }
         });
     }, error => {
-      console.log('error====', error);
-      this.showDialog(error);
+      // console.log('error====', error);
+      this.messageOff.next(false);
+      this.showDialog("Something went gone wrong.");
     });
   }
 
   addMeetingToDatabaseWithGTM(meetIngData, data) {
+
     let userName = localStorage.getItem('fullName');
     let timeZone = localStorage.getItem('selectedTimeZone');
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/meeting/addMeetingWithGtm', this.data).subscribe((responseData) => {
-      console.log('addMeeting====', responseData);
+    this.httpClient.post<any>('/meeting/addMeetingWithGtm', this.data).subscribe((responseData) => {
+      // console.log('addMeeting====', responseData);
       let insertId = responseData.data.insertId;
       let currentEmail = localStorage.getItem('email');
-      this.httpClient.post<any>('https://dev.cloudmeetin.com/user/insertevent', {
+      this.httpClient.post<any>('/user/insertevent', {
         data :  data,
         meetIngData: meetIngData,
         email: currentEmail,
@@ -667,81 +680,138 @@ export class MeetingService {
         userName : userName,
         timeZone : timeZone
       }).subscribe((responseData) => {
-        console.log('Google Calendar integration ======', responseData);
+        // console.log('Google Calendar integration ======', responseData);
 
-        this.httpClient.post<any>('https://dev.cloudmeetin.com/meeting/addEventID', {
+        this.httpClient.post<any>('/meeting/addEventID', {
           userID: this.getUserId(),
           eventId: responseData.data.id,
           insertId: insertId
         }).subscribe((response) => {
-          console.log('Event Response --- >> ', response);
-          console.log("meetingData=========>", meetIngData);
-          console.log("clientEmail=========>", this.data.schedulerEmail);
-          console.log("email=========>", currentEmail);
-          this.httpClient.post<any>('https://dev.cloudmeetin.com/sendEmail/sendemail', {
+          // console.log('Event Response --- >> ', response);
+          // console.log("meetingData=========>", meetIngData);
+          // console.log("clientEmail=========>", this.data.schedulerEmail);
+          // console.log("email=========>", currentEmail);
+          this.meetIngData['userTimeZone'] = this.data.userTimeZone;
+          this.httpClient.post<any>('/sendEmail/sendemail', {
             meetingData: meetIngData,
             clientEmail: this.data.schedulerEmail,
             email: currentEmail,
             userName : userName,
             eventType : data.eventType
           }).subscribe((responseData) => {
-            console.log('Notification sent on gmail with GTM ======1', responseData);
+            // console.log('Notification sent on gmail with GTM ======1', responseData);
             if (localStorage.getItem('UpdateQuery') === 'true') {
               // if user select same date then run the update api
-              console.log('Update =====================================================');
+              // console.log('Update =====================================================');
               let oldMeetingList = localStorage.getItem('meetingTimeList').toString();
               let updateMeetingList = oldMeetingList.concat(',' + this.data.starttime);
-              // console.log('',updateMeetingList);
-              this.httpClient.post<any>('https://dev.cloudmeetin.com/filter/updateMeetingRecords', {
+              // // console.log('',updateMeetingList);
+              this.httpClient.post<any>('/filter/updateMeetingRecords', {
                 userId: this.data.userId,
                 meetingDate: this.data.date,
                 meetingTimeList: updateMeetingList
               }).subscribe((responseDataUserUpdate) => {
-                console.log('Meeting Data updated successfully  ========================>>>>>>', responseDataUserUpdate);
+                // console.log('Meeting Data updated successfully  ========================>>>>>>', responseDataUserUpdate);
                 this.meetingsConfirmation();
               }, error => {
-                console.log('error CAL ====', error);
-                this.showDialog(error);
+                // console.log('error CAL ====', error);
+                this.messageOff.next(false);
+                this.showDialog("Something went gone wrong.");
               });
 
             } else {
               // if user select date as a first time
-              console.log('Insert =====================================================');
-              this.httpClient.post<any>('https://dev.cloudmeetin.com/filter/insertMeetingRecords', {
+              // console.log('Insert =====================================================');
+              this.httpClient.post<any>('/filter/insertMeetingRecords', {
                 userId: this.data.userId,
                 meetingDate: this.data.date,
                 meetingTimeList: this.data.starttime
               }).subscribe((responseDataUser) => {
-                console.log('Meeting Data saved successfully  ========================>>>>>>', responseDataUser);
+                // console.log('Meeting Data saved successfully  ========================>>>>>>', responseDataUser);
                 this.meetingsConfirmation();
               }, error => {
-                console.log('error CAL ====', error);
-                this.showDialog(error);
+                // console.log('error CAL ====', error);
+                this.messageOff.next(false);
+                this.showDialog("Something went gone wrong.");
               });
             }
           }, error => {
-            console.log('error CAL ====', error);
-            this.showDialog(error);
+            // console.log('error CAL ====', error);
+            this.messageOff.next(false);
+            this.showDialog("Something went gone wrong.");
           });
         });
       }, error => {
-        console.log('error CAL ====', error);
-        this.showDialog(error);
+        // console.log('error CAL ====', error);
+        this.messageOff.next(false);
+        this.showDialog("Something went gone wrong.");
       });
     }, error => {
-      console.log('error====', error);
-      this.showDialog(error);
+      // console.log('error====', error);
+      this.messageOff.next(false);
+      this.showDialog("Something went gone wrong.");
+    });
+  }
+
+  /* Zoom meeting schedule*/
+  addMeetingWithZoom(meetIngData: any, data: any) {
+    let userName = localStorage.getItem('fullName');
+    let timeZone = localStorage.getItem('selectedTimeZone');
+    this.httpClient.post<any>('/zoom/insertMeeting', {meetIngData: meetIngData, data: data}).subscribe(response => {
+      console.log("Zoom Response -- > ",response.data);
+      let currentEmail = localStorage.getItem('email');
+      data['g2mMeetingId'] = response.data.id;
+      data['g2mMeetingUrl'] = response.data.join_url;
+      data['g2mMeetingCallNo'] = JSON.parse(response.data.zMeetingData).invitation;
+      meetIngData['g2mMeetingId'] = response.data.id;
+      meetIngData['g2mMeetingUrl'] = response.data.join_url;
+      meetIngData['g2mMeetingCallNo'] = JSON.parse(response.data.zMeetingData).invitation;
+      meetIngData['userTimeZone'] = data.userTimeZone;
+      this.httpClient.post<any>('/meeting/add-meeting-records', data).subscribe((responseData) => {
+        console.log("Zoom Meeting response data ", responseData );
+        let meetingUniqueId = typeof (responseData.meetingUniqueId) === 'string' && responseData.meetingUniqueId !== 'undefined' &&
+        responseData.meetingUniqueId.split('').length > 0 ? responseData.meetingUniqueId : false;
+        if(meetingUniqueId) {
+          data['meetingId'] = meetingUniqueId;
+          this.httpClient.post<any>('/user/insertevent', {
+            data: data,
+            meetIngData: meetIngData,
+            email: currentEmail,
+            eventType: data.eventType,
+            inviteeEmail: data.schedulerEmail,
+            userName: userName,
+            timeZone: timeZone
+          }).subscribe((responseData) => {
+            console.log("Google calendar event id : ", responseData);
+            this.httpClient.post<any>('/meeting/addEventid-withmeetingid', {
+              meetingId: meetingUniqueId,
+              eventId: responseData.data.id,
+            }).subscribe((response) => {
+              this.sendMeetingNotification(meetIngData, data.schedulerEmail, currentEmail,data.eventType,userName, (status) => {
+                if (status == 200) {
+                  this.meetingsConfirmation();
+                } else {
+                  this.messageOff.next(false);
+                  this.showDialog("Something went gone wrong.");
+                }
+              });
+            });
+          });
+        } else {
+          this.showDialog("Something went gone wrong.");
+        }
+      });
     });
   }
 
   /*This function used for insert event Id in Database Table*/
   insertEventIdInDatabase(eventId,insertId, callback) {
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/meeting/addEventID', {
+    this.httpClient.post<any>('/meeting/addEventID', {
       userID: this.getUserId(),
       eventId: eventId,
       insertId: insertId
     }).subscribe((response) => {
-        console.log('Event Response --- >> ', response);
+        // console.log('Event Response --- >> ', response);
         callback(200)
       }, error => {
         callback(error);
@@ -750,38 +820,38 @@ export class MeetingService {
 
   /* This function used to send the email */
 /*  sendMeetingNotification(meetIngData, schedulerEmail, currentEmail, callback) {
-    console.log("meetIngData", meetIngData);
-    console.log("schedulerEmail", schedulerEmail);
-    console.log("currentEmail", currentEmail);
+    // console.log("meetIngData", meetIngData);
+    // console.log("schedulerEmail", schedulerEmail);
+    // console.log("currentEmail", currentEmail);
     this.httpClient.post<any>('/sendEmail/sendemail', {
       meetingData: meetIngData,
       clientEmail: schedulerEmail,
       email: currentEmail
     }).subscribe((responseData) => {
-      console.log('Notification sent on gmail with GTM ======', responseData);
+      // console.log('Notification sent on gmail with GTM ======', responseData);
       callback(200);
     }, error => {
-      console.log('error CAL ====', error);
+      // console.log('error CAL ====', error);
       callback(error);
     });
   }*/
 
 
   sendMeetingNotification(meetIngData, schedulerEmail, currentEmail, eventType, userName, callback) {
-    console.log("meetIngData", meetIngData);
-    console.log("schedulerEmail", schedulerEmail);
-    console.log("currentEmail", currentEmail);
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/sendEmail/sendemail', {
+    // console.log("meetIngData", meetIngData);
+    // console.log("schedulerEmail", schedulerEmail);
+    // console.log("currentEmail", currentEmail);
+    this.httpClient.post<any>('/sendEmail/sendemail', {
       meetingData: meetIngData,
       clientEmail: schedulerEmail,
       email: currentEmail,
       userName : userName,
       eventType : eventType
     }).subscribe((responseData) => {
-      console.log('Notification sent on gmail with GTM ======', responseData);
+      // console.log('Notification sent on gmail with GTM ======', responseData);
       callback(200);
     }, error => {
-      console.log('error CAL ====', error);
+      // console.log('error CAL ====', error);
       callback(error);
     });
   }
@@ -789,105 +859,47 @@ export class MeetingService {
   /*This function used for insert the meeting time list in database's table */
   insertMeetingTime(data, callback) {
     // if user select date as a first time
-    console.log('Insert =====================================================');
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/filter/insertMeetingRecords', {
+    // console.log('Insert =====================================================');
+    this.httpClient.post<any>('/filter/insertMeetingRecords', {
       userId: data.userId,
       meetingDate: data.date,
       meetingTimeList: data.starttime
     }).subscribe((responseDataUser) => {
-      console.log('Meeting Data saved successfully  ========================>>>>>>', responseDataUser);
+      // console.log('Meeting Data saved successfully  ========================>>>>>>', responseDataUser);
       callback(200);
     }, error => {
-      console.log('error CAL ====', error);
+      // console.log('error CAL ====', error);
       callback(error);
     });
   }
 
   /*This function used for append the meeting time list in database's table */
   appendMeetingTime(data, updateMeetingList, callback) {
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/filter/updateMeetingRecords', {
+    this.httpClient.post<any>('/filter/updateMeetingRecords', {
       userId: data.userId,
       meetingDate: data.date,
       meetingTimeList: updateMeetingList
     }).subscribe((responseDataUserUpdate) => {
-      console.log('Meeting Data updated successfully  ========================>>>>>>', responseDataUserUpdate);
+      // console.log('Meeting Data updated successfully  ========================>>>>>>', responseDataUserUpdate);
       callback(200);
     }, error => {
-      console.log('error CAL ====', error);
+      // console.log('error CAL ====', error);
       callback(error);
     });
   }
 
- /* /!*Cancel meeting function*!/
+
+  /*Cancel meeting function*/
   cancelMeetingSchedule(meetingDetail: any) {
+    console.log("Cancel by Admin : ", meetingDetail);
     this.httpClient.post<any>('/user/delete',{email: this.getUserEmailId(), meetingDetail: meetingDetail}).subscribe(
       res =>{
         console.log("Remove calendar event --- >> ",res);
         if(meetingDetail.g2mMeetingId){
           this.deleteGTMRecord(meetingDetail);
         }
-      },error => {
-        this.showDialog(error);
-      });
-  }
-
-  /!* Meeting record delete from the GTM*!/
-  deleteGTMRecord(meetingDetail: any){
-    let userId = meetingDetail.userId;
-    this.httpClient.post<any>('/integration/getgotomeeting',{userId: userId}).subscribe(
-      res =>{
-        let gtmDetail = res.data;
-        if(gtmDetail.length > 0) {
-          let client_id_client_secret64 = res.data[0].clientId_client_secret_64;
-          let httpHeaders = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Basic '+client_id_client_secret64
-          });
-          let optionsHeader = {
-            headers: httpHeaders
-          };
-          this.httpClient.post<any>('https://api.getgo.com/oauth/v2/token?grant_type=password&username='+res.data[0].emailId+'&password='+res.data[0].password+'',{}, optionsHeader).subscribe(
-            res => {
-              this.gtm_access_token = res.access_token;
-              console.log('this.access_token===', this.gtm_access_token);
-              this.gtm_expires_in = res.expires_in;
-              this.gtm_organizer_key = res.organizer_key;
-              this.gtm_refresh_token = res.refresh_token;
-
-              let httpHeaders = new HttpHeaders({
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.gtm_access_token
-              });
-              let options = {
-                headers: httpHeaders
-              };
-              this.httpClient.delete<any>('https://api.getgo.com/G2M/rest/meetings/'+meetingDetail.g2mMeetingId,options).subscribe(
-                res =>{
-                  console.log("delete Response=========",res);
-                },
-                err => {
-                  console.log("delete Error=========",err.message);
-                });
-            },
-            err => {
-              console.log('AccessToken Error=========', err.message);
-            });
-        }
-      },error => {
-        console.log("error====",error);
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.data = error;
-        this.dialog.open(MessagedialogComponent, dialogConfig);
-      });
-  }*/
-
-  /*Cancel meeting function*/
-  cancelMeetingSchedule(meetingDetail: any) {
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/user/delete',{email: this.getUserEmailId(), meetingDetail: meetingDetail}).subscribe(
-      res =>{
-        console.log("Remove calendar event --- >> ",res);
-        if(meetingDetail.g2mMeetingId){
-          this.deleteGTMRecord(meetingDetail);
+        if(meetingDetail.zoomMeetingId) {
+          this.deleteZOOMRecord(meetingDetail.zoomMeetingId,  meetingDetail.userId)
         }
       },error => {
         this.showDialog(error);
@@ -895,7 +907,7 @@ export class MeetingService {
   }
 
   cancelMeetingScheduleByClient(meetingDetail: any, meetingId) {
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/user/deletebymeetingid',{meetingId	: meetingId	, meetingDetail: meetingDetail}).subscribe(
+    this.httpClient.post<any>('/user/deletebymeetingid',{meetingId	: meetingId	, meetingDetail: meetingDetail}).subscribe(
       res =>{
         meetingDetail['subject'] = meetingDetail.invitee;
         this.sendMeetingNotification(meetingDetail, meetingDetail.schedulerEmail, meetingDetail.calendarID,
@@ -908,15 +920,23 @@ export class MeetingService {
         if(meetingDetail.g2mMeetingId){
           this.deleteGTMRecord(meetingDetail);
         }
+        if(meetingDetail.zoomMeetingId) {
+          this.deleteZOOMRecord(meetingDetail.zoomMeetingId,  meetingDetail.userId)
+        }
       },error => {
         this.showDialog(error);
       });
   }
-
+  /* This function use for delete the meeting from the zoom*/
+  public deleteZOOMRecord(zoomMeetingId: any, userId: any) {
+    this.httpClient.post<any>('/zoom/deleteMeeting', {userId: userId , zoomMeetingId: zoomMeetingId}).subscribe((response)=> {
+      console.log("ZOOM cancel record : ", response);
+    });
+  }
   /* Meeting record delete from the GTM*/
   deleteGTMRecord(meetingDetail: any){
     let userId = meetingDetail.userId;
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/integration/getgotomeeting',{userId: userId}).subscribe(
+    this.httpClient.post<any>('/integration/getgotomeeting',{userId: userId}).subscribe(
       res =>{
         let gtmDetail = res.data;
         if(gtmDetail.length > 0) {
@@ -928,16 +948,16 @@ export class MeetingService {
           let options = {
             headers: httpHeaders
           };
-          this.httpClient.delete<any>('https://api.getgo.com/G2M/rest/meetings/'+meetingDetail.g2mMeetingId,options).subscribe(
+          this.httpClient.post<any>('/meeting/gtm-meetingdelete',{g2mMeetingId: meetingDetail.g2mMeetingId, access_token: access_token}).subscribe(
             res =>{
-              console.log("delete Response=========",res);
+              // console.log("delete Response=========",res);
             },
             err => {
-              console.log("delete Error=========",err.message);
+              // console.log("delete Error=========",err.message);
             });
         }
       },error => {
-        console.log("error====",error);
+        // console.log("error====",error);
         this.messageService.generateErrorMessage(error);
        /* const dialogConfig = new MatDialogConfig();
         dialogConfig.data = error;
@@ -950,21 +970,21 @@ export class MeetingService {
     return JSON.parse(localStorage.getItem("rescheduleRecord"));
   }
 
-  /* Reschedule meetings records main function  [Completed]*/
+  /*/!* Reschedule meetings records main function  [Completed]*!/
   rescheduleMeeting(data: any, meetingData: any) {
     let currentEmail = localStorage.getItem('email');
     let userEmail = localStorage.getItem('email');
     let cEventId = localStorage.getItem('eventId');
     data['rescheduleRecord'] = localStorage.getItem('rescheduleRecord');
     // Add meeting record in database
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/meeting/rescheduleMeeting', data).subscribe((responseDataUserUpdate) => {
-      console.log('Meeting Data Reschdule successfully  ========================>>>>>>', responseDataUserUpdate);
+    this.httpClient.post<any>('/meeting/rescheduleMeeting', data).subscribe((responseDataUserUpdate) => {
+      // console.log('Meeting Data Reschdule successfully  ========================>>>>>>', responseDataUserUpdate);
       let meetId = responseDataUserUpdate.meetingUniqueId;
-      console.log('meetId new  ========================>>>>>>', meetId);
+      // console.log('meetId new  ========================>>>>>>', meetId);
       data['newMeetingId'] = meetId;
       // This function use for get the go to meeting credentials from the database table
-      this.httpClient.post("https://dev.cloudmeetin.com/integration/gotoMeetingCredentials", {userId: this.getUserId()}).subscribe((res: { message: string, data: any }) => {
-        console.log("---------------Go To Meeting Credentials Response ---------->", res.data);
+      this.httpClient.post("/integration/gotoMeetingCredentials", {userId: this.getUserId()}).subscribe((res: { message: string, data: any }) => {
+        // console.log("---------------Go To Meeting Credentials Response ---------->", res.data);
         if (res.data.length > 0) {
               let jsonData = res.data[0];
               this.access_token = jsonData.access_token;
@@ -979,68 +999,57 @@ export class MeetingService {
                 headers: httpHeaders
               };
               let g2meetingId = JSON.parse(localStorage.getItem('rescheduleRecord')).g2mMeetingId;
-              console.log('g2meetingId ----------- >> ', g2meetingId);
+              // console.log('g2meetingId ----------- >> ', g2meetingId);
               if(g2meetingId !== null && g2meetingId !== undefined){
                 this.httpClient.put('https://api.getgo.com/G2M/rest/meetings/' + g2meetingId + '', meetingData, options)
                   .subscribe(
                     res => {
-                      console.log('Meeting response for GTM R --------------- >> ', res);
-                      /*Called the onUpdateEventInCalendar function to update the meeting event by Google calendar*/
+                      // console.log('Meeting response for GTM R --------------- >> ', res);
+                      /!*Called the onUpdateEventInCalendar function to update the meeting event by Google calendar*!/
 
                       this.onUpdateEventInCalendar(userEmail, cEventId, data,meetingData, (cb) => {
                         if (cb == 200) {
-                          /*Called the sendMeetingNotification function to send the meeting notification by email*/
+                          /!*Called the sendMeetingNotification function to send the meeting notification by email*!/
                           let userName = localStorage.getItem('fullName');
                           meetingData['rescheduleRecord'] = JSON.parse(data.rescheduleRecord);
                           meetingData['rescheduleReason'] = data.rescheduleReason;
                           meetingData['reschedulerName'] = data.reschedulerName;
+                          meetingData['userTimeZone'] = data.userTimeZone;
+                          // console.log("data.userTimeZone=========",data.userTimeZone);
                           this.sendMeetingNotification(meetingData, data.schedulerEmail, currentEmail,data.eventType,userName, (status) => {
                             if (status == 200) {
                               this.meetingsConfirmation();
-                              /*if (oldMeetingList) {
-                                this.appendMeetingTime(data, updateMeetingList, (_status) => {
-                                  if (_status == 200) {
-                                    this.meetingsConfirmation();
-                                  } else {
-                                    this.showDialog('Internal Server Error');
-                                  }
-                                });
-                              } else {
-                                this.insertMeetingTime(data, (statusRecord) => {
-                                  if (statusRecord == 200) {
-                                    /!* Called the meetingsConfirmation function*!/
-                                    this.meetingsConfirmation();
-                                  } else {
-                                    this.showDialog('Internal Server Error');
-                                  }
-                                });
-                              }*/
                             } else {
-                              /* Called the meetingsConfirmation function*/
-                              this.showDialog('Notification Error!');
+                              /!* Called the meetingsConfirmation function*!/
+                              this.messageOff.next(false);
+                              this.showDialog("Something went gone wrong.");
                             }
                           });
                         } else {
-                          this.showDialog('Google Calendar Error!');
+                          this.messageOff.next(false);
+                          this.showDialog("Something went gone wrong.");
                         }
                       });
                     },
                     err => {
-                      this.showDialog(err.message);
+                      this.messageOff.next(false);
+                      this.showDialog("Something went gone wrong.");
                     }
                   );
               }else{
-                /*meetingData['newMeetingId'] = meetId;*/
+                /!*meetingData['newMeetingId'] = meetId;*!/
                 this.onUpdateEventInCalendar(userEmail, cEventId, data, meetingData,(cb) => {
                   if (cb == 200) {
                     let userName = localStorage.getItem('fullName');
                     meetingData['rescheduleRecord'] = JSON.parse(data.rescheduleRecord);
                     meetingData['rescheduleReason'] = data.rescheduleReason;
                     meetingData['reschedulerName'] = data.reschedulerName;
+                    meetingData['userTimeZone'] = data.userTimeZone;
+                    // console.log("data.userTimeZone=========",data.userTimeZone);
                     this.sendMeetingNotification(meetingData, data.schedulerEmail, currentEmail,data.eventType,userName, (status) => {
                       if (status == 200) {
                         this.meetingsConfirmation();
-                        /*if (oldMeetingList) {
+                        /!*if (oldMeetingList) {
                           this.appendMeetingTime(data, updateMeetingList, (_status) => {
                             if (_status == 200) {
 
@@ -1058,76 +1067,241 @@ export class MeetingService {
                               this.showDialog('Internal Server Error');
                             }
                           });
-                        }*/
+                        }*!/
                       } else {
-                        /* Called the meetingsConfirmation function*/
-                        this.showDialog('Notification Error!');
+                        /!* Called the meetingsConfirmation function*!/
+                        this.messageOff.next(false);
+                        this.showDialog("Something went gone wrong.");
                       }
                     });
                   } else {
-                    this.showDialog('Google Calendar Error!');
+                    this.messageOff.next(false);
+                    this.showDialog("Something went gone wrong.");
                   }
                 });
               }
 
         } else {
-          console.log("DAta========================",data);
-          console.log("userEmail========================",userEmail);
-          console.log("cEventId========================",cEventId);
-          console.log("This part will run then. when GTM is not connect");
-          /*This part will run then when in GTM is not connect*/
-          /*Called the onUpdateEventInCalendar function to update the meeting event by Google calendar*/
+          // console.log("DAta========================",data);
+          // console.log("userEmail========================",userEmail);
+          // console.log("cEventId========================",cEventId);
+          // console.log("This part will run then. when GTM is not connect");
+          /!*This part will run then when in GTM is not connect*!/
+          /!*Called the onUpdateEventInCalendar function to update the meeting event by Google calendar*!/
           this.onUpdateEventInCalendar(userEmail, cEventId, data, meetingData,(cb) => {
             if (cb == 200) {
-              /*Called the sendMeetingNotification function to send the meeting notification by email*/
+              /!*Called the sendMeetingNotification function to send the meeting notification by email*!/
               let userName = localStorage.getItem('fullName');
               meetingData['rescheduleRecord'] = JSON.parse(data.rescheduleRecord);
               meetingData['rescheduleReason'] = data.rescheduleReason;
               meetingData['reschedulerName'] = data.reschedulerName;
+              meetingData['userTimeZone'] = data.userTimeZone;
+              // console.log("data.userTimeZone=========",data.userTimeZone);
               this.sendMeetingNotification(meetingData, data.schedulerEmail, currentEmail,data.eventType,userName, (status) => {
                 if (status == 200) {
-                 /* this.appendMeetingTime(data, updateMeetingList, (_status) => {
+                 /!* this.appendMeetingTime(data, updateMeetingList, (_status) => {
                     if (_status == 200) {
                       /!* Called the meetingsConfirmation function*!/
                       this.meetingsConfirmation();
                     } else {
                       this.showDialog('Internal Server Error');
                     }
-                  });*/
+                  });*!/
                   this.meetingsConfirmation();
                 } else {
-                  this.showDialog('Notification Error!');
+                  this.messageOff.next(false);
+                  this.showDialog("Something went gone wrong.");
                 }
               });
             } else {
-              this.showDialog('Google Calendar Error!');
+              this.messageOff.next(false);
+              this.showDialog("Something went gone wrong.");
             }
           });
         }
       }, error => {
-        console.log('error CAL ====', error);
-        this.showDialog(error);
+        // console.log('error CAL ====', error);
+        this.messageOff.next(false);
+        this.showDialog("Something went gone wrong.");
       });
     }, error => {
-      console.log('error CAL ====', error);
-      this.showDialog(error);
+      // console.log('error CAL ====', error);
+      this.messageOff.next(false);
+      this.showDialog("Something went gone wrong.");
     });
-  }
+  }*/
+
+  rescheduleMeeting (data: any, meetingData: any) {
+    let currentEmail = localStorage.getItem('email');
+    let userEmail = localStorage.getItem('email');
+    let cEventId = localStorage.getItem('eventId');
+    data['rescheduleRecord'] = JSON.parse(localStorage.getItem('rescheduleRecord'));
+    console.log("rescheduleRecord Data is --- > ", data.rescheduleRecord);
+
+    let GTM = typeof (data.rescheduleRecord.g2mMeetingId) === 'string' && data.rescheduleRecord.g2mMeetingId !== 'undefined'
+      && data.rescheduleRecord.g2mMeetingId != null && data.rescheduleRecord.g2mMeetingId.split('').length > 0;
+    let ZOOM = typeof (data.rescheduleRecord.zoomMeetingId) === 'string' && data.rescheduleRecord.zoomMeetingId !== 'undefined'
+      && data.rescheduleRecord.zoomMeetingId != null && data.rescheduleRecord.zoomMeetingId.split('').length > 0;
+
+    if(GTM) {
+      this.httpClient.post("/integration/gotoMeetingCredentials", {userId: this.getUserId()}).subscribe((res: { message: string, data: any }) => {
+        console.log("Response of GTM Credentials", res.data);
+        if (res.data.length > 0) {
+          let jsonData = res.data[0];
+          this.access_token = jsonData.access_token;
+          this.expires_in = jsonData.expires_in;
+          this.organizer_key = jsonData.organizer_key;
+          this.refresh_token = jsonData.refresh_token;
+          let httpHeaders = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + this.access_token
+          });
+          let options = {
+            headers: httpHeaders
+          };
+          let g2meetingId = JSON.parse(localStorage.getItem('rescheduleRecord')).g2mMeetingId;
+          if(g2meetingId !== null && g2meetingId !== undefined){
+            this.httpClient.post('/meeting/gtm-meetingreschedule',{ meetingData: meetingData, g2meetingId: g2meetingId, access_token: this.access_token})
+              .subscribe(
+                res => {
+                  console.log('Meeting response for GTM R --------------- >> ', res);
+                  /*Called the onUpdateEventInCalendar function to update the meeting event by Google calendar*/
+                  this.httpClient.post<any>('/meeting/rescheduleMeeting', data).subscribe((responseDataUserUpdate) => {
+                    console.log('Meeting Data Reschdule successfully  ========================>>>>>>', responseDataUserUpdate);
+                    let meetId = responseDataUserUpdate.meetingUniqueId;
+                    data['newMeetingId'] = meetId;
+                    this.onUpdateEventInCalendar(userEmail, cEventId, data,meetingData, (cb, calData) => {
+                      if (cb == 200) {
+                        /*Called the sendMeetingNotification function to send the meeting notification by email*/
+                        let userName = localStorage.getItem('fullName');
+                        meetingData['rescheduleRecord'] = data.rescheduleRecord;
+                        meetingData['rescheduleReason'] = data.rescheduleReason;
+                        meetingData['reschedulerName'] = data.reschedulerName;
+                        meetingData['userTimeZone'] = data.userTimeZone;
+                        console.log("data.userTimeZone=========",data.userTimeZone);
+                        this.sendMeetingNotification(meetingData, data.schedulerEmail, currentEmail,data.eventType,userName, (status) => {
+                          if (status == 200) {
+                            this.meetingsConfirmation();
+                          } else {
+                            /* Called the meetingsConfirmation function*/
+                            this.messageOff.next(false);
+                            this.showDialog("Something went gone wrong.");
+                          }
+                        });
+                      } else {
+                        this.messageOff.next(false);
+                        this.showDialog("Something went gone wrong.");
+                      }
+                    });
+                  });
+                },
+                err => {
+                  this.messageOff.next(false);
+                  this.showDialog("Something went gone wrong.");
+                });
+          }
+
+        } else {
+          this.messageOff.next(false);
+          this.showDialog("Something went gone wrong.");
+        }
+      });
+    } else if(ZOOM) {
+      console.log("data Data is --- > ", ZOOM);
+      this.httpClient.post<any>("/zoom/updateMeeting", {data: data, meetIngData: meetingData})
+        .subscribe((response) => {
+          console.log("Response of ZOOM update Credentials", response);
+          /*Called the onUpdateEventInCalendar function to update the meeting event by Google calendar*/
+          data.rescheduleRecord.g2mMeetingCallNo = JSON.parse(response.data).invitation;
+          data.rescheduleRecord.g2mMeetingUrl = ' ';
+          data.rescheduleRecord.g2mMeetingId = ' ';
+          this.httpClient.post<any>('/meeting/rescheduleMeeting', data).subscribe((responseDataUserUpdate) => {
+            console.log('Meeting Data Reschdule successfully  ========================>>>>>>', responseDataUserUpdate);
+            let meetId = responseDataUserUpdate.meetingUniqueId;
+            data['newMeetingId'] = meetId;
+            this.onUpdateEventInCalendar(userEmail, cEventId, data,meetingData, (cb, calData) => {
+              if (cb == 200) {
+                /*Called the sendMeetingNotification function to send the meeting notification by email*/
+                let userName = localStorage.getItem('fullName');
+                meetingData['rescheduleRecord'] = data.rescheduleRecord;
+                meetingData['rescheduleReason'] = data.rescheduleReason;
+                meetingData['reschedulerName'] = data.reschedulerName;
+                meetingData['userTimeZone'] = data.userTimeZone;
+                console.log("data.userTimeZone=========",data.userTimeZone);
+                this.sendMeetingNotification(meetingData, data.schedulerEmail, currentEmail,data.eventType,userName, (status) => {
+                  if (status == 200) {
+                    this.meetingsConfirmation();
+                  } else {
+                    /* Called the meetingsConfirmation function*/
+                    this.messageOff.next(false);
+                    this.showDialog("Something went gone wrong.");
+                  }
+                });
+              } else {
+                this.messageOff.next(false);
+                this.showDialog("Something went gone wrong.");
+              }
+            });
+          });
+        }, error => {
+          this.messageOff.next(false);
+          this.showDialog("Something went gone wrong.");
+        });
+    } else {
+      // this.messageOff.next(false);
+      console.log("DAta========================",data);
+      console.log("userEmail========================",userEmail);
+      console.log("cEventId========================",cEventId);
+      console.log("This part will run then. when GTM is not connect");
+      /*This part will run then when in GTM is not connect*/
+      /*Called the onUpdateEventInCalendar function to update the meeting event by Google calendar*/
+      this.httpClient.post<any>('/meeting/rescheduleMeeting', data).subscribe((responseDataUserUpdate) => {
+        console.log('Meeting Data Reschdule successfully  ========================>>>>>>', responseDataUserUpdate);
+        let meetId = responseDataUserUpdate.meetingUniqueId;
+        data['newMeetingId'] = meetId;
+        this.onUpdateEventInCalendar(userEmail, cEventId, data, meetingData,(cb, calData) => {
+          if (cb == 200) {
+            /*Called the sendMeetingNotification function to send the meeting notification by email*/
+            let userName = localStorage.getItem('fullName');
+            meetingData['rescheduleRecord'] = data.rescheduleRecord;
+            meetingData['rescheduleReason'] = data.rescheduleReason;
+            meetingData['reschedulerName'] = data.reschedulerName;
+            meetingData['userTimeZone'] = data.userTimeZone;
+            meetingData['rescheduleRecord'].g2mMeetingId =  calData.data.conferenceId;
+            meetingData['rescheduleRecord'].g2mMeetingUrl = calData.data.hangoutLink;
+            meetingData['rescheduleRecord'].g2mMeetingCallNo = ' ';
+            console.log("data.userTimeZone=========",data.userTimeZone);
+            this.sendMeetingNotification(meetingData, data.schedulerEmail, currentEmail,data.eventType,userName, (status) => {
+              if (status == 200) {
+                this.meetingsConfirmation();
+              } else {
+                this.messageOff.next(false);
+                this.showDialog("Something went gone wrong.");
+              }
+            });
+          } else {
+            this.messageOff.next(false);
+            this.showDialog("Something went gone wrong.");
+          }
+        });
+      });
+    }
+  };
 
   /*This function used to update event in Google calendar*/
   onUpdateEventInCalendar(email, eventId, meetingData,gtmData, callback) {
     // It used for update the meeting record in Google calendar
-    this.httpClient.post("https://dev.cloudmeetin.com/user/eventUpdate", {
+    this.httpClient.post("/user/eventUpdate", {
       email: email,
       eventId: eventId,
       meetIngData: meetingData,
       gtmData: gtmData
-    }).subscribe((gotoMeetingUpdateResponse) => {
-      console.log("Response of Update meeting time from Google calendar -- > ", gotoMeetingUpdateResponse);
-      callback(200);
+    }).subscribe((calendarResponse) => {
+      // console.log("Response of Update meeting time from Google calendar -- > ", gotoMeetingUpdateResponse);
+      callback(200, calendarResponse);
     }, error => {
-      console.log('error CAL ====', error);
-      callback(error);
+      // console.log('error CAL ====', error);
+      callback(400, error);
     });
   }
 
@@ -1142,121 +1316,20 @@ export class MeetingService {
   /*This function used for show the confirmation page and remove the meeting's local storage data*/
   meetingsConfirmation() {
     this.router.navigate(['confirmedMeeting']);
-    /*localStorage.removeItem('rescheduleRecord');*/
-    /*localStorage.removeItem('UpdateQuery');
-    localStorage.removeItem('meetingTimeList');*/
   }
 
 
-  getCalendarEventSlot(eventType: number,dateValue: string) {
-    console.log("eventType===========", eventType);
-    console.log("dateValue============", dateValue);
+
+  getCalendarEventSlot(eventType: number,dateValue: string,timeZone: string) {
+    this.timeZoneForConvert = timeZone;
     this.userSlotArray = [];
     this.jsonSlotArrayTemp = [];
     this.selectDate = new Date(dateValue);
-    let startTime = this.setHours(6, 0);
-    let endTime = this.setHours(24,0);
-    console.log("startTime", startTime);
-    console.log("endTime", endTime);
-    console.log("selectDate====",this.selectDate);
-    /*userSlotArray.push({startTime: startTime, endTime: endTime});*/
-    let count = 0;
-    if(this.getUserEmail())  {
-      this.httpClient.post<any>('https://dev.cloudmeetin.com/user/gettime', {email: this.getUserEmail()}).subscribe((responseData) => {
-        let startTime = responseData.data[0].startTime.split(':');
-        let endTime = responseData.data[0].endTime.split(':');
-        console.log("startTime-- > ", startTime);
-        console.log("endTime-- > ", endTime);
-        for(let i = +startTime[0]; i<endTime[0]; i++) {
-          if(eventType == 60) {
-            count % 2 == 0 ? this.userSlotArray.push({startTime: this.setHours(i, 0), endTime: this.setHours(i, 60)}) : this.userSlotArray.push({startTime: this.setHours(i-1, 60), endTime: this.setHours(i, 60)})
-          }  else if(eventType === 30) {
-            if(count % 2 == 0) {
-              this.userSlotArray.push({startTime: this.setHours(i, 0), endTime: this.setHours(i, 30)})
-            } else {
-              this.userSlotArray.push({startTime: this.setHours(i-1, 30), endTime: this.setHours(i, 0)});
-              this.userSlotArray.push({startTime: this.setHours(i, 0), endTime: this.setHours(i, 30)});
-              this.userSlotArray.push({startTime: this.setHours(i, 30), endTime: this.setHours(i+1, 0)});
-            }
-          } else if(eventType == 15) {
-            if(count % 2 == 0) {
-              this.userSlotArray.push({startTime: this.setHours(i, 0), endTime: this.setHours(i, 15)});
-            } else {
-              this.userSlotArray.push({startTime: this.setHours(i-1, 15), endTime: this.setHours(i-1, 30)});
-              this.userSlotArray.push({startTime: this.setHours(i-1, 30), endTime: this.setHours(i-1, 45)});
-              this.userSlotArray.push({startTime: this.setHours(i-1, 45), endTime: this.setHours(i, 0)});
-              this.userSlotArray.push({startTime: this.setHours(i, 0), endTime: this.setHours(i, 15)});
-              this.userSlotArray.push({startTime: this.setHours(i, 15), endTime: this.setHours(i, 30)});
-              this.userSlotArray.push({startTime: this.setHours(i, 30), endTime: this.setHours(i, 45)});
-              this.userSlotArray.push({startTime: this.setHours(i, 45), endTime: this.setHours(i+1, 0)});
-            }
-          }
-          count++;
-        }
-
-        console.log("This ", this.userSlotArray);
-
-        let email = this.getUserEmail();
-        console.log("email=============",email);
-        if(email != null && email != undefined){
-          this.jsonSlotArray = [];
-          if(this.userSlotArray != null){
-            for(let i =0 ; i< this.userSlotArray.length;i++) {
-              if(this.userSlotArray[i].startTime != null && this.userSlotArray[i].startTime != undefined && this.userSlotArray[i].endTime != null && this.userSlotArray[i].endTime != undefined ){
-                this.httpClient.post<any>('https://dev.cloudmeetin.com/user/getcalendareventslot',
-                  {
-                    email: email,
-                    timeMax: new Date(this.userSlotArray[i].endTime),
-                    timeMin: new Date(this.userSlotArray[i].startTime)
-                  }).subscribe((response) => {
-                  if(response != null){
-                    console.log("Response -- >", response);
-                    if(response.length > 0) {
-                    } else {
-                      this.jsonSlotArray.push({startTime: new Date(this.userSlotArray[i].startTime) , endTime: new Date(this.userSlotArray[i].endTime)})
-                      console.log("MAin a", this.jsonSlotArray);
-
-                      /* this.availabileSlot.next(this.jsonSlotArray);*/
-                    }
-
-                    if( i== this.userSlotArray.length-1) {
-                      this.jsonSlotArray.sort((a,b) => a.startTime - b.startTime);
-                      this.jsonSlotArrayTemp = this.jsonSlotArray;
-                      this.availabileSlot.next(this.jsonSlotArray);
-                    }
-                    console.log("this.jsonSlotArrayTemp.length=====",this.jsonSlotArrayTemp.length);
-                    console.log("this.jsonSlotArray.length=====",this.jsonSlotArray.length);
-                    if(this.jsonSlotArrayTemp.length > 0 && this.jsonSlotArray.length >= this.jsonSlotArrayTemp.length){
-                      this.availabileSlot.next(this.jsonSlotArray);
-                    }
-                  }
-                });
-              }
-            }
-          }
-        }
-      });
-    } else {
-      this.showDialog("Undefined user id");
-    }
-    /*console.log("eventType===========", eventType);
-    console.log("dateValue============", dateValue);
-    this.userSlotArray = [];
-    this.jsonSlotArrayTemp = [];
-    this.selectDate = new Date(dateValue);
-    let startTime = this.setHours(6, 0);
-    let endTime = this.setHours(24,0);
-    console.log("startTime", startTime);
-    console.log("endTime", endTime);
-    console.log("selectDate====",this.selectDate);
-    /!*userSlotArray.push({startTime: startTime, endTime: endTime});*!/
     let count = 0;
     if(this.getUserEmail())  {
       this.httpClient.post<any>('/user/gettime', {email: this.getUserEmail()}).subscribe((responseData) => {
         let startTime = responseData.data[0].startTime.split(':');
         let endTime = responseData.data[0].endTime.split(':');
-        console.log("startTime-- > ", startTime);
-        console.log("endTime-- > ", endTime);
         for(let i = +startTime[0]; i<endTime[0]; i++) {
           if(eventType == 60) {
             count % 2 == 0 ? this.userSlotArray.push({startTime: this.setHours(i, 0), endTime: this.setHours(i, 60)}) : this.userSlotArray.push({startTime: this.setHours(i-1, 60), endTime: this.setHours(i, 60)})
@@ -1284,10 +1357,161 @@ export class MeetingService {
           count++;
         }
 
-        console.log("This ", this.userSlotArray);
-
+        // console.log("userSlotArray==== ", this.userSlotArray);
         let email = this.getUserEmail();
+        let calendarJson  = [];
+        // console.log("email=============",email);
         if(email != null && email != undefined){
+          this.jsonSlotArray = [];
+          let flagValue = 0;
+          if(this.userSlotArray != null){
+            this.httpClient.post<any>( '/user/getcalendareventslot',
+              {
+                email: email,
+                timeMax: new Date(this.userSlotArray[this.userSlotArray.length-1].endTime),
+                timeMin: new Date(this.userSlotArray[0].startTime)
+              }).subscribe((response) => {
+             //  console.log("Calendar Response -- >", response);
+              if(response.length == 0) {
+                for(let i =0 ; i< this.userSlotArray.length; i++) {
+                  this.jsonSlotArray.push({startTime: moment(this.userSlotArray[i].startTime).tz(timeZone).format() , endTime: moment(this.userSlotArray[i].endTime).tz(timeZone).format()})
+                }
+                this.availabileSlot.next(this.jsonSlotArray);
+              } else {
+                response.map((obj, index) => {
+                  if(obj.hasOwnProperty("recurrence")) {
+                    let startTime = obj.start.dateTime;
+                    let endTime = obj.end.dateTime;
+                    let tempStartTime:Date = new Date(startTime);
+                    let tempEndTime:Date = new Date(endTime);
+                    tempStartTime.setFullYear(1900 + this.selectDate.getYear(),this.selectDate.getMonth(),this.selectDate.getDate());
+                    tempEndTime.setFullYear(1900 + this.selectDate.getYear(),this.selectDate.getMonth(),this.selectDate.getDate());
+                    calendarJson.push({
+                      startTime: Date.parse(tempStartTime.toString()),
+                      endTime: Date.parse(tempEndTime.toString())
+                    });
+                  } else {
+                    calendarJson.push({
+                      startTime: Date.parse(obj.start.dateTime),
+                      endTime: Date.parse(obj.end.dateTime)
+                    });
+                    if(obj.hasOwnProperty("attendees")) {
+                      for(let k =0; k< obj.attendees.length ; k++) {
+                        let checkPoint = typeof (obj.attendees[k].organizer) === 'boolean' && obj.attendees[k].organizer !== 'undefined' && obj.attendees[k].organizer === true;
+                        if(checkPoint) {
+                          if(obj.attendees[k].responseStatus == "declined") {
+                            // console.log("Log # 1 ",index)
+                            calendarJson.splice(index- flagValue, 1);
+                            flagValue++;
+                            // console.log("Log # ",calendarJson.splice(index, 1));
+                          }
+                        }
+                      }
+                    }
+                  }
+                });
+                calendarJson.sort(function(a, b) {
+                  return a.startTime - b.startTime;
+                });
+
+                /*calendarJson.forEach(item =>{
+                 // console.log("Booked item ===="+"Start time ==="+new Date(item.startTime)+"  end time======="+new Date(item.endTime));
+                });*/
+
+                for(let i=0;i<calendarJson.length;i++){
+                  let last_index_startTime;
+                  let last_index_endTime;
+                  for(let j=0;j<this.userSlotArray.length;j++){
+                    if(this.userSlotArray[j].startTime<=calendarJson[i].startTime){
+                      last_index_startTime = j;
+                    }
+                  }
+                  for(let j=0;j<this.userSlotArray.length;j++){
+                    if(this.userSlotArray[j].startTime<=calendarJson[i].endTime){
+                      if(this.userSlotArray[j].startTime == calendarJson[i].endTime){
+                        last_index_endTime = j;
+                      }else{
+                        last_index_endTime = j+1;
+                      }
+                    }
+                  }
+
+                  if(last_index_startTime && last_index_endTime){
+                    this.userSlotArray.splice(last_index_startTime,(last_index_endTime-last_index_startTime));
+                  } else if(last_index_startTime ==0 && last_index_endTime){
+                    this.userSlotArray.splice(last_index_startTime,(last_index_endTime-last_index_startTime));
+                  }
+                }
+                // console.log("Slot Array : ", this.userSlotArray);
+
+                for(let i =0 ; i< this.userSlotArray.length; i++) {
+                  this.jsonSlotArray.push({startTime: moment(this.userSlotArray[i].startTime).tz(timeZone).format() , endTime: moment(this.userSlotArray[i].endTime).tz(timeZone).format()})
+                }
+                this.availabileSlot.next(this.jsonSlotArray);
+              }
+
+              /* this.userSlotArray.forEach((item, index)=>{
+                 console.log("Available item after filter ===="+"Start time ==="+new Date(item.startTime)+"  end time======="+new Date(item.endTime));
+                 this.jsonSlotArray.push({
+                   startTime: item.startTime,
+                   endTime : item.endTime
+                 });
+
+               });*/
+
+
+              /* if(response != null && response != undefined){
+                // console.log("Calendar Response -- >", response);
+                 if(response.length > 0) {
+                   let flagValue = true;
+                   for(let i=0;i<response.length;i++){
+                     if(response[i].attendees != null && response[i].attendees!= undefined){
+                       for(let k =0; k<response[i].attendees.length ; k++) {
+                         let checkPoint = typeof (response[i].attendees[k].organizer) === 'boolean' && response[i].attendees[k].organizer !== 'undefined' && response[i].attendees[k].organizer === true ? true : false;
+                         if (checkPoint) {
+                           if (response[i].attendees[k].responseStatus != "declined") {
+                             flagValue = false;
+                             break;
+                           }
+                         }
+                       }
+                     }else{
+                       let status = response[i].status;
+                       // console.log("Calendar Response Manualstatus======",status);
+                       if(status == "confirmed"){
+                         flagValue = false;
+                         break;
+                       }
+                     }
+                   }
+                   // console.log("Calendar Response Time push====",moment(this.userSlotArray[i].startTime).tz(timeZone).format());
+                   if(flagValue){
+                     this.jsonSlotArray.push({
+                       startTime: moment(this.userSlotArray[i].startTime).tz(timeZone).format(),
+                       endTime: moment(this.userSlotArray[i].endTime).tz(timeZone).format()
+                     });
+                   }
+                 } else {
+                   this.jsonSlotArray.push({startTime: moment(this.userSlotArray[i].startTime).tz(timeZone).format() , endTime: moment(this.userSlotArray[i].endTime).tz(timeZone).format()})
+                   // console.log("jsonSlotArray=========", this.jsonSlotArray);
+                 }
+                 if( i== this.userSlotArray.length-1) {
+                   this.jsonSlotArray.sort((a,b) => Date.parse(a.startTime) - Date.parse(b.startTime));
+                   this.jsonSlotArrayTemp = this.jsonSlotArray;
+                   this.availabileSlot.next(this.jsonSlotArray);
+                 }
+                 // console.log("this.jsonSlotArrayTemp.length=====",this.jsonSlotArrayTemp.length);
+                 // console.log("this.jsonSlotArray.length=====",this.jsonSlotArray.length);
+                 if(this.jsonSlotArrayTemp.length > 0 && this.jsonSlotArray.length >= this.jsonSlotArrayTemp.length){
+                   console.log("this.jsonSlotArrayTemp.length=====",this.jsonSlotArray);
+                   this.availabileSlot.next(this.jsonSlotArray);
+                 }
+               }*/
+
+            });
+          }
+        }
+       /* if(email != null && email != undefined){
           this.jsonSlotArray = [];
           if(this.userSlotArray != null){
             for(let i =0 ; i< this.userSlotArray.length;i++) {
@@ -1298,23 +1522,48 @@ export class MeetingService {
                     timeMax: new Date(this.userSlotArray[i].endTime),
                     timeMin: new Date(this.userSlotArray[i].startTime)
                   }).subscribe((response) => {
-                  if(response != null){
-                    console.log("Response -- >", response);
+                  if(response != null && response != undefined){
+                    // console.log("Calendar Response -- >", response);
                     if(response.length > 0) {
+                      let flagValue = true;
+                      for(let i=0;i<response.length;i++){
+                        if(response[i].attendees != null && response[i].attendees!= undefined){
+                          for(let k =0; k<response[i].attendees.length ; k++) {
+                            let checkPoint = typeof (response[i].attendees[k].organizer) === 'boolean' && response[i].attendees[k].organizer !== 'undefined' && response[i].attendees[k].organizer === true ? true : false;
+                            if (checkPoint) {
+                              if (response[i].attendees[k].responseStatus != "declined") {
+                                flagValue = false;
+                                break;
+                              }
+                            }
+                          }
+                        }else{
+                          let status = response[i].status;
+                          // console.log("Calendar Response Manualstatus======",status);
+                          if(status == "confirmed"){
+                            flagValue = false;
+                            break;
+                          }
+                        }
+                      }
+                      // console.log("Calendar Response Time push====",moment(this.userSlotArray[i].startTime).tz(timeZone).format());
+                      if(flagValue){
+                        this.jsonSlotArray.push({
+                          startTime: moment(this.userSlotArray[i].startTime).tz(timeZone).format(),
+                          endTime: moment(this.userSlotArray[i].endTime).tz(timeZone).format()
+                        });
+                      }
                     } else {
-                      this.jsonSlotArray.push({startTime: new Date(this.userSlotArray[i].startTime) , endTime: new Date(this.userSlotArray[i].endTime)})
-                      console.log("MAin a", this.jsonSlotArray);
-
-                      /!* this.availabileSlot.next(this.jsonSlotArray);*!/
+                      this.jsonSlotArray.push({startTime: moment(this.userSlotArray[i].startTime).tz(timeZone).format() , endTime: moment(this.userSlotArray[i].endTime).tz(timeZone).format()})
+                      // console.log("jsonSlotArray=========", this.jsonSlotArray);
                     }
-
                     if( i== this.userSlotArray.length-1) {
-                      this.jsonSlotArray.sort((a,b) => a.startTime - b.startTime);
+                      this.jsonSlotArray.sort((a,b) => Date.parse(a.startTime) - Date.parse(b.startTime));
                       this.jsonSlotArrayTemp = this.jsonSlotArray;
                       this.availabileSlot.next(this.jsonSlotArray);
                     }
-                    console.log("this.jsonSlotArrayTemp.length=====",this.jsonSlotArrayTemp.length);
-                    console.log("this.jsonSlotArray.length=====",this.jsonSlotArray.length);
+                    // console.log("this.jsonSlotArrayTemp.length=====",this.jsonSlotArrayTemp.length);
+                    // console.log("this.jsonSlotArray.length=====",this.jsonSlotArray.length);
                     if(this.jsonSlotArrayTemp.length > 0 && this.jsonSlotArray.length >= this.jsonSlotArrayTemp.length){
                       this.availabileSlot.next(this.jsonSlotArray);
                     }
@@ -1323,14 +1572,16 @@ export class MeetingService {
               }
             }
           }
-        }
+        }*/
       });
     } else {
       this.showDialog("Undefined user id");
-    }*/
+    }
   }
 
-  setHours (time:number, minutes: number) {
+
+
+ /* setHours (time:number, minutes: number) {
     let now = new Date();
     now.setDate(now.getDate());
     now.setFullYear(this.selectDate.getFullYear(),this.selectDate.getMonth(),this.selectDate.getDate());
@@ -1338,11 +1589,30 @@ export class MeetingService {
     now.setMinutes(minutes);
     now.setSeconds(0);
     now.setMilliseconds(0);
-// @ts-ignore
-// return now;
-    return Date.parse(now);
-  }
+    let newDate = formatDate(now, 'yyyy-MM-dd hh:mm a,z', 'en-US');
+    let splitDate = newDate.toString().split(",");
+    let tempDate = splitDate[0]+",GMT"+moment("2013-11-18").tz(this.timeZoneForConvert).format('Z');
+    /!*  // console.log("TempDate======",tempDate);
+      // console.log("date tempDate======",moment.utc(tempDate).valueOf());*!/
+    return Date.parse(tempDate);
+  }*/
+  setHours (time:number, minutes: number) {
 
+    let now = new Date();
+    //now.setUTCDate(now.getUTCDate());
+    now.setFullYear(this.selectDate.getFullYear(),this.selectDate.getMonth(),this.selectDate.getDate());
+    now.setHours(time,minutes,0,0);
+    /* now.setMinutes(minutes);
+     now.setSeconds(0);
+     now.setMilliseconds(0);*/
+    //console.log("now =======",now);
+    let newDate = formatDate(now, 'yyyy-MM-dd hh:mm a,z', 'en-US');
+    //console.log("now =======",newDate);
+    let splitDate = newDate.toString().split(",");
+    let tempDate = splitDate[0]+",GMT"+moment().tz(this.timeZoneForConvert).format('Z');
+    //console.log("tempDate=======",tempDate);
+    return Date.parse(tempDate);
+  }
 
   setMeetingUID(meetingUniqueId: any) {
     if(meetingUniqueId) {
@@ -1358,17 +1628,24 @@ export class MeetingService {
 
   getMeetingRecords(meetingUID: any) {
     if(meetingUID) {
-      return this.httpClient.get<any>('https://dev.cloudmeetin.com/meeting/getmeetingrecords' + meetingUID);
+      return this.httpClient.get<any>('/meeting/getmeetingrecords' + meetingUID);
     } else {
       this.showDialog("Invalid Id")
     }
   }
   getUserRecords(userId: any) {
     if(userId) {
-      return this.httpClient.post<any>('https://dev.cloudmeetin.com/user/checkuser', {userId: userId});
+      return this.httpClient.post<any>('/user/checkuser', {userId: userId});
     } else {
       this.showDialog("Invalid Id")
     }
   }
 
+
+
+  /* This function get the selected meeting platform*/
+  getSelectedMeetingPlatform(userId: string) {
+    return this.httpClient.post<any>('/integration/getSelectedMeetingPaltform', {userId: userId});
+
+  }
 }

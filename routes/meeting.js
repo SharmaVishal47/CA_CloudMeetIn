@@ -8,12 +8,12 @@ const cron = require('node-cron');
 
 cron.schedule('*/30 * * * *', () => {
   let gtmQuery = "SELECT * FROM `g2meetingintegration`";
-  console.log("gtmQuery===========",gtmQuery);
+  // console.log("gtmQuery===========",gtmQuery);
   db.query(gtmQuery, (err, result) => {
     if (err!==null) {
       return;
     } else {
-      console.log("GTM DataBAse===========",result);
+      // console.log("GTM DataBAse===========",result);
       if(result.length>0){
         for(let i=0;i<result.length;i++){
           let refreshToken = result[i].refresh_token;
@@ -33,10 +33,10 @@ cron.schedule('*/30 * * * *', () => {
               }
             }, function (error, response, body) {
               if (error) {
-                console.log("GTM error=====",error);
+                // console.log("GTM error=====",error);
               }else{
                 body = JSON.parse(body);
-                console.log("GTM body=====",body);
+                // console.log("GTM body=====",body);
                 if (body.access_token) {
                   let access_token = body.access_token;
                   let email = body.email;
@@ -87,10 +87,10 @@ router.post('/addMeetingWithGtm',(req,res,next)=>{
   localStorage.setItem("meetingId",meetingUniqueId );
   let query = "INSERT INTO `calendlymeeting` (meetingId,g2mMeetingId,g2mMeetingUrl,userId, timeZone, eventType, meetingTime, meetingDate,schedulerName,schedulerEmail,schedulerPhone,schedulerDescription, g2mMeetingCallNo,meetingEndTime,createdDate) VALUES ('"+meetingUniqueId+"','"+req.body.g2mMeetingId+"','"+req.body.g2mMeetingUrl+"','"+req.body.userId+"', '" + req.body.timeZone + "', '" + req.body.eventType + "', '" + req.body.starttime + "', '" + req.body.date + "', '" + req.body.schedulerName + "','"+req.body.schedulerEmail+"','"+req.body.schedulerPhone+"','"+req.body.schedulerDescription+"','"+req.body.g2mMeetingCallNo+"','"+req.body.endtime+"','"+req.body.createdDate+"')";
 
-  console.log("addMeetingWithGtm query=====",query);
+  // console.log("addMeetingWithGtm query=====",query);
   db.query(query, (err, result) => {
-    console.log("result=====",result);
-    console.log("err=====",err);
+    // console.log("result=====",result);
+    // console.log("err=====",err);
     if (err!==null) {
       return res.status(500).send(err);
     }else {
@@ -107,8 +107,8 @@ router.post('/addMeeting',(req,res,next)=>{
   localStorage.setItem("meetingId",meetingUniqueId );
   let query = "INSERT INTO `calendlymeeting` ( userId, meetingId, timeZone, eventType, meetingTime, meetingEndTime,meetingDate,schedulerName,schedulerEmail,schedulerPhone,schedulerDescription,createdDate) VALUES ('"+req.body.userId+"', '" + meetingUniqueId + "', '" + req.body.timeZone + "','" + req.body.eventType + "', '" + req.body.starttime+ "', '"+ req.body.endtime+ "', '" + req.body.date + "', '" + req.body.schedulerName + "','"+req.body.schedulerEmail+"','"+req.body.schedulerPhone+"','"+req.body.schedulerDescription+"','"+req.body.createdDate+"')";
   db.query(query, (err, result) => {
-    console.log("result=====",result);
-    console.log("err=====",err);
+    // console.log("result=====",result);
+    // console.log("err=====",err);
     if (err!==null) {
       return res.status(500).send(err);
     }else {
@@ -122,11 +122,11 @@ router.post('/addMeeting',(req,res,next)=>{
 
 // Update meeting record when user select reschedule meetings
 router.post('/rescheduleMeeting',(req,res,next)=>{
-  console.log("req..................", req.body);
+  // console.log("req..................", req.body);
   let meetingUniqueId  = ULID.ulid();
   localStorage.setItem("meetingId",meetingUniqueId );
   let query = "UPDATE `calendlymeeting` SET `meetingId` = '"+meetingUniqueId+"', `timeZone` = '"+req.body.timeZone+"',`meetingTime` = '"+req.body.starttime+"', `meetingEndTime` = '"+req.body.endtime+"',`meetingDate` = '"+req.body.date+"',`schedulerName` = '"+req.body.schedulerName+"',`schedulerEmail` = '"+req.body.schedulerEmail+"',`reschedulerName` = '"+req.body.reschedulerName+"',`rescheduleReason` = '"+req.body.rescheduleReason+"' WHERE `userId` = '" + req.body.userId + "' AND `eventId` = '"+req.body.eventId+"'";
-  console.log("Update -------------------> ",query);
+  // console.log("Update -------------------> ",query);
   db.query(query, (err, result) => {
     if (err!==null) {
       return res.status(500).send(err);
@@ -143,8 +143,8 @@ router.post('/addEventID',(req,res,next)=>{
   let query = "UPDATE `calendlymeeting` SET  `eventId` = '"+req.body.eventId+"' WHERE `userId` = '" + req.body.userID + "' AND `id` = '"+ req.body.insertId+"'";
 
   db.query(query, (err, result) => {
-    console.log("result=====",result);
-    console.log("err=====",err);
+    // console.log("result=====",result);
+    // console.log("err=====",err);
     if (err!==null) {
       return res.status(500).send(err);
     }else {
@@ -156,11 +156,11 @@ router.post('/addEventID',(req,res,next)=>{
   });
 });
 router.post('/getMeetingRecord',(req,res,next)=>{
-  console.log(req.body);
+  // console.log(req.body);
    let usernameQuery = "SELECT * FROM `calendlymeeting` WHERE userId = '" + req.body.userId+ "'";
   db.query(usernameQuery, (err, result) => {
-    console.log("result=====",result);
-    console.log("err=====",err);
+    // console.log("result=====",result);
+    // console.log("err=====",err);
     if (err!==null) {
       return res.status(500).send(err);
     }else {
@@ -174,15 +174,15 @@ router.post('/getMeetingRecord',(req,res,next)=>{
 
 router.post('/disconnectgtmintegration', function(req, res) {
   let query = "DELETE FROM `g2meetingintegration` WHERE userId='"+req.body.userId+"'";
-  console.log("query---", query)
+  // console.log("query---", query)
   db.query(query, (err, result) => {
     if (err!==null) {
       return res.status(500).send(err);
     }else {
       let query = "UPDATE `calendly` SET `go2meeting` = '"+false+"' WHERE `calendly`.`userId`='" + req.body.userId + "'";
       db.query(query, (err, result) => {
-        console.log("result=====",result);
-        console.log("err=====",err);
+        // console.log("result=====",result);
+        // console.log("err=====",err);
         if (err!==null) {
           return res.status(500).send(err);
         }else {
@@ -198,7 +198,7 @@ router.post('/disconnectgtmintegration', function(req, res) {
 
 router.get('/getmeetingrecords:meetingUID', (req, res, next) => {
   let query = "SELECT * FROM `calendlymeeting` WHERE meetingId ='" + req.params.meetingUID + "'";
-  console.log("-----------meetingUID Query  ", query);
+  // console.log("-----------meetingUID Query  ", query);
   db.query(query, (err, result) => {
     if (err !== null) {
       return res.status(500).send(err);

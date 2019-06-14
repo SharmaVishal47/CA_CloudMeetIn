@@ -5,7 +5,7 @@ import {NzModalService} from 'ng-zorro-antd';
   providedIn: 'root'
 })
 export class MessageServiceService {
-
+  _errorMessage: string;
   constructor(private modalService: NzModalService,) { }
   public generateCreateMessage(content:any){
     this.modalService.create({
@@ -13,7 +13,7 @@ export class MessageServiceService {
       nzContent:content,
       nzMask:false,
       nzClosable: false,
-      nzOnOk: () => console.log('Info OK')//new Promise((resolve) => window.setTimeout(resolve, 1000))
+      nzOnOk: () => {}// console.log('Info OK')//new Promise((resolve) => window.setTimeout(resolve, 1000))
     });
   }
   public generateSuccessMessage(content:any){
@@ -22,7 +22,7 @@ export class MessageServiceService {
       nzContent:content,
       nzMask:false,
       nzClosable: false,
-      nzOnOk: () => console.log('Info OK') //new Promise((resolve) => window.setTimeout(resolve, 1000))
+      nzOnOk: () => {}// console.log('Info OK') //new Promise((resolve) => window.setTimeout(resolve, 1000))
     });
   }
   public generateErrorMessage(content:any){
@@ -31,7 +31,7 @@ export class MessageServiceService {
       nzContent:content,
       nzMask:false,
       nzClosable: false,
-      nzOnOk: () => console.log('Info OK')//new Promise((resolve) => window.setTimeout(resolve, 1000))
+      nzOnOk: () => {}// console.log('Info OK')//new Promise((resolve) => window.setTimeout(resolve, 1000))
     });
   }
   public generateInfoMessage(content:any){
@@ -40,7 +40,15 @@ export class MessageServiceService {
       nzContent:content,
       nzMask:false,
       nzClosable: false,
-      nzOnOk: () => console.log('Info OK')//new Promise((resolve) => window.setTimeout(resolve, 1000))
+      nzOnOk: () => {}// console.log('Info OK')//new Promise((resolve) => window.setTimeout(resolve, 1000))
     });
+  }
+
+
+  errorMessage(emailAlreadyExist: string) {
+    this._errorMessage = emailAlreadyExist;
+  }
+  getErrorMessage () {
+    return this._errorMessage;
   }
 }

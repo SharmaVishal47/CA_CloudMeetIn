@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiUrl: 'https://dev.cloudmeetin.com',
+  googleAuth : '812688497337-bnvqsplr9iv5ki7s733gde19bhnar61p.apps.googleusercontent.com'
 };
 
 /*

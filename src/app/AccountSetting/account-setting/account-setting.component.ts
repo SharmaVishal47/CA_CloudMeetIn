@@ -1,12 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthServiceLocal} from '../../Auth/auth.service';
-import {MatDialog, MatDialogConfig} from '@angular/material';
-import {MessagedialogComponent} from '../../messagedialog/messagedialog.component';
+import {MatDialog} from '@angular/material';
 import {HttpClient} from '@angular/common/http';
 import {AccountSettingsService} from './account-settings.service';
 import {Router} from '@angular/router';
 import {MessageServiceService} from '../../Auth/message-service.service';
+import {ImageCroppedEvent} from 'ngx-image-cropper';
+import {IntegrationService} from '../../Integrations/integration.service';
+import {MeetingService} from '../../meetings/meeting.service';
 
 @Component({
   selector: 'app-account-setting',
@@ -14,6 +16,18 @@ import {MessageServiceService} from '../../Auth/message-service.service';
   styleUrls: ['./account-setting.component.css']
 })
 export class AccountSettingComponent implements OnInit {
+  public editor;
+  public editorContent = `<h3>I am Example content</h3>`;
+  public editorOptions = {
+    placeholder: "insert content..."
+  };
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  height;
+  width;
+  viewCroper:boolean;
+  meetingPlatformResponse = [];
+  spinLoading: boolean = true;
   counntryList = [
     {"name": "Afghanistan", "code": "AF"},
     {"name": "land Islands", "code": "AX"},
@@ -260,6 +274,7 @@ export class AccountSettingComponent implements OnInit {
     {"name": "Zambia", "code": "ZM"},
     {"name": "Zimbabwe", "code": "ZW"}
   ];
+  linkButtonStatus: boolean = false;
   validateForm: FormGroup;
   changePasswordForm: FormGroup;
   changeEmailForm: FormGroup;
@@ -280,12 +295,30 @@ export class AccountSettingComponent implements OnInit {
   visibleEmail = false;
   changeEmail;
   cnfEmail;
-  constructor(private messageService: MessageServiceService, private router:Router, private accountService: AccountSettingsService, private fb: FormBuilder, private dialog: MatDialog, private httpClient: HttpClient, private authService: AuthServiceLocal) {
+  constructor(
+    private messageService: MessageServiceService,
+    private router:Router,
+    public accountService: AccountSettingsService,
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+    private httpClient: HttpClient,
+    private authService: AuthServiceLocal,
+    private integrationService: IntegrationService,
+    private meetingService: MeetingService
+  ) {
   }
 
   ngOnInit() {
+    this.viewCroper=false;
+    setTimeout(() => {
+      this.editorContent = '<h1>content changed!</h1>';
+      // console.log('you can use the quill instance object to do something', this.editor);
+      // this.editor.disable();
+    }, 2800);
+
+
     this.accountService.confirmEmail.subscribe((check)=>{
-      console.log("check=========",check);
+      // console.log("check=========",check);
       this.showConfirmEmail = check;
     });
     this.changePasswordForm = this.fb.group({
@@ -300,54 +333,95 @@ export class AccountSettingComponent implements OnInit {
     });
     this.userId = this.authService.getUserId();
     this.email = this.authService.getUserEmaild();
-    console.log('USERID----------------->>>>>>', this.userId);
+    // console.log('USERID----------------->>>>>>', this.userId);
     this.validateForm = this.fb.group({
       name: [null, [Validators.required]],
       language: [null, [Validators.required]],
       dateFormat: [null, [Validators.required]],
       timeFormat: [null, [Validators.required]],
       country: [null, [Validators.required]],
-      welcome: [null, [Validators.required]]
+      meetingPlatform: [null, [Validators.required]],
+      welcome: [null, [Validators.required]],
+
     });
     this.myLinkForm = new FormGroup({
       userID: new FormControl(null, [Validators.required])
     });
-    this.profileForm = new FormGroup({
+    /*this.profileForm = new FormGroup({
       'file': new FormControl(null, [Validators.required]),
       'image': new FormControl(null)
+    });*/
+    this.profileForm = new FormGroup({
+      'file': new FormControl(null, [Validators.required]),
+      'image': new FormControl(null),
+      'webLink': new FormControl(null)
     });
     this.myLinkForm.patchValue({
       userID: this.userId
     });
-    this.httpClient.post<any>('https://dev.cloudmeetin.com/userData/userData', {'userId': this.userId}).subscribe(
+    /* This function use for get the meeting platform  [SUMIT]*/
+    this.meetingService.getSelectedMeetingPlatform(this.userId).subscribe((responseData) => {
+      console.log("Selected Meeting plat form",  responseData.data[0].selectedMeetingPlatform);
+      let sMeetingPlatform  = typeof (responseData.data[0].selectedMeetingPlatform) === 'string' && responseData.data[0].selectedMeetingPlatform !== 'undefined' && responseData.data[0].selectedMeetingPlatform.split('').length > 0 && responseData.data[0].selectedMeetingPlatform != null ? responseData.data[0].selectedMeetingPlatform : false;
+      if(sMeetingPlatform) {
+        console.log("IF Part");
+        this.integrationService.getMeetingPlatforms(this.userId).subscribe((response) => {
+          console.log("Meeting plat form",  response);
+            response.data[0].go2meeting === 'true' ? this.meetingPlatformResponse.push('GTM') : null;
+            response.data[0].salesforce === 'true' ? this.meetingPlatformResponse.push('SALESFORCE') : null;
+            response.data[0].zoom === 'true' ? this.meetingPlatformResponse.push('ZOOM') : null;
+            this.meetingPlatformResponse.push('Hangout');
+            this.validateForm.patchValue({
+              meetingPlatform: responseData.data[0].selectedMeetingPlatform
+            });
+        });
+      } else {
+        console.log("ELSE part");
+        this.meetingPlatformResponse.push('Hangout')
+      }
+    });
+    this.httpClient.post<any>('/userData/userData', {'userId': this.userId}).subscribe(
       res => {
         this.imageSource = res.data[0].profilePic;
         if (this.imageSource == null) {
           this.imageSource = '../../../assets/group_people.png';
         }
-        console.log('Image Source --->', this.imageSource);
-        console.log('res===========', res);
+        // console.log('Image Source --->', this.imageSource);
+        // console.log('res===========', res);
         this.loginEmail = res.data[0].email;
         this.loginPassword = res.data[0].password;
         this.starPass = createStars(this.loginPassword.length);
-        console.log('Login Email --> ', this.loginEmail);
-        console.log('Login Password --> ', this.starPass);
+        // console.log('Login Email --> ', this.loginEmail);
+        // console.log('Login Password --> ', this.starPass);
+        // console.log("========================================");
+        // console.log("res.data[0].country  ", res.data[0].country);
+        // console.log("res.data[0].fullName  ", res.data[0].fullName);
+        // console.log("res.data[0].welcomeMessage  ", res.data[0].welcomeMessage);
+        // console.log("res.data[0].language  ", res.data[0].language);
+        // console.log("res.data[0].dateFormat  ", res.data[0].dateFormat);
+        // console.log("res.data[0].timeFormat  ", res.data[0].timeFormat);
+
+        let checkPointCountry = typeof (res.data[0].country) === 'string' && res.data[0].country !== 'null' && res.data[0].country !== 'undefined' && res.data[0].country.split('').length > 0 ? res.data[0].country : 'IN';
+        let checkPointLanguage = typeof (res.data[0].language) === 'string' && res.data[0].language !== 'null' && res.data[0].language !== 'undefined' && res.data[0].language.split('').length > 0  ?  res.data[0].language : 'English';
+        let checkPointDateFormat = typeof (res.data[0].dateFormat) === 'string' && res.data[0].dateFormat !== 'null' && res.data[0].dateFormat !== 'undefined' && res.data[0].dateFormat.split('').length > 0  ? res.data[0].dateFormat : 'DD/MM/YYYY';
+        let checkPointTimeFormat = typeof (res.data[0].timeFormat) === 'string' && res.data[0].timeFormat !== 'null' && res.data[0].timeFormat !== 'undefined' && res.data[0].timeFormat.split('').length > 0 ? res.data[0].timeFormat : '12h (am/pm)';
+
+        // console.log("========================================");
         this.validateForm.patchValue({
-          country: res.data[0].country,
+          country: checkPointCountry,
           name: res.data[0].fullName,
           welcome: res.data[0].welcomeMessage,
-          language: res.data[0].language,
-          dateFormat: res.data[0].dateFormat,
-          timeFormat: res.data[0].timeFormat,
+          language: checkPointLanguage,
+          dateFormat: checkPointDateFormat,
+          timeFormat: checkPointTimeFormat,
+          meetingPlatform: 'Hangout'
         });
 
         this.timeZone = res.data[0].timeZone;
+        this.spinLoading = false;
       }, err => {
-        console.log('Error=========', err.message);
+        // console.log('Error=========', err.message);
         this.messageService.generateErrorMessage("404 ! Record does not exist");
-        /*const dialogConfig = new MatDialogConfig();
-        dialogConfig.data = err;
-        this.dialog.open(MessagedialogComponent, dialogConfig);*/
       });
 
     function createStars(n) {
@@ -368,6 +442,7 @@ export class AccountSettingComponent implements OnInit {
     return {};
   };
 
+
   changeTimezone(timezone) {
     this.timeZone = timezone;
   }
@@ -385,12 +460,13 @@ export class AccountSettingComponent implements OnInit {
     let uid = this.validateForm.value;
     uid['userId'] = this.userId;
     uid['timeZone'] = this.timeZone;
+    uid['meetingPlatform'] = this.validateForm.value.meetingPlatform !== 'Hangout' ? this.validateForm.value.meetingPlatform : null;
     this.accountService.SaveProfileData(uid);
   }
 
-  submitMyProfileForm() {
-    console.log('Profile form--> ', this.profileForm.value);
-    console.log('Image value--> ', this.image);
+ /* submitMyProfileForm() {
+    // console.log('Profile form--> ', this.profileForm.value);
+    // console.log('Image value--> ', this.image);
     let uid = this.profileForm.value;
     uid['id'] = this.userId;
     uid['image'] = this.image;
@@ -399,19 +475,86 @@ export class AccountSettingComponent implements OnInit {
     postData.append('image', this.image);
     this.accountService.saveProfilePic(postData);
     this.upload = true;
+  }*/
+  submitMyProfileForm() {
+ /*   console.log('Profile form--> ', this.profileForm.value);
+    console.log('Image value--> ', this.image);*/
+    let uid = this.profileForm.value;
+    uid['userId'] = this.userId;
+    uid['image'] = this.imagePreview;
+    const postData = new FormData();
+    postData.append('userId', this.userId);
+    postData.append('image', this.imagePreview);
+    console.log('Post data - ', postData);
+    this.accountService.saveProfilePic(this.profileForm.value);
+
+    this.upload = true;
+    this.viewCroper=false;
+    this.height = 0;
+    this.width =0;
   }
 
-  onImagePicked(imageEvent: Event) {
+ /* onImagePicked(imageEvent: Event) {
     if ((imageEvent.target as HTMLInputElement).files && (imageEvent.target as HTMLInputElement).files[0]) {
       if((imageEvent.target as HTMLInputElement).files[0].size < 3145728){
         this.upload = false;
         const reader = new FileReader();
         reader.onload = (event: ProgressEvent) => {
           this.imagePreview = (<FileReader>event.target).result;
-          this.image = (imageEvent.target as HTMLInputElement).files[0];
+          /!*this.image = (imageEvent.target as HTMLInputElement).files[0];*!/
+          let type  = (imageEvent.target as HTMLInputElement).files[0].type;
+          // console.log("Type ", type);
+          switch (type) {
+            case 'image/jpeg': this.image = (imageEvent.target as HTMLInputElement).files[0];
+              break;
+            case 'image/png' :this.image = (imageEvent.target as HTMLInputElement).files[0];
+              break;
+            case 'image/jpg' : this.image = (imageEvent.target as HTMLInputElement).files[0];
+              break;
+            default: this.messageService.generateErrorMessage("The image is invalid, or not supported. Allowed types: png jpg jpeg.");
+              this.upload = true;
+          }
         };
         reader.readAsDataURL((imageEvent.target as HTMLInputElement).files[0]);
       }else{
+        this.upload = true;
+        this.messageService.generateErrorMessage("Select the file less then 3MB.");
+      }
+    }
+  }*/
+
+  onImagePicked(imageEvent: Event) {
+    // console.log("Image Event --- > ", imageEvent);
+    if ((imageEvent.target as HTMLInputElement).files && (imageEvent.target as HTMLInputElement).files[0]) {
+      if((imageEvent.target as HTMLInputElement).files[0].size < 3145728){
+        this.upload = false;
+        const reader = new FileReader();
+        reader.onload = (event: ProgressEvent) => {
+          let type = (imageEvent.target as HTMLInputElement).files[0].type;
+          // console.log("Type ", type);
+          switch (type) {
+            case 'image/jpeg':
+              this.imagePreview = (<FileReader>event.target).result;
+              this.imageChangedEvent = imageEvent;  this.viewCroper=true;
+              break;
+            case 'image/png' :
+              this.imagePreview = (<FileReader>event.target).result;
+              this.imageChangedEvent = imageEvent; this.viewCroper=true;
+              break;
+            case 'image/jpg' :
+              this.imagePreview = (<FileReader>event.target).result;
+              this.imageChangedEvent = imageEvent; this.viewCroper=true;
+              break;
+            default: this.messageService.generateErrorMessage("The image is invalid, or not supported. Allowed types: png jpg jpeg.");
+              this.upload = true;
+              this.viewCroper=false;
+          }
+        };
+
+        reader.readAsDataURL((imageEvent.target as HTMLInputElement).files[0]);
+      }else{
+        this.upload = true;
+        this.viewCroper=false;
         this.messageService.generateErrorMessage("Select the file less then 3MB.");
       }
     }
@@ -449,7 +592,7 @@ export class AccountSettingComponent implements OnInit {
   /*  handleOkEmailStatus() {
       this.visibleEmail = false;
       this.showConfirmEmail = this.accountService.getEmailStatus();
-      console.log('Email stautus--> ',this.showConfirmEmail);
+      // console.log('Email stautus--> ',this.showConfirmEmail);
     }*/
 
   updateConfirmValidator(): void {
@@ -461,7 +604,7 @@ export class AccountSettingComponent implements OnInit {
       this.changePasswordForm.controls[i].markAsDirty();
       this.changePasswordForm.controls[i].updateValueAndValidity();
     }
-    console.log('Password--> ', this.changePasswordForm.value);
+    // console.log('Password--> ', this.changePasswordForm.value);
     let changePassword = this.changePasswordForm.value;
     changePassword['userId'] = this.userId;
     this.accountService.updateAccountPassword(changePassword);
@@ -471,7 +614,7 @@ export class AccountSettingComponent implements OnInit {
     this.visibleEmail = false;
     for (const i in this.changeEmailForm.controls) {
       this.changeEmailForm.controls[i].markAsDirty();
-      console.log('Change Login --> ', this.changeEmailForm.value);
+      // console.log('Change Login --> ', this.changeEmailForm.value);
       this.changeEmail = this.changeEmailForm.value;
       this.changeEmail['userId'] = this.userId;
       this.cnfEmail = this.changeEmailForm.value.email;
@@ -483,4 +626,39 @@ export class AccountSettingComponent implements OnInit {
     this.showConfirmEmail = false;
   }
 
+  onEditorBlured(quill) {
+    // console.log('editor blur!', quill);
+  }
+
+  onEditorFocused(quill) {
+    // console.log('editor focus!', quill);
+  }
+
+  onEditorCreated(quill) {
+    this.editor = quill;
+    // console.log('quill is ready! this is current quill instance object', quill);
+  }
+
+  onContentChanged({ quill, html, text }) {
+    // console.log('quill content is changed!', quill, html, text);
+  }
+
+  imageCropped(event: ImageCroppedEvent) {
+    this.imagePreview = event.base64;
+    this.height = event.height;
+    this.width = event.width;
+    this.upload = false;
+    console.log('event--- imageCropped > ',event);
+    console.log('imagePreview---->', this.imagePreview);
+  }
+  imageLoaded() {
+
+  }
+  cropperReady() {
+
+  }
+  loadImageFailed() {
+
+    // show message
+  }
 }

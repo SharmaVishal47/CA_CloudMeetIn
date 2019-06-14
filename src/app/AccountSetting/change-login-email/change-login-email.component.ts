@@ -25,9 +25,9 @@ export class ChangeLoginEmailComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe(params => {
       this.queryData = params['data'];
       this.email = params['email'];
-      console.log(' QueryParams--->',this.queryData);
-      console.log(' QueryParams email--->',this.email);
-     /* console.log(' user email--->',this.userEmail);*/
+      // console.log(' QueryParams--->',this.queryData);
+      // console.log(' QueryParams email--->',this.email);
+     /* // console.log(' user email--->',this.userEmail);*/
     });
     //this.accountService.getUserEmail();
  this.accountService.checkTokenDataUpdateEmail(this.queryData,this.email);
@@ -35,7 +35,7 @@ export class ChangeLoginEmailComponent implements OnInit {
   submitForm(): void {
     let loginForm = this.changPasswordForm.value;
     loginForm['emailID'] = this.email;
-    console.log('LoginForm', loginForm);
+    // console.log('LoginForm', loginForm);
     for (const i in this.changPasswordForm.controls) {
       this.changPasswordForm.controls[ i ].markAsDirty();
       this.changPasswordForm.controls[ i ].updateValueAndValidity();

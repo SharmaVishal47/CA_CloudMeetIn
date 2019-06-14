@@ -34,7 +34,7 @@ import { DashboardComponent } from './Account/dashboard/dashboard.component';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
 import { CalendarOptionComponent } from './calendar-option/calendar-option.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { CalendareventComponent } from './calendar-event/calendarevent.component';
 import { UserRoleComponentComponent } from './user-role-component/user-role-component.component';
 import { SchedulingPageComponent } from './meetings/scheduling-page/scheduling-page.component';
@@ -55,6 +55,7 @@ import { MbscModule } from '../lib/mobiscroll/js/mobiscroll.angular.min.js';
 import { CreateEventComponent } from './Events/create-event/create-event.component';
 import { NewEventTeamComponent } from './Events/new-event-team/new-event-team.component';
 import {ColorPickerModule} from 'ngx-color-picker';
+import { QuillEditorModule } from 'ngx-quill-editor';
 import {
   en_US,
   NgZorroAntdModule,
@@ -87,6 +88,21 @@ import { RescheduleEventComponent } from './meetings/reschedule-event/reschedule
 import {ClipboardModule} from 'ngx-clipboard';
 import { ErrorComponent } from './error/error.component';
 import {DialogChangeAccountPasswordComponent} from './AccountSetting/dialog-change-account-password/dialog-change-account-password.component';
+import { FooterComponent } from './Home/footer/footer.component';
+import {ImageCropperModule} from 'ngx-image-cropper';
+import { SignUpByEmailComponent } from './Auth/sign-up-by-email/sign-up-by-email.component';
+import { CalenderoptionByEmailComponent } from './Auth/calenderoption-by-email/calenderoption-by-email.component';
+import { ConfirmEmailComponent } from './Auth/confirm-email/confirm-email.component';
+import { CalenderoptionComponent } from './Auth/calenderoption/calenderoption.component';
+import {AdminLoginComponent, FormatTimePipe} from './Admin/admin-login/admin-login.component';
+import {NgxCaptchaModule} from 'ngx-captcha';
+import { AdminDashboardComponent } from './Admin/admin-dashboard/admin-dashboard.component';
+import { TermConditionsComponent } from './Home/term-conditions/term-conditions.component';
+import { ValidInputDirective } from './Directive/valid-input.directive';
+import {AuthInterceptor} from './Admin/auth.interceptor';
+import {environment} from '../environments/environment';
+
+const GOOGLE_AUTH = environment.googleAuth;
 
 
 export function getAuthServiceConfigs() {
@@ -94,12 +110,15 @@ export function getAuthServiceConfigs() {
     [
       {
         id: GoogleLoginProvider.PROVIDER_ID,
-        provider: new GoogleLoginProvider("812688497337-bnvqsplr9iv5ki7s733gde19bhnar61p.apps.googleusercontent.com")
+      /*  /!*provider: new GoogleLoginProvider("812688497337-bnvqsplr9iv5ki7s733gde19bhnar61p.apps.googleusercontent.com") *!//!*For Dev*!/
+        provider: new GoogleLoginProvider("430164070437-mha3f9ivplko6ue547ihmbvag4fksvcf.apps.googleusercontent.com") /!*For CloudMeetin*!/*/
+        provider: new GoogleLoginProvider(GOOGLE_AUTH)
       }
     ]
 );
   return config;
 }
+// @ts-ignore
 // @ts-ignore
 @NgModule({
   declarations: [
@@ -148,7 +167,17 @@ export function getAuthServiceConfigs() {
     RescheduleMeetingComponent,
     RescheduleEventComponent,
     ErrorComponent,
-    DialogChangeAccountPasswordComponent
+    DialogChangeAccountPasswordComponent,
+    FooterComponent,
+    SignUpByEmailComponent,
+    CalenderoptionByEmailComponent,
+    ConfirmEmailComponent,
+    CalenderoptionComponent,
+    AdminLoginComponent,
+    AdminDashboardComponent,
+    TermConditionsComponent,
+    ValidInputDirective,
+    FormatTimePipe
 
   ],
   imports: [
@@ -187,7 +216,11 @@ export function getAuthServiceConfigs() {
    /* NzDatePickerModule,*/
     IconModule,
     ClipboardModule,
-    NgxUiLoaderModule
+    NgxUiLoaderModule,
+    QuillEditorModule,
+    ImageCropperModule,
+    NgxCaptchaModule
+
   ],
   providers: [
       {
@@ -197,7 +230,8 @@ export function getAuthServiceConfigs() {
     { provide: NZ_I18N, useValue: en_US },
     MatDatepickerModule,
     DatePipe,
-    NgxUiLoaderDemoService
+    NgxUiLoaderDemoService,
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent],
     entryComponents: [

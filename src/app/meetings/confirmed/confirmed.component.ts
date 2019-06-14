@@ -11,6 +11,7 @@ import {MeetingService} from '../meeting.service';
   styleUrls: ['./confirmed.component.css']
 })
 export class ConfirmedComponent implements OnInit {
+  weblink;
   meetingEvent = '';
   userImage: string;
   meetingDate = '';
@@ -22,6 +23,22 @@ export class ConfirmedComponent implements OnInit {
   rescheduleRecord;
   visibleButton = false;
   ngOnInit() {
+    if(localStorage.getItem('fullName') == undefined || localStorage.getItem('fullName') == null){
+      this.router.navigate(['/error']);
+      return;
+    }
+    if(localStorage.getItem('userIdMeeting') == undefined || localStorage.getItem('userIdMeeting') == null){
+      this.router.navigate(['/error']);
+      return;
+    }
+    if(localStorage.getItem('email') == undefined || localStorage.getItem('email') == null){
+      this.router.navigate(['/error']);
+      return;
+    }
+    this.weblink = localStorage.getItem('weblink');
+    if(this.weblink === null|| this.weblink === undefined || this.weblink === "null" || this.weblink === "" ){
+      this.weblink = "";
+    }
     if(this.authServiceLocal.getIsAuthenticated()){
       this.meetingService.removeHeader(false);
       this.visibleButton = true;
@@ -54,6 +71,7 @@ export class ConfirmedComponent implements OnInit {
     localStorage.removeItem('reschduleMeetingId');
     localStorage.removeItem('eventId');
     localStorage.removeItem('rescheduleRecord');
+    localStorage.removeItem('weblink');
     /*if(this.rescheduleRecord){
       localStorage.removeItem('rescheduleRecord');
     }*/

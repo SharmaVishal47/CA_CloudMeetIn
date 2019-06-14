@@ -13,7 +13,6 @@
                 <div nz-form-control>
                   <span style="color: #707070;font-size: medium;">All Upcoming&nbsp;&nbsp;<!--&nbsp;&nbsp;<i nz-icon type="down" theme="outline"></i>--></span>
                   <nz-range-picker
-                    [nzAllowClear]="allowClear"
                     formControlName="dateRange"
                     [nzRanges]="ranges1"
                     nzFormat="yyyy/MM/dd"
@@ -28,9 +27,9 @@
 
 
         <nz-tabset [nzSize]="size"  >
-          <nz-tab [nzTitle]="titleTemplate" cli>
+          <nz-tab [nzTitle]="titleTemplate">
             <ng-template #titleTemplate>
-              Cloudmeetin
+              CloudMeetIn
             </ng-template>
 
             <!--<div nz-row>
@@ -74,7 +73,7 @@
             <div nz-row >
               <div nz-col [nzXs]="{ span:4}" [nzMd]="{ span: 4}" [nzLg]="{ span: 4}" *ngFor="let event_details of EventTypeSlotDashboardForShow;let i = index" >
                 <nz-dropdown>
-                  <a nz-dropdown style="font-size:calc(0.50em + 0.7vmin);">
+                  <a nz-dropdown style="font-size:calc(0.50em + 0.7vmin);cursor: default;">
                     <div class="custom-circle" [ngStyle]="{'background-color': event_details.color}"></div>&nbsp;&nbsp;{{event_details.name}}<!--<i nz-icon type="down" class="custom-icon"  theme="outline"></i>-->
                   </a>
                  <!-- <ul nz-menu nzSelectable style="margin-top: 12px">
@@ -172,53 +171,36 @@
                     </nz-dropdown>
                   </div>
                 </div>
-                <!--<div class="col-lg-2" style="padding-left: 0">
-                  <p class="remove-padding">Tracking ID</p>
+                <div class="col-lg-2" style="padding-left: 0">
+                  <p class="remove-padding">Meeting</p>
                   <div style="display: flex">
-                    <nz-dropdown [nzTrigger]="'click'">
+                    <nz-dropdown>
                       <a nz-dropdown>
                     <span class="clBlue">
-                    All IDs
+                   Meeting Filters
                     </span>
                         <img src="../../../assets/down_arrow.svg" alt="" height="12" width="12" style="margin-left: 10px;margin-bottom: 5px; cursor: pointer" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       </a>
                       <ul nz-menu nzSelectable>
-                        <li class="col-lg-12">
-                          <nz-input-group [nzSuffix]="suffixIconSearch">
-                            <input type="text" nz-input placeholder="Search">
-                          </nz-input-group>
-                        </li>
-
                         <li nz-menu-item >
                           <div class="col-lg-12" style="font-size: 13px">
-                            <ng-template #suffixIconSearch>
-                              <i nz-icon type="search"></i>
-                            </ng-template>
                             <br>
-                            <small style="font-family: 'Roboto-Regular', sans-serif; color: #FF4165;" nz-checkbox [(ngModel)]="allChecked" (ngModelChange)="updateAllChecked()" [nzIndeterminate]="indeterminate">Select all / Clear</small> <br>
-                            <div>
-                              <p>My Events</p>
-                              <br>
-                            </div>
+                            <small style="font-family: 'Roboto-Regular', sans-serif; color: #FF4165;" nz-checkbox [(ngModel)]="allCheckedMeeting" (ngModelChange)="updateAllCheckedMeeting()" [nzIndeterminate]="indeterminaMeeting">Select all / Clear</small> <br>
+                            <br>
+                            <br>
                             <div nz-row>
-                              <nz-checkbox-group nz-col nzSpan="4" [(ngModel)]="checkOptionsOne" (ngModelChange)="updateSingleChecked()">
+                              <nz-checkbox-group nz-col nzSpan="4" [(ngModel)]="checkOptionsOnMeeting" (ngModelChange)="updateSingleCheckedMeeting()">
                                 <br>
                               </nz-checkbox-group>
                               <br>
+                              <button nz-button nzSize="small" class="login-form-button" style="background-color:#FF4165; color: white;float: right;margin-top: 10px" (click)="filterByDay()">OK</button>
                             </div>
                           </div>
-                        </li>
-                        <li nz-menu-item>
-
-                        </li>
-                        <hr>
-                        <li nz-menu-item>
-
                         </li>
                       </ul>
                     </nz-dropdown>
                   </div>
-                </div>-->
+                </div>
                 <button nz-button nzSize="small" class="login-form-button" style="background-color:#FF4165; color: white;float: right;margin-top: 10px" (click)="resetFilter()" *ngIf="showReset">Reset</button>
               </div>
             </div>
@@ -379,7 +361,7 @@
         <div style="text-align: center;margin-top: 15%">
           <p class="centerText">You have no upcoming events yet.</p>
           <p class="centerText">As events are scheduled with you, they'll appear here.</p>
-          <p class="centerTextSmall">Need tips? Check out our <span style="color: #FF4165;cursor: pointer">Knowledge base</span></p>
+        <!--  <p class="centerTextSmall">Need tips? Check out our <span style="color: #FF4165;cursor: pointer">Knowledge base</span></p>-->
         </div>
       </div>
     </div>
