@@ -2,9 +2,9 @@ import {Component, OnInit, PipeTransform} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {FormBuilder} from '@angular/forms';
-import {MeetingService} from '../meeting.service';
+import {MeetingService} from '../../meeting.service';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {environment} from '../../../environments/environment';
+import {environment} from '../../../../environments/environment';
 const API_URL = environment.apiUrl;
 
 @Component({

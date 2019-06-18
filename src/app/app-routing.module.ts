@@ -1,4 +1,4 @@
-import {RouterModule, Routes} from '@angular/router';
+import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import {LoginComponent} from './Auth/login/login.component';
 import {SignupComponent} from './Auth/signup/signup.component';
@@ -12,8 +12,8 @@ import {CalendarEditComponent} from './calendar/calendar-edit/calendar-edit.comp
 import {AvailbilityComponent} from './calendar/availbility/availbility.component';
 import {DashboardComponent} from './Account/dashboard/dashboard.component';
 import {UserRoleComponentComponent} from './user-role-component/user-role-component.component';
-import {SchedulingPageComponent} from './meetings/scheduling-page/scheduling-page.component';
-import {ScheduleEventComponent} from './meetings/schedule-event/schedule-event.component';
+import {SchedulingPageComponent} from './meetings/main-meeting/scheduling-page/scheduling-page.component';
+import {ScheduleEventComponent} from './meetings/main-meeting/schedule-event/schedule-event.component';
 import {ScheduleDateComponent} from './meetings/schedule-date/schedule-date.component';
 import {ConfirmedComponent} from './meetings/confirmed/confirmed.component';
 import {IntegrationsComponent} from './Integrations/integrations/integrations.component';
@@ -51,6 +51,7 @@ import {TermConditionsComponent} from './Home/term-conditions/term-conditions.co
 const appRoutes: Routes = [
   /* Main Components*/
   {path: '', component: HomeComponent},
+  {path: 'meetin', loadChildren: './meetings/main-meeting/meeting.module#MeetingModule'},
   {path: 'admin-login', component: AdminLoginComponent},
   {path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [AdminGuard]},
   {path: 'terms-conditions', component: TermConditionsComponent},
@@ -97,26 +98,28 @@ const appRoutes: Routes = [
 
 
   /*Meeting Reschedule*/
-  {path: 'reschedule/:id', component: RescheduleMeetingComponent},
 
-  {path: 'meeting', component: MettingComponent},
-  {path: 'cancellations/:id', component: CancelEventComponent},
   {path: 'features', component: FeaturesComponent},
   {path: 'account', component: AccountComponent},
   {path: 'team', component: TeamComponent},
   {path: 'error', component: ErrorComponent},
+  /*{path: 'reschedule/:id', component: RescheduleMeetingComponent},
 
+  {path: 'meeting', component: MettingComponent},
+  {path: 'cancellations/:id', component: CancelEventComponent},
   {path: 'confirmedMeeting', component: ConfirmedComponent},
   {path: ':userId/:selectTime/:schedulingPage', component: ScheduleEventComponent},
   {path: ':userId/:selectTime', component: MettingComponent},
-  {path: ':userId', component: SchedulingPageComponent},
+  {path: ':userId', component: SchedulingPageComponent},*/
 
   /*  {path: ':userId/:selectTime/:selectDay', component: ScheduleDateComponent},*/
 
 ];
 @NgModule({
   imports: [
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes, {
+      preloadingStrategy: PreloadAllModules
+    })
   ],
   exports: [RouterModule],
   providers : [AuthGuard, AdminGuard]

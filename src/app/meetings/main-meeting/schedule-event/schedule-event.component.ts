@@ -3,10 +3,10 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {HttpClient} from '@angular/common/http';
-import {MeetingService} from '../meeting.service';
-import {AuthServiceLocal} from '../../Auth/auth.service';
-import {MessageServiceService} from '../../Auth/message-service.service';
-import {ValidInputDirective} from '../../Directive/valid-input.directive';
+import {MeetingService} from '../../meeting.service';
+import {AuthServiceLocal} from '../../../Auth/auth.service';
+import {MessageServiceService} from '../../../Auth/message-service.service';
+import {ValidInputDirective} from '../../../Directive/valid-input.directive';
 import {NzMessageService} from 'ng-zorro-antd';
 
 @Component({

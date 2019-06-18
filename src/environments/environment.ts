@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://dev.cloudmeetin.com'
+  apiUrl: 'https://dev.cloudmeetin.com',
+  lazyPath: 'meetin/'
 };
 
 /*

@@ -37,8 +37,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { CalendareventComponent } from './calendar-event/calendarevent.component';
 import { UserRoleComponentComponent } from './user-role-component/user-role-component.component';
-import { SchedulingPageComponent } from './meetings/scheduling-page/scheduling-page.component';
-import { ScheduleEventComponent } from './meetings/schedule-event/schedule-event.component';
+import { SchedulingPageComponent } from './meetings/main-meeting/scheduling-page/scheduling-page.component';
+import { ScheduleEventComponent } from './meetings/main-meeting/schedule-event/schedule-event.component';
 import { MessagedialogComponent } from './messagedialog/messagedialog.component';
 import { ScheduleDateComponent } from './meetings/schedule-date/schedule-date.component';
 import { ConfirmedComponent } from './meetings/confirmed/confirmed.component';
@@ -123,7 +123,7 @@ export function getAuthServiceConfigs() {
     LoginComponent,
     SignupComponent,
     HomeComponent,
-    MettingComponent,
+   /* MettingComponent,*/
     FeaturesComponent,
     AccountComponent,
     SettingsComponent,
@@ -134,11 +134,11 @@ export function getAuthServiceConfigs() {
     CalendarOptionComponent,
     CalendareventComponent,
     UserRoleComponentComponent,
-    SchedulingPageComponent,
-    ScheduleEventComponent,
+    /*SchedulingPageComponent,
+    ScheduleEventComponent,*/
     MessagedialogComponent,
     ScheduleDateComponent,
-    ConfirmedComponent,
+   /* ConfirmedComponent,*/
     IntegrationsComponent,
     GoTomeetingIntegrationComponent,
     ShareYourLinkComponentComponent,
@@ -159,8 +159,8 @@ export function getAuthServiceConfigs() {
     ZoomIntegrationComponent,
     GTMIntegrationCodeComponent,
     ChangeLoginEmailComponent,
-    CancelEventComponent,
-    RescheduleMeetingComponent,
+    /*CancelEventComponent,
+    RescheduleMeetingComponent,*/
     RescheduleEventComponent,
     ErrorComponent,
     DialogChangeAccountPasswordComponent,

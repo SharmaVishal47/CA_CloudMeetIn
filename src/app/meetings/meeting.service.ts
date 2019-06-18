@@ -12,7 +12,7 @@ import {environment} from '../../environments/environment';
 import {forEach} from '@angular/router/src/utils/collection';
 
 const API_URL = environment.apiUrl;
-
+const LAZY_PATH = environment.lazyPath;
 @Injectable({
   providedIn: 'root'
 })
@@ -99,7 +99,7 @@ export class MeetingService {
     localStorage.setItem('email', email);
     localStorage.setItem('userIdMeeting', userId);
     localStorage.setItem('fullName', Meeting_owner);
-    this.router.navigate([userId + '/' + event]);
+    this.router.navigate([LAZY_PATH +userId + '/' + event]);
   }
 
   // This method used to store the event records in local storage
@@ -348,7 +348,7 @@ export class MeetingService {
   }
 
   checkMeetingPlatform() {
-    this.httpClient.post<any>('/user/checkMeetingPlatform', {userId: localStorage.getItem("userIdMeeting")}).subscribe(
+    this.httpClient.post<any>(API_URL + '/user/checkMeetingPlatform', {userId: localStorage.getItem("userIdMeeting")}).subscribe(
       res => {
         this.meetingPlatform.next(res);
       }, error => {
@@ -589,7 +589,7 @@ export class MeetingService {
     let timeZone = localStorage.getItem('selectedTimeZone');
     this.meetIngData = meetIngData;
     this.data = data;
-    this.httpClient.post<any>('/meeting/addMeeting', this.data).subscribe((responseData) => {
+    this.httpClient.post<any>(API_URL +'/meeting/addMeeting', this.data).subscribe((responseData) => {
       // console.log('addMeeting====', responseData.data.insertId);
       let insertId = responseData.data.insertId;
       let currentEmail = localStorage.getItem('email');
@@ -599,7 +599,7 @@ export class MeetingService {
         if(status && returnStartTime && returnEndTime) {
           /*this.meetIngData.starttime = returnStartTime;
           this.meetIngData.endtime = returnEndTime;*/
-          this.httpClient.post<any>('/user/insertevent', {
+          this.httpClient.post<any>(API_URL +'/user/insertevent', {
             data: data,
             meetIngData: this.meetIngData,
             email: currentEmail,
@@ -675,7 +675,7 @@ export class MeetingService {
       // console.log('addMeeting====', responseData);
       let insertId = responseData.data.insertId;
       let currentEmail = localStorage.getItem('email');
-      this.httpClient.post<any>('/user/insertevent', {
+      this.httpClient.post<any>(API_URL + '/user/insertevent', {
         data :  data,
         meetIngData: meetIngData,
         email: currentEmail,
@@ -686,7 +686,7 @@ export class MeetingService {
       }).subscribe((responseData) => {
         // console.log('Google Calendar integration ======', responseData);
 
-        this.httpClient.post<any>('/meeting/addEventID', {
+        this.httpClient.post<any>(API_URL + '/meeting/addEventID', {
           userID: this.getUserId(),
           eventId: responseData.data.id,
           insertId: insertId
@@ -710,7 +710,7 @@ export class MeetingService {
               let oldMeetingList = localStorage.getItem('meetingTimeList').toString();
               let updateMeetingList = oldMeetingList.concat(',' + this.data.starttime);
               // // console.log('',updateMeetingList);
-              this.httpClient.post<any>('/filter/updateMeetingRecords', {
+              this.httpClient.post<any>(API_URL +'/filter/updateMeetingRecords', {
                 userId: this.data.userId,
                 meetingDate: this.data.date,
                 meetingTimeList: updateMeetingList
@@ -726,7 +726,7 @@ export class MeetingService {
             } else {
               // if user select date as a first time
               // console.log('Insert =====================================================');
-              this.httpClient.post<any>('/filter/insertMeetingRecords', {
+              this.httpClient.post<any>(API_URL + '/filter/insertMeetingRecords', {
                 userId: this.data.userId,
                 meetingDate: this.data.date,
                 meetingTimeList: this.data.starttime
@@ -1439,10 +1439,11 @@ export class MeetingService {
         // console.log("responseData : ", responseData);
         let startTime = responseData.data[0].startTime.split(':');
         let endTime = responseData.data[0].endTime.split(':');
-         //console.log("startTime-- > ", startTime);
-         //console.log("endTime-- > ", endTime);
+       console.log("startTime-- > ", startTime);
+       console.log("endTime-- > ", endTime);
         for(let i = +startTime[0]; i<endTime[0]; i++) {
           if(eventType == 60) {
+            console.log("Log 1.1 #", this.setHours(i, 0) + '' + this.setHours(i, 60), ' ' +this.setHours(i-1, 60) +' '+ this.setHours(i, 60));
             count % 2 == 0 ? this.userSlotArray.push({startTime: this.setHours(i, 0), endTime: this.setHours(i, 60)}) : this.userSlotArray.push({startTime: this.setHours(i-1, 60), endTime: this.setHours(i, 60)})
           }  else if(eventType === 30) {
             if(count % 2 == 0) {
@@ -1471,9 +1472,11 @@ export class MeetingService {
         console.log("userSlotArray==== ", this.userSlotArray);
         let email = this.getUserEmail();
         let calendarJson  = [];
+
         // console.log("email=============",email);
         if(email != null && email != undefined){
           this.jsonSlotArray = [];
+          let flagValue = 0;
           if(this.userSlotArray != null){
                 this.httpClient.post<any>(API_URL + '/user/getcalendareventslot',
                   {
@@ -1486,9 +1489,12 @@ export class MeetingService {
                     this.availabileSlot.next(this.userSlotArray);
                   } else {
                     console.log("Log# 4 : ");
+                    calendarJson =[];
                     response.map((obj, index) => {
-                      // console.log("Log 4 : ", obj.recurrence);
+
+                      console.log("Log 3 : ", obj.hasOwnProperty("recurrence"));
                       if(obj.hasOwnProperty("recurrence")) {
+                        console.log("Log 4 ===========: ", obj.hasOwnProperty("recurrence"));
                         let startTime = obj.start.dateTime;
                         let endTime = obj.end.dateTime;
                         let tempStartTime:Date = new Date(startTime);
@@ -1500,30 +1506,45 @@ export class MeetingService {
                           startTime: Date.parse(tempStartTime.toString()),
                           endTime: Date.parse(tempEndTime.toString())
                         });
-                      } else {
+                      }else{
                         calendarJson.push({
                           startTime: Date.parse(obj.start.dateTime),
                           endTime: Date.parse(obj.end.dateTime)
                         });
+
                         if(obj.hasOwnProperty("attendees")) {
                           for(let k =0; k< obj.attendees.length ; k++) {
                             let checkPoint = typeof (obj.attendees[k].organizer) === 'boolean' && obj.attendees[k].organizer !== 'undefined' && obj.attendees[k].organizer === true;
                             if(checkPoint) {
                               if(obj.attendees[k].responseStatus == "declined") {
-                                console.log("Log # ",calendarJson.splice(index, 1));
+                                console.log("Index value--------- :", index);
+                                console.log("Index value--------- :", flagValue);
+                                console.log("Log # ",calendarJson.splice(index - flagValue, 1));
+                                flagValue++;
+
+                                /*flagValue = true;
+                                break;*/
                               }
                             }
                           }
                         }
+                        /*if(flagValue){
+                          console.log("Index value---------15 :", index);
+                          calendarJson.splice(index,1);
+                        }*/
                       }
-                    });
-                    calendarJson.sort(function(a, b) {
-                      return a.startTime - b.startTime;
                     });
 
                     calendarJson.forEach(item =>{
                       console.log("Booked item ===="+"Start time ==="+new Date(item.startTime)+"  end time======="+new Date(item.endTime));
                     });
+
+
+                    calendarJson.sort(function(a, b) {
+                      return a.startTime - b.startTime;
+                    });
+                    console.log("Calendar Json : ", calendarJson);
+
 
 
 
@@ -1533,20 +1554,27 @@ export class MeetingService {
                       for(let j=0;j<this.userSlotArray.length;j++){
                         if(this.userSlotArray[j].startTime<=calendarJson[i].startTime){
                           last_index_startTime = j;
+                          console.log("Index # : ",last_index_startTime)
+
                         }
                       }
                       for(let j=0;j<this.userSlotArray.length;j++){
                         if(this.userSlotArray[j].startTime<=calendarJson[i].endTime){
                           if(this.userSlotArray[j].startTime == calendarJson[i].endTime){
                             last_index_endTime = j;
+                            console.log("Index1 # : ",last_index_endTime)
                           }else{
                             last_index_endTime = j+1;
                           }
                         }
                       }
                       if(last_index_startTime && last_index_endTime){
+                        console.log("Index3 # : ",last_index_endTime)
                         this.userSlotArray.splice(last_index_startTime,(last_index_endTime-last_index_startTime));
-                      }
+                      } else if(last_index_startTime ==0 && last_index_endTime){
+                        this.userSlotArray.splice(last_index_startTime,(last_index_endTime-last_index_startTime));
+                        }
+
                     }
                     console.log("Slot Array : ", this.userSlotArray);
                     for(let i =0 ; i< this.userSlotArray.length; i++) {
@@ -1558,11 +1586,11 @@ export class MeetingService {
 
                  /* this.userSlotArray.forEach((item, index)=>{
                     console.log("Available item after filter ===="+"Start time ==="+new Date(item.startTime)+"  end time======="+new Date(item.endTime));
-                    this.jsonSlotArray.push({
+                  /!*  this.jsonSlotArray.push({
                       startTime: item.startTime,
                       endTime : item.endTime
                     });
-
+*!/
                   });*/
 
 
@@ -1641,7 +1669,10 @@ export class MeetingService {
     return Date.parse(tempDate);
   }*/
   setHours (time:number, minutes: number) {
-
+    //console.log(new Date("2019-06-18 12:00 AM ,GMT+05:30").toISOString())
+  /*  console.log(moment("2019-06-18 12:00 AM +05:30").format());
+    console.log(moment("2019-06-18 12:00 AM,GMT+05:30").format());
+    console.log("Log 1.2 # :",  time + ' : ', minutes);*/
     let now = new Date();
     //now.setUTCDate(now.getUTCDate());
     now.setFullYear(this.selectDate.getFullYear(),this.selectDate.getMonth(),this.selectDate.getDate());
@@ -1651,10 +1682,14 @@ export class MeetingService {
      now.setMilliseconds(0);*/
     //console.log("now =======",now);
     let newDate = formatDate(now, 'yyyy-MM-dd hh:mm a,z', 'en-US');
-    //console.log("now =======",newDate);
+    console.log("now =======",newDate);
     let splitDate = newDate.toString().split(",");
-    let tempDate = splitDate[0]+",GMT"+moment().tz(this.timeZoneForConvert).format('Z');
-    //console.log("tempDate=======",tempDate);
+    let timeManage = moment().tz(this.timeZoneForConvert).format('Z').split(':');
+    let tempDate = splitDate[0]+",GMT" +moment().tz(this.timeZoneForConvert).format('Z');
+     // let tempDate = splitDate[0]+",GMT" +timeManage[0] +timeManage[1];
+    console.log("tempDate=======",tempDate);
+
+    console.log("Date.parse(tempDate)=======",Date.parse(tempDate));
     return Date.parse(tempDate);
   }
 

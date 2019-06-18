@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://dev.cloudmeetin.com'
+  apiUrl: 'https://dev.cloudmeetin.com',
+  lazyPath: 'meetin/'
 };
