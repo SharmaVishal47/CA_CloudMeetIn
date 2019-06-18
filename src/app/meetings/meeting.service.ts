@@ -1608,8 +1608,10 @@ export class MeetingService {
     //console.log("now =======",now);
     let newDate = formatDate(now, 'yyyy-MM-dd hh:mm a,z', 'en-US');
     //console.log("now =======",newDate);
+    let timeManage = moment().tz(this.timeZoneForConvert).format('Z').split(':');
     let splitDate = newDate.toString().split(",");
-    let tempDate = splitDate[0]+",GMT"+moment().tz(this.timeZoneForConvert).format('Z');
+    // let tempDate = splitDate[0]+",GMT"+moment().tz(this.timeZoneForConvert).format('Z');
+    let tempDate = splitDate[0]+",GMT" +timeManage[0] +timeManage[1];
     //console.log("tempDate=======",tempDate);
     return Date.parse(tempDate);
   }
@@ -1648,4 +1650,7 @@ export class MeetingService {
     return this.httpClient.post<any>('/integration/getSelectedMeetingPaltform', {userId: userId});
 
   }
+
+
+
 }
