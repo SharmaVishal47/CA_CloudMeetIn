@@ -38,7 +38,7 @@
     "https-post": "^0.1.1",
     "igniteui-cli": "^3.2.2",
     "iplocation": "^6.1.0",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "jsonwebtoken": "^8.4.0",
     "jstimezonedetect": "^1.0.6",
     "localStorage": "^1.0.4",
